@@ -1,0 +1,44 @@
+{
+  "name": "@unionschool/campus-admin",
+  "version": "0.1.0-alpha.1",
+  "description": "面向智慧校园后台管理场景的 Vue 3 前端框架",
+  "type": "module",
+  "license": "MIT",
+  "author": "UnionSchool",
+  "homepage": "https://campus.zhongxiaotong.com",
+  "repository": { "type": "git", "url": "git+https://github.com/UnionSchool/campus-admin.git" },
+  "bugs": { "url": "https://github.com/UnionSchool/campus-admin/issues" },
+  "keywords": ["vue", "vue3", "campus", "school", "admin", "dashboard"],
+  "sideEffects": ["**/*.css"],
+  "files": ["dist", "README.md", "LICENSE"],
+  "main": "./dist/campus-admin.umd.cjs",
+  "module": "./dist/campus-admin.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/campus-admin.js", "require": "./dist/campus-admin.umd.cjs" },
+    "./style.css": "./dist/campus-admin.css"
+  },
+  "publishConfig": { "access": "public" },
+  "engines": { "node": ">=20.19.0" },
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.app.json",
+    "build:demo": "npm run typecheck && vite build",
+    "build:lib": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.lib.json && vite build --config vite.config.lib.ts",
+    "build": "npm run build:lib",
+    "check": "npm run typecheck && npm run build:lib && npm pack --dry-run",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run check"
+  },
+  "peerDependencies": { "vue": "^3.5.0" },
+  "dependencies": {
+    "@lucide/vue": "^1.44.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vue": "^3.5.42",
+    "vue-tsc": "^3.3.11"
+  }
+}
