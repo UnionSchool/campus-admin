@@ -1,45 +1,49 @@
 {
-  "name": "@unionschool/campus-admin",
+  "name": "campus",
   "version": "0.1.0-alpha.1",
-  "description": "面向智慧校园后台管理场景的 Vue 3 前端框架",
+  "private": true,
+  "description": "众校通智慧校园 Vue 3 前端框架 Monorepo",
   "type": "module",
   "license": "MIT",
   "author": "UnionSchool",
   "homepage": "https://campus.zhongxiaotong.com",
-  "repository": { "type": "git", "url": "git+https://github.com/UnionSchool/campus-admin.git" },
-  "bugs": { "url": "https://github.com/UnionSchool/campus-admin/issues" },
-  "keywords": ["vue", "vue3", "campus", "school", "admin", "dashboard"],
-  "sideEffects": ["**/*.css"],
-  "files": ["dist", "README.md", "LICENSE"],
-  "main": "./dist/campus-admin.umd.cjs",
-  "module": "./dist/campus-admin.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/campus-admin.js", "require": "./dist/campus-admin.umd.cjs" },
-    "./style.css": "./dist/campus-admin.css"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnionSchool/campus.git"
   },
-  "publishConfig": { "access": "public" },
-  "engines": { "node": ">=20.19.0" },
+  "bugs": {
+    "url": "https://github.com/UnionSchool/campus/issues"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
-    "dev": "vite",
-    "typecheck": "vue-tsc --noEmit -p tsconfig.app.json",
-    "build:demo": "npm run typecheck && vite build",
-    "build:lib": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.lib.json && vite build --config vite.config.lib.ts",
-    "build": "npm run build:lib",
-    "check": "npm run typecheck && npm run build:lib && npm pack --dry-run",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "typecheck": "pnpm --filter @unionschool/campus-core typecheck && pnpm --filter @unionschool/campus-framework typecheck && pnpm --filter @unionschool/campus-ui typecheck && pnpm --filter @unionschool/campus-admin typecheck && pnpm --filter @unionschool/example-* typecheck",
+    "build:core": "pnpm --filter @unionschool/campus-core build",
+    "build:framework": "pnpm --filter @unionschool/campus-framework build",
+    "build:ui": "pnpm --filter @unionschool/campus-ui build",
+    "build:admin": "pnpm --filter @unionschool/campus-admin build",
+    "build:packages": "npm run build:core && npm run build:framework && npm run build:ui && npm run build:admin",
+    "build:example": "pnpm --filter @unionschool/example-* build",
+    "build:example:admin": "pnpm --filter @unionschool/example-admin build",
+    "build:demo": "npm run build:example",
+    "build": "npm run build:packages",
+    "dev": "pnpm --filter @unionschool/example-admin dev",
+    "dev:admin": "pnpm --filter @unionschool/example-admin dev",
+    "preview": "pnpm --filter @unionschool/example-admin preview",
+    "preview:admin": "pnpm --filter @unionschool/example-admin preview",
+    "preview:example": "pnpm --filter @unionschool/example-admin preview",
+    "up": "bash ./up",
     "deploy": "node scripts/deploy.mjs",
-    "preview": "vite preview",
-    "prepublishOnly": "npm run check"
-  },
-  "peerDependencies": { "vue": "^3.5.0" },
-  "dependencies": {
-    "@lucide/vue": "^1.44.0"
+    "clean": "node scripts/clean.mjs all",
+    "check": "npm run check:boundaries && npm run build:packages && npm run typecheck && npm run build:example && npm run pack:dry",
+    "pack:dry": "node scripts/verify-pack.mjs"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.8",
+    "@types/node": "^22",
     "typescript": "^5.9.3",
     "vite": "^8.3.0",
-    "vue": "^3.5.42",
     "vue-tsc": "^3.3.11"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    { "id": "20260301", "name": "李思远", "studentNo": "20260301", "grade": "高二", "className": "高二（3）班", "status": "normal", "checkIn": "07:52", "balance": 86.4 },
+    { "id": "20260302", "name": "王雨桐", "studentNo": "20260302", "grade": "高二", "className": "高二（3）班", "status": "normal", "checkIn": "07:48", "balance": 132 },
+    { "id": "20260303", "name": "陈昊然", "studentNo": "20260303", "grade": "高二", "className": "高二（1）班", "status": "leave", "balance": 24.5 },
+    { "id": "20260304", "name": "赵一诺", "studentNo": "20260304", "grade": "高二", "className": "高二（2）班", "status": "normal", "checkIn": "07:55", "balance": 210.8 },
+    { "id": "20260305", "name": "孙梓涵", "studentNo": "20260305", "grade": "高二", "className": "高二（1）班", "status": "absent", "balance": 58 },
+    { "id": "20260306", "name": "周子墨", "studentNo": "20260306", "grade": "高二", "className": "高二（3）班", "status": "normal", "checkIn": "08:14", "balance": 176.2 },
+    { "id": "20260201", "name": "吴清和", "studentNo": "20260201", "grade": "高一", "className": "高一（1）班", "status": "normal", "checkIn": "07:41", "balance": 99.9 },
+    { "id": "20260202", "name": "郑亦辰", "studentNo": "20260202", "grade": "高一", "className": "高一（2）班", "status": "normal", "checkIn": "07:46", "balance": 45.3 },
+    { "id": "20260203", "name": "何书宁", "studentNo": "20260203", "grade": "高一", "className": "高一（1）班", "status": "leave", "balance": 301.5 },
+    { "id": "20260204", "name": "林知夏", "studentNo": "20260204", "grade": "高一", "className": "高一（2）班", "status": "normal", "checkIn": "07:50", "balance": 12.8 },
+    { "id": "20260205", "name": "黄予安", "studentNo": "20260205", "grade": "高一", "className": "高一（1）班", "status": "normal", "checkIn": "07:58", "balance": 88 },
+    { "id": "20260206", "name": "许星辰", "studentNo": "20260206", "grade": "高一", "className": "高一（2）班", "status": "absent", "balance": 66.6 }
+  ],
+  "count": 12,
+  "extra": {
+    "gradeOptions": ["高一", "高二"]
+  }
+}

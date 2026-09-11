@@ -1,0 +1,68 @@
+{
+  "name": "@unionschool/campus-framework",
+  "version": "0.1.0-alpha.1",
+  "description": "Campus Admin 与 Vue 之间的适配层，全项目唯一直接依赖 vue 的位置",
+  "type": "module",
+  "license": "MIT",
+  "author": "UnionSchool",
+  "homepage": "https://campus.zhongxiaotong.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnionSchool/campus.git",
+    "directory": "packages/campus-framework"
+  },
+  "keywords": [
+    "campus",
+    "vue",
+    "vue3",
+    "adapter",
+    "typescript"
+  ],
+  "sideEffects": true,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs",
+      "source": "./src/index.ts"
+    },
+    "./style.css": {
+      "import": "./dist/campus-framework.css",
+      "default": "./dist/campus-framework.css"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "build": "node ../../scripts/clean.mjs dist:packages/campus-framework && vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json && vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@lucide/vue": "^1.44.0",
+    "vue": "^3.5.42"
+  },
+  "dependencies": {
+    "@unionschool/campus-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@lucide/vue": "^1.44.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vue": "^3.5.42",
+    "vue-tsc": "^3.3.11"
+  }
+}

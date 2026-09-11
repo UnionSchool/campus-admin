@@ -1,0 +1,126 @@
+<!--
+ * 学生选择器：按姓名、学号、班级筛选并选择学生，支持单选与多选。
+ * 学生列表由业务方查询后传入；需要服务端搜索时监听 search 事件。
+ *
+ * 用法：
+ *   <CaStudentPicker v-model="studentIds" multiple :students="students" :loading="loading" @search="fetchStudents" />
+ *
+ * Props：modelValue / students / multiple / placeholder / loading / clearable
+ * 事件：update:modelValue、change、search
+ * 工具：filterStudents、toIdList、isSelected、toggleSingle、toggleMultiple
+ *
+ * 数据约定：id 使用字符串，避免后端大整数在 JavaScript 中丢失精度。
+-->
+
+<script setup lang="ts">
+import { computed, ref } from '@unionschool/campus-framework'
+import { Search } from '@lucide/vue'
+import { ns, cx } from '@/core/namespace'
+import CaAvatar from '../../../base/avatar/index'
+import CaCheckbox from '../../../form/checkbox/index'
+import CaEmpty from '../../../feedback/empty/index'
+import { filterStudents, isSelected, toggleMultiple, toggleSingle } from './core'
+import type { StudentOption, StudentValue } from './core'
+
+defineOptions({ name: 'CaStudentPicker' })
+
+const props = withDefaults(defineProps<{
+  modelValue?: StudentValue
+  /** 候选学生，由业务方通过接口获取后传入，组件不访问接口 */
+  students?: StudentOption[]
+  multiple?: boolean
+  placeholder?: string
+  loading?: boolean
+  /** 取消选择时是否抛出空数组/undefined */
+  clearable?: boolean
+}>(), {
+  students: () => [],
+  placeholder: '搜索姓名、学号或班级',
+  loading: false,
+  clearable: true,
+})
+
+const emit = defineEmits<{
+  'update:modelValue': [value: StudentValue]
+  change: [value: StudentValue, students: StudentOption[]]
+  search: [keyword: string]
+}>()
+
+const keyword = ref('')
+const visible = computed(() => filterStudents(props.students, keyword.value))
+const selectedIds = computed(() => {
+  if (props.modelValue === undefined || props.modelValue === '') return [] as string[]
+  return Array.isArray(props.modelValue) ? props.modelValue : [props.modelValue as string]
+})
+
+function pick(student: StudentOption) {
+  if (props.multiple) {
+    const next = toggleMultiple(props.modelValue, student.id)
+    emit('update:modelValue', next)
+    emit('change', next, props.students.filter(item => next.includes(item.id)))
+    return
+  }
+  const next = toggleSingle(props.modelValue, student.id)
+  emit('update:modelValue', next)
+  emit('change', next, props.students.filter(item => item.id === next))
+}
+
+function onSearch() {
+  emit('search', keyword.value)
+}
+</script>
+
+<template>
+  <div :class="ns('student-picker')">
+    <div :class="ns('student-picker', 'search')">
+      <Search :size="15" aria-hidden="true" />
+      <input
+        v-model="keyword"
+        :class="ns('student-picker', 'input')"
+        type="search"
+        :placeholder="placeholder"
+        aria-label="搜索学生"
+        @input="onSearch"
+      />
+      <span v-if="selectedIds.length" :class="ns('student-picker', 'count')">已选 {{ selectedIds.length }}</span>
+    </div>
+
+    <div :class="ns('student-picker', 'list')" role="listbox" :aria-multiselectable="multiple">
+      <div v-if="loading" :class="ns('student-picker', 'loading')">加载中…</div>
+      <button
+        v-for="student in visible"
+        v-else
+        :key="student.id"
+        :class="cx(ns('student-picker', 'item'), isSelected(modelValue, student.id) ? ns('student-picker', 'item', 'selected') : '')"
+        type="button"
+        role="option"
+        :aria-selected="isSelected(modelValue, student.id)"
+        @click="pick(student)"
+      >
+        <CaCheckbox v-if="multiple" :model-value="isSelected(modelValue, student.id)" tabindex="-1" />
+        <CaAvatar :src="student.avatar" :name="student.name" size="small" />
+        <span :class="ns('student-picker', 'info')">
+          <b>{{ student.name }}</b>
+          <small>{{ [student.className, student.studentNo && `学号 ${student.studentNo}`].filter(Boolean).join(' · ') }}</small>
+        </span>
+      </button>
+      <CaEmpty v-if="!visible.length && !loading" title="没有匹配的学生" description="换个关键词试试" size="small" />
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.ca-student-picker { display: grid; gap: var(--ca-space-3); }
+.ca-student-picker__search { display: flex; align-items: center; gap: var(--ca-space-2); padding: 0 var(--ca-space-3); min-height: var(--ca-control-height-md); border: 1px solid var(--ca-border-color); border-radius: var(--ca-radius-md); color: var(--ca-text-placeholder); }
+.ca-student-picker__search:focus-within { border-color: var(--ca-color-primary); box-shadow: 0 0 0 3px var(--ca-color-primary-soft); }
+.ca-student-picker__input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ca-text-primary); font-size: var(--ca-font-size-md); outline: none; }
+.ca-student-picker__count { flex-shrink: 0; color: var(--ca-color-primary); font-size: var(--ca-font-size-xs); }
+.ca-student-picker__list { display: grid; gap: 2px; max-height: 320px; overflow-y: auto; }
+.ca-student-picker__item { display: flex; align-items: center; gap: var(--ca-space-2); width: 100%; padding: var(--ca-space-2); border-radius: var(--ca-radius-md); text-align: left; }
+.ca-student-picker__item:hover { background: var(--ca-surface-sunken); }
+.ca-student-picker__item--selected { background: var(--ca-color-primary-soft); }
+.ca-student-picker__info { display: grid; gap: 2px; min-width: 0; }
+.ca-student-picker__info b { color: var(--ca-text-primary); font-size: var(--ca-font-size-md); font-weight: 500; }
+.ca-student-picker__info small { color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
+.ca-student-picker__loading { padding: var(--ca-space-5); color: var(--ca-text-secondary); font-size: var(--ca-font-size-sm); text-align: center; }
+</style>

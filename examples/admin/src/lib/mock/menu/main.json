@@ -1,0 +1,104 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    {
+      "id": "school",
+      "label": "学校概况",
+      "icon": "LayoutDashboard",
+      "order": 1,
+      "children": [
+        { "id": "school-home", "label": "我的首页", "path": "/home", "icon": "LayoutDashboard" },
+        { "id": "school-student", "label": "学生管理", "path": "/school/students", "icon": "GraduationCap" },
+        { "id": "school-component", "label": "组件总览", "path": "/school/components", "icon": "FileText" }
+      ]
+    },
+    {
+      "id": "org",
+      "label": "组织与人员",
+      "icon": "UsersRound",
+      "order": 2,
+      "children": [
+        { "id": "org-student-file", "label": "学生档案", "icon": "UsersRound" },
+        { "id": "org-staff", "label": "教职工管理", "icon": "Briefcase" },
+        { "id": "org-grade-class", "label": "班级与年级", "icon": "School" }
+      ]
+    },
+    {
+      "id": "teach",
+      "label": "教学教务",
+      "icon": "BookOpen",
+      "order": 3,
+      "children": [
+        {
+          "id": "teach-course",
+          "label": "课程管理",
+          "children": [
+            { "id": "teach-course-schedule", "label": "课程表", "path": "/teach/course/schedule" },
+            { "id": "teach-course-setting", "label": "课程设置" },
+            { "id": "teach-course-textbook", "label": "教材管理" }
+          ]
+        },
+        { "id": "teach-smart", "label": "智能排课" },
+        { "id": "teach-score", "label": "成绩管理" }
+      ]
+    },
+    {
+      "id": "attend",
+      "label": "考勤管理",
+      "icon": "ClipboardCheck",
+      "badge": "4",
+      "order": 4,
+      "children": [
+        {
+          "id": "attend-today",
+          "label": "今日考勤",
+          "icon": "ClipboardCheck",
+          "children": [
+            { "id": "attend-today-student", "label": "学生考勤" },
+            { "id": "attend-today-teacher", "label": "教师考勤" }
+          ]
+        },
+        { "id": "attend-stat", "label": "考勤统计", "icon": "CalendarCheck" },
+        { "id": "attend-leave", "label": "请假审批", "icon": "FileCheck2" }
+      ]
+    },
+    {
+      "id": "pay",
+      "label": "校园服务",
+      "icon": "WalletCards",
+      "order": 5,
+      "children": [
+        { "id": "pay-card", "label": "校园一卡通", "icon": "CreditCard" },
+        { "id": "pay-canteen", "label": "智慧食堂", "icon": "Utensils" },
+        { "id": "pay-laundry", "label": "智能洗衣", "icon": "WashingMachine" }
+      ]
+    },
+    {
+      "id": "secure",
+      "label": "校园安全",
+      "icon": "ShieldCheck",
+      "badge": "2",
+      "order": 6,
+      "children": [
+        {
+          "id": "secure-access",
+          "label": "门禁管理",
+          "icon": "DoorOpen",
+          "children": [
+            { "id": "secure-access-records", "label": "人员通行记录" },
+            { "id": "secure-access-devices", "label": "门禁设备" }
+          ]
+        },
+        { "id": "secure-inspection", "label": "设备巡检", "icon": "ScanLine" }
+      ]
+    },
+    {
+      "id": "device",
+      "label": "设备中心",
+      "icon": "MonitorSmartphone",
+      "order": 7
+    }
+  ],
+  "count": 7
+}

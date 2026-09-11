@@ -1,5 +1,6 @@
 node_modules/
 dist/
+site-dist/
 *.tsbuildinfo
 .DS_Store
 .idea/
@@ -9,6 +10,10 @@ dist/
 !.env.example
 *.tgz
 npm-debug.log*
-
+pnpm-debug.log*
+# 演示站上传脚本与日志，仅保留在本机
+up
+coscli.log
+coscli_output/
 # 内部规划、讨论稿和未公开设计资料，仅保留在本机
 .local-docs/

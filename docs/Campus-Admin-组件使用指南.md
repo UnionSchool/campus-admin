@@ -1,0 +1,249 @@
+# Campus Admin 组件使用指南
+
+> 适用包：`@unionschool/campus-admin`（含 `campus-ui` 全部组件）
+> 示例代码可直接运行：`examples/admin/src/views/StudentListView.vue`
+
+## 1. 两种使用方式
+
+### 方式一：插件全局注册（推荐用于后台项目）
+
+在入口安装一次，所有页面直接写标签，无需在页面里 import。
+
+```ts
+// main.ts
+import { createApp } from 'vue'
+import { createCampusAdmin } from '@unionschool/campus-admin'
+import '@unionschool/campus-admin/style.css'
+import App from './App.vue'
+
+const app = createApp(App)
+
+// createCampusAdmin 返回的是 Vue 插件，已内置注册全部 Ca 组件
+app.use(createCampusAdmin({
+  name: '众校通智慧校园',
+  version: '1.0.0',
+  config: { request: { baseURL: '/api' } },
+}))
+
+app.mount('#app')
+```
+
+页面里直接用组件：
+
+```vue
+<template>
+  <CaPageHeader title="学生管理">
+    <CaButton type="primary">新增学生</CaButton>
+  </CaPageHeader>
+
+  <CaTable :columns="columns" :data="rows" />
+
+  <!-- 消息提示是命令式的，必须在模板里挂一个容器 -->
+  <CaToastContainer />
+</template>
+```
+
+优点：不用逐个维护 import，模板干净。
+
+### 方式二：按需 import（推荐用于组件数量少的页面或独立包）
+
+```vue
+<script setup lang="ts">
+import { CaButton, CaTable, toast } from '@unionschool/campus-admin'
+import type { TableColumn } from '@unionschool/campus-admin'
+</script>
+```
+
+优点：类型提示精确，构建时可以只打包用到的组件。此时**不需要** `app.use`。
+
+两种方式可以混用：全局注册后仍可显式 import，用于取 `toast`、`ns` 这类非组件导出。
+
+## 2. 样式与主题
+
+组件样式必须引入一次：
+
+```ts
+import '@unionschool/campus-admin/style.css'
+```
+
+换肤只覆盖 CSS 变量，不改组件样式：
+
+```css
+:root {
+  --ca-color-primary: #1f6fe0;
+  --ca-radius-md: 6px;
+  --ca-control-height-md: 32px;
+}
+```
+
+完整变量清单见 `packages/campus-ui/src/styles/token.css`。
+
+## 3. Table 用法
+
+### 3.1 最小可用
+
+```vue
+<script setup lang="ts">
+import type { TableColumn } from '@unionschool/campus-admin'
+
+interface StudentRow {
+  id: string
+  name: string
+  className: string
+}
+
+const columns: TableColumn<StudentRow>[] = [
+  { key: 'name', title: '姓名' },
+  { key: 'className', title: '班级' },
+]
+
+const rows: StudentRow[] = [
+  { id: '20260301', name: '李思远', className: '高二（3）班' },
+]
+</script>
+
+<template>
+  <CaTable :columns="columns" :data="rows" row-key="id" />
+</template>
+```
+
+要点：
+
+- `columns` 是普通数组，可以来自配置中心或后端下发。
+- `rowKey` 必填字符串字段或函数，不要用数组索引。
+- 未声明 `render` 时按 `key` 直接取字段值。
+
+### 3.2 列配置字段
+
+```ts
+interface TableColumn<T = unknown> {
+  key: string
+  title: string
+  width?: number | string
+  align?: 'left' | 'center' | 'right'
+  numeric?: boolean          // 数字列自动右对齐
+  sortable?: boolean         // 显示排序按钮
+  render?: (row: T, index: number) => string
+}
+```
+
+### 3.3 自定义单元格
+
+插槽名统一为 `cell-<列 key>`，参数是 `row / index / column`：
+
+```vue
+<CaTable :columns="columns" :data="rows" row-key="id">
+  <template #cell-name="{ row }">
+    <CaAvatar :name="row.name" size="small" />
+    <b>{{ row.name }}</b>
+  </template>
+
+  <template #cell-status="{ row }">
+    <CaAttendanceBadge :status="row.status" size="small" />
+  </template>
+
+  <template #cell-balance="{ row }">
+    ¥ {{ row.balance.toFixed(2) }}
+  </template>
+</CaTable>
+```
+
+泛型会跟着 `columns` 的类型推导，`row` 自动获得具体字段，无需类型断言。
+
+### 3.4 排序
+
+默认非受控：点表头即在组件内部排序，按 `asc → desc → 取消` 循环。
+
+需要服务端排序时改为受控：
+
+```vue
+<CaTable
+  :columns="columns"
+  :data="rows"
+  :sort-key="sortKey"
+  :sort-order="sortOrder"
+  @sort="(key, order) => { sortKey = key; sortOrder = order; load() }"
+/>
+```
+
+### 3.5 加载、空态与点击行
+
+```vue
+<CaTable
+  :columns="columns"
+  :data="rows"
+  row-key="id"
+  stripe
+  compact
+  :loading="loading"
+  empty-text="没有符合条件的学生"
+  @row-click="handleRowClick"
+>
+  <template #empty>自定义空态内容</template>
+</CaTable>
+```
+
+### 3.6 配合分页
+
+```vue
+<CaPagination
+  v-model:current="page"
+  v-model:page-size="pageSize"
+  :total="total"
+  @change="load"
+/>
+```
+
+## 4. 一个完整页面的写法
+
+`examples/admin/src/views/StudentListView.vue` 是最接近真实业务的参考，结构是：
+
+```text
+页面组件（只负责渲染）
+├── CaPageHeader      标题 + 操作按钮
+├── CaSearchForm      查询条件
+├── CaTable           列表 + 自定义单元格
+└── CaPagination      分页
+
+useStudentList()（负责逻辑）
+├── query / page / pageSize 状态
+├── queryStudents()         纯函数过滤，可单测
+└── search() / reset() / load()  数据加载，可替换为接口调用
+```
+
+这样拆分的好处：查询逻辑不依赖 Vue，能直接单测；换成真实接口只改 `load()`。
+
+## 5. 组件清单
+
+| 分类 | 组件 |
+| --- | --- |
+| 基础 | CaButton、CaIcon、CaTag、CaAvatar |
+| 表单 | CaInput、CaTextarea、CaSelect、CaCheckbox、CaSwitch |
+| 数据 | CaTable、CaPagination、CaStatistic |
+| 反馈 | CaEmpty、CaSkeleton、CaProgress、CaModal、CaDrawer、CaToastContainer + toast |
+| 导航布局 | CaBreadcrumb、CaPageHeader、CaSearchForm |
+| 校园业务 | CaStudentPicker、CaClassTree、CaAttendanceBadge |
+| 课表日程 | CaWeeklyTimetable、CaDailyAgenda |
+
+全部组件在 `examples/admin` 的「组件总览」页有可交互演示。
+
+## 6. 常用 Props 速查
+
+```text
+CaButton        type / variant(solid|outline|text) / size / loading / disabled / block / iconOnly
+CaTable         columns / data / rowKey / loading / stripe / compact / sortKey / sortOrder
+CaPagination    current / pageSize / total / showTotal
+CaSearchForm    columns / visibleCount / loading，事件 search / reset
+CaModal         v-model / title / width / maskClosable / escClosable / showFooter
+CaDrawer        v-model / title / placement(right|left|bottom) / size
+CaStudentPicker v-model / students / multiple / loading
+CaClassTree     v-model / grades / searchable
+CaAttendanceBadge status(normal|late|leave|absent|early|unknown) / time / size
+```
+
+## 7. 注意事项
+
+- `toast` 是命令式 API，需要页面挂载 `<CaToastContainer />` 才能看到消息。
+- 组件不访问接口。数据通过 Props 传入、事件抛出，接口层由业务或后续 `request` 模块负责。
+- 所有 ID 使用字符串，避免后端大整数在 JavaScript 中丢失精度。
+- 组件样式使用 `ca-` 前缀与 CSS 变量，业务侧覆盖请用变量，不要写深层选择器。

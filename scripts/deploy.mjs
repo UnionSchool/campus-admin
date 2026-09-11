@@ -1,22 +1,26 @@
+/**
+ * 统一发布脚本：校验 → 打标签 → 推送 GitHub / Gitee → 发布 npm 包。
+ *
+ * Monorepo 采用统一版本号：根 package.json 的 version 是唯一版本来源，
+ * 各子包必须与根版本一致，避免出现 campus-core 与 campus-admin 版本漂移。
+ */
 import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 
 const dryRun = process.argv.includes('--dry-run')
 const allowedArgs = new Set(['--dry-run'])
-const unknownArgs = process.argv.slice(2).filter((arg) => !allowedArgs.has(arg))
+const unknownArgs = process.argv.slice(2).filter(arg => !allowedArgs.has(arg))
 
 if (unknownArgs.length > 0) {
   fail(`不支持的参数：${unknownArgs.join(', ')}`)
 }
 
-const packageJson = JSON.parse(
-  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
-)
-const packageName = packageJson.name
-const version = packageJson.version
+const rootPackage = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
+const version = rootPackage.version
 const tag = `v${version}`
 const branch = 'main'
 const remotes = ['origin', 'gitee']
+const publishable = ['campus-core', 'campus-framework', 'campus-ui', 'campus-admin']
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -25,14 +29,8 @@ function run(command, args, options = {}) {
     stdio: options.capture ? 'pipe' : 'inherit',
   })
 
-  if (options.allowFailure) {
-    return result
-  }
-
-  if (result.status !== 0) {
-    fail(`命令执行失败：${command} ${args.join(' ')}`)
-  }
-
+  if (options.allowFailure) return result
+  if (result.status !== 0) fail(`命令执行失败：${command} ${args.join(' ')}`)
   return options.capture ? result.stdout.trim() : ''
 }
 
@@ -45,79 +43,62 @@ function ensure(condition, message) {
   if (!condition) fail(message)
 }
 
+function packageVersion(name) {
+  const file = new URL(`../packages/${name}/package.json`, import.meta.url)
+  return JSON.parse(readFileSync(file, 'utf8')).version
+}
+
 function remoteTagExists(remote) {
   const result = run('git', ['ls-remote', '--exit-code', '--tags', remote, `refs/tags/${tag}`], {
     allowFailure: true,
     capture: true,
   })
-
   if (result.status === 0) return true
   if (result.status === 2) return false
   fail(`无法检查 ${remote} 的标签，请检查网络和仓库权限`)
 }
 
-console.log(`准备发布 ${packageName}@${version}${dryRun ? '（演练模式）' : ''}`)
+console.log(`准备发布 Campus ${version}${dryRun ? '（演练模式）' : ''}`)
 
-const currentBranch = run('git', ['branch', '--show-current'], { capture: true })
-ensure(currentBranch === branch, `必须在 ${branch} 分支发布，当前分支为 ${currentBranch || 'detached HEAD'}`)
-
-const worktree = run('git', ['status', '--porcelain'], { capture: true })
-ensure(worktree === '', '工作区存在未提交变更，请先提交或暂存处理')
-
-for (const remote of remotes) {
-  const remoteUrl = run('git', ['remote', 'get-url', remote], { capture: true })
-  ensure(remoteUrl !== '', `缺少远程仓库 ${remote}`)
-  run('git', ['fetch', remote, branch, '--tags'])
-
-  const ancestor = run(
-    'git',
-    ['merge-base', '--is-ancestor', `${remote}/${branch}`, 'HEAD'],
-    { allowFailure: true, capture: true },
-  )
-  ensure(
-    ancestor.status === 0,
-    `${remote}/${branch} 包含本地没有的提交，请先同步并解决分支差异`,
-  )
-
-  ensure(!remoteTagExists(remote), `${remote} 已存在标签 ${tag}`)
-}
-
-const localTag = run('git', ['tag', '--list', tag], { capture: true })
-ensure(localTag === '', `本地已存在标签 ${tag}`)
-
-const npmVersion = run('npm', ['view', `${packageName}@${version}`, 'version'], {
-  allowFailure: true,
-  capture: true,
+publishable.forEach((name) => {
+  const current = packageVersion(name)
+  ensure(current === version, `包 ${name} 的版本为 ${current}，与根版本 ${version} 不一致`)
 })
 
-if (npmVersion.status === 0 && npmVersion.stdout.trim() === version) {
-  fail(`npm 已存在 ${packageName}@${version}，请先更新版本号`)
+const currentBranch = run('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { capture: true })
+if (!dryRun && currentBranch !== branch) {
+  fail(`当前分支为 ${currentBranch}，请切换到 ${branch} 后再发布`)
 }
 
-// npm 查询不存在版本时通常返回 E404；其他错误可能是网络或鉴权异常。
-ensure(
-  npmVersion.status !== 0 && /E404|404 Not Found/.test(npmVersion.stderr),
-  '无法确认 npm 版本是否可发布，请检查 npm 登录状态和网络',
-)
+const status = run('git', ['status', '--porcelain'], { capture: true })
+if (status) {
+  fail('工作区存在未提交改动，请先提交或暂存')
+}
 
-run('npm', ['run', 'check'])
+if (remoteTagExists('origin') || remoteTagExists('gitee')) {
+  fail(`标签 ${tag} 已存在，请先更新版本号`)
+}
 
+console.log('执行发布门禁检查...')
+if (!dryRun) run('npm', ['run', 'check'])
+
+console.log(`创建标签 ${tag} 并推送...`)
 if (dryRun) {
-  console.log('\n演练完成：所有发布前检查均已通过，未推送代码、标签或发布 npm。')
+  remotes.forEach(remote => console.log(`[dry-run] git push ${remote} ${branch} 与 ${tag}`))
+  publishable.forEach(name => console.log(`[dry-run] pnpm --filter @unionschool/${name} publish`))
+  console.log('演练完成，未产生任何提交、标签或发布。')
   process.exit(0)
 }
 
-// origin 标签最后推送，因为它会触发 GitHub Actions 发布 npm。
-run('git', ['push', 'origin', branch])
-run('git', ['push', 'gitee', branch])
-run('git', ['tag', '-a', tag, '-m', tag])
-run('git', ['push', 'gitee', tag])
-run('git', ['push', 'origin', tag])
+run('git', ['tag', '-a', tag, '-m', `Campus ${version}`])
+remotes.forEach((remote) => {
+  run('git', ['push', remote, branch])
+  run('git', ['push', remote, tag])
+})
 
-console.log(`
-发布已触发：
-- GitHub main 和 ${tag} 已推送
-- Gitee main 和 ${tag} 已推送
-- npm 将由 GitHub Actions 发布 ${packageName}@${version}
+console.log('发布 npm 包（统一版本号）...')
+publishable.forEach((name) => {
+  run('pnpm', ['--filter', `@unionschool/${name}`, 'publish', '--access', 'public'])
+})
 
-请在 GitHub Actions 中确认发布任务成功。`)
+console.log(`发布完成：Campus ${version}`)
