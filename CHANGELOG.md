@@ -34,6 +34,7 @@
 - 组件库对 vue-i18n 保持零依赖：`useLocale()` 注入不到实例时回退到内置 zh-CN 默认实例，单独使用组件库也能正常工作。
 - `campus-admin` 的 `createCampusAdmin` 支持 `config.locale`（locale / fallbackLocale / messages），业务词条与组件库内置词条深合并到同一个语言实例。
 - 新增 `scripts/check-locale.mjs` 并纳入 `npm run check`：校验代码用到的词条键都存在、各语言词条数量一致。
+- 修复 `pnpm run deploy` 本地发布：本地环境无法生成 npm provenance（会报 `Automatic provenance generation not supported for provider: null`），改为本地自动加 `--no-provenance`、CI 中保留；预发布版本自动带 `--tag next`；新增 `--skip-npm` 用于只推标签、交给 `release.yml` 在 CI 里发布。
 - 新增《Campus Admin 国际化使用指南》（`docs/Campus-Admin-国际化使用指南.md`）：一分钟接入、词条与命名空间约定、取词切换到日期数字格式化、后端文案对接、与 vue-i18n 共存、加语言与排查清单；组件使用指南、根 README、组件库 README 与示例 README 均已加入入口。
 - 组件导出统一 `Ca` 前缀：`CaDailyAgenda`、`CaWeeklyTimetable`。
 - 组件逻辑与渲染分离，日期计算、过滤与文案抽到纯 TypeScript 的 `core.ts`。
