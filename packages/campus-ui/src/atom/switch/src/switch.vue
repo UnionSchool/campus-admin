@@ -46,33 +46,4 @@ function toggle() {
   </button>
 </template>
 
-<style scoped>
-.ca-switch { display: inline-flex; align-items: center; gap: var(--ca-space-2); font-size: var(--ca-font-size-sm); color: var(--ca-text-secondary); }
-.ca-switch--disabled { opacity: .55; cursor: not-allowed; }
-.ca-switch__track {
-  position: relative;
-  display: block;
-  width: 34px;
-  height: 19px;
-  border-radius: var(--ca-radius-full);
-  background: var(--ca-color-neutral-300);
-  transition: background-color .2s;
-}
-.ca-switch__thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: var(--ca-shadow-sm);
-  transition: transform .2s;
-}
-.ca-switch--on .ca-switch__track { background: var(--ca-color-primary); }
-.ca-switch--on .ca-switch__thumb { transform: translateX(15px); }
-.ca-switch:focus-visible .ca-switch__track { outline: 2px solid var(--ca-color-primary); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) {
-  .ca-switch__track, .ca-switch__thumb { transition: none; }
-}
-</style>
+<style src="../style/index.css"></style>

@@ -41,6 +41,4 @@ const style = computed(() => ({ color: props.color ?? undefined }))
   </span>
 </template>
 
-<style scoped>
-.ca-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; line-height: 1; }
-</style>
+<style src="../style/index.css"></style>

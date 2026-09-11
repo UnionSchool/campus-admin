@@ -73,21 +73,4 @@ defineExpose({ expand: () => { expanded.value = true }, collapse: () => { expand
   </form>
 </template>
 
-<style scoped>
-.ca-search-form { display: grid; gap: var(--ca-space-3); padding: var(--ca-space-4); border: 1px solid var(--ca-border-color); border-radius: var(--ca-radius-lg); background: var(--ca-surface-card); }
-.ca-search-form__fields { display: grid; gap: var(--ca-space-3); }
-.ca-search-form__fields--collapsed { overflow: hidden; }
-.ca-search-form__actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--ca-space-2); }
-.ca-search-form__button { display: inline-flex; align-items: center; gap: 5px; min-height: var(--ca-control-height-md); padding: 0 var(--ca-space-3); border: 1px solid var(--ca-border-color); border-radius: var(--ca-radius-md); background: var(--ca-surface-card); color: var(--ca-text-regular); font-size: var(--ca-font-size-sm); }
-.ca-search-form__button:hover:not(:disabled) { border-color: var(--ca-color-primary); color: var(--ca-color-primary); }
-.ca-search-form__button--primary { border-color: transparent; background: var(--ca-color-primary); color: white; }
-.ca-search-form__button--primary:hover:not(:disabled) { background: var(--ca-color-primary-hover); color: white; }
-.ca-search-form__button:disabled { opacity: .6; cursor: not-allowed; }
-.ca-search-form__toggle { display: inline-flex; align-items: center; gap: 3px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-sm); }
-.ca-search-form__toggle:hover { color: var(--ca-color-primary); }
-.ca-search-form__arrow { transition: transform .16s; }
-.ca-search-form__arrow--open { transform: rotate(180deg); }
-@media (prefers-reduced-motion: reduce) {
-  .ca-search-form__arrow { transition: none; }
-}
-</style>
+<style src="../style/index.css"></style>

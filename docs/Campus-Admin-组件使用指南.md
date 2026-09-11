@@ -1,7 +1,7 @@
 # Campus Admin 组件使用指南
 
 > 适用包：`@unionschool/campus-admin`（含 `campus-ui` 全部组件）
-> 示例代码可直接运行：`examples/admin/src/views/StudentListView.vue`
+> 示例代码可直接运行：`examples/admin/src/pages/school/students.vue`
 
 ## 1. 两种使用方式
 
@@ -65,6 +65,39 @@ import type { TableColumn } from '@unionschool/campus-admin'
 ```ts
 import '@unionschool/campus-admin/style.css'
 ```
+
+### 明暗主题
+
+```ts
+import { setTheme } from '@unionschool/campus-admin'
+
+setTheme('dark')   // 暗色
+setTheme('light')  // 亮色
+setTheme('auto')   // 跟随系统
+```
+
+`setTheme` 只在 `<html>` 上写 `data-ca-theme`，也可以直接写静态属性：
+
+```html
+<html data-ca-theme="dark">
+```
+
+### 学校品牌色
+
+学校品牌不是蓝色时，只给一个主色即可，其余色阶自动推导：
+
+```ts
+import { setPrimaryColor, resetPrimaryColor } from '@unionschool/campus-admin'
+
+setPrimaryColor('#7c4dff')   // 紫色品牌
+resetPrimaryColor()          // 恢复默认蓝色
+```
+
+自动推导的内容：hover / active、浅色底、浅底上的文字色、实心背景上的文字色。
+品牌色过浅（例如黄色）时会自动加深文字、并把实心按钮的文字换成深色，
+保证对比度达标。按钮、标签、菜单选中态、表格悬停、课表色块会一起生效。
+
+### 覆盖 Token
 
 换肤只覆盖 CSS 变量，不改组件样式：
 
@@ -196,7 +229,7 @@ interface TableColumn<T = unknown> {
 
 ## 4. 一个完整页面的写法
 
-`examples/admin/src/views/StudentListView.vue` 是最接近真实业务的参考，结构是：
+`examples/admin/src/pages/school/students.vue` 是最接近真实业务的参考，结构是：
 
 ```text
 页面组件（只负责渲染）
@@ -215,15 +248,15 @@ useStudentList()（负责逻辑）
 
 ## 5. 组件清单
 
-| 分类 | 组件 |
+组件按 **原子 / 基础 / 功能** 三层组织：
+
+| 层 | 组件 |
 | --- | --- |
-| 基础 | CaButton、CaIcon、CaTag、CaAvatar |
-| 表单 | CaInput、CaTextarea、CaSelect、CaCheckbox、CaSwitch |
-| 数据 | CaTable、CaPagination、CaStatistic |
-| 反馈 | CaEmpty、CaSkeleton、CaProgress、CaModal、CaDrawer、CaToastContainer + toast |
-| 导航布局 | CaBreadcrumb、CaPageHeader、CaSearchForm |
-| 校园业务 | CaStudentPicker、CaClassTree、CaAttendanceBadge |
-| 课表日程 | CaWeeklyTimetable、CaDailyAgenda |
+| 原子 `src/atom` | CaButton、CaIcon、CaTag、CaAvatar、CaInput、CaTextarea、CaSelect、CaCheckbox、CaSwitch、CaProgress、CaAttendanceBadge |
+| 基础 `src/base` | CaTable、CaPagination、CaStatistic、CaModal、CaDrawer、CaEmpty、CaSkeleton、CaToastContainer + toast、CaBreadcrumb、CaSideMenu、CaPageHeader、CaSearchForm、CaClassTree |
+| 功能 `src/feature` | CaStudentPicker、CaWeeklyTimetable、CaDailyAgenda |
+
+判据：元素级是原子；区域级、能直接布局的是基础；多个组件组合起来完成一件事、且不区分角色的是功能。
 
 全部组件在 `examples/admin` 的「组件总览」页有可交互演示。
 

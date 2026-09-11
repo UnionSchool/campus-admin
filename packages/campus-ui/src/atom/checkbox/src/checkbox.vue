@@ -56,26 +56,4 @@ function toggle() {
   </label>
 </template>
 
-<style scoped>
-.ca-checkbox { display: inline-flex; align-items: center; gap: var(--ca-space-2); cursor: pointer; font-size: var(--ca-font-size-md); color: var(--ca-text-regular); }
-.ca-checkbox--disabled { cursor: not-allowed; color: var(--ca-text-placeholder); }
-.ca-checkbox__input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-.ca-checkbox__box {
-  display: grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  border: 1px solid var(--ca-border-color-strong);
-  border-radius: var(--ca-radius-sm);
-  background: var(--ca-surface-card);
-  color: transparent;
-  transition: background-color .18s, border-color .18s, color .18s;
-}
-.ca-checkbox:hover:not(.ca-checkbox--disabled) .ca-checkbox__box { border-color: var(--ca-color-primary); }
-.ca-checkbox--checked .ca-checkbox__box,
-.ca-checkbox--indeterminate .ca-checkbox__box { border-color: var(--ca-color-primary); background: var(--ca-color-primary); color: white; }
-.ca-checkbox--disabled .ca-checkbox__box { background: var(--ca-surface-sunken); }
-.ca-checkbox__input:focus-visible + .ca-checkbox__box { outline: 2px solid var(--ca-color-primary); outline-offset: 2px; }
-.ca-checkbox__label { line-height: 1.4; }
-</style>
+<style src="../style/index.css"></style>

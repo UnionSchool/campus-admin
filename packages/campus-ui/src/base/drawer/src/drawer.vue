@@ -16,7 +16,7 @@
 import { nextTick, onBeforeUnmount, ref, watch } from '@unionschool/campus-framework'
 import { X } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
-import { focusableElements, lockScroll, unlockScroll } from '../../../feedback/modal/src/core'
+import { focusableElements, lockScroll, unlockScroll } from '../../modal/src/core'
 
 defineOptions({ name: 'CaDrawer' })
 
@@ -97,25 +97,4 @@ onBeforeUnmount(() => {
   </Teleport>
 </template>
 
-<style scoped>
-.ca-drawer { position: fixed; inset: 0; z-index: var(--ca-z-index-modal); background: var(--ca-overlay-color); }
-.ca-drawer__panel { position: absolute; display: flex; flex-direction: column; max-width: 100vw; max-height: 100dvh; background: var(--ca-surface-card); box-shadow: var(--ca-shadow-lg); }
-.ca-drawer__panel.right { top: 0; right: 0; bottom: 0; }
-.ca-drawer__panel.left { top: 0; left: 0; bottom: 0; }
-.ca-drawer__panel.bottom { left: 0; right: 0; bottom: 0; border-radius: var(--ca-radius-xl) var(--ca-radius-xl) 0 0; }
-.ca-drawer__header { display: flex; align-items: center; justify-content: space-between; gap: var(--ca-space-4); padding: var(--ca-space-4) var(--ca-space-5); border-bottom: 1px solid var(--ca-border-color); }
-.ca-drawer__title { color: var(--ca-text-primary); font-size: var(--ca-font-size-lg); font-weight: 600; }
-.ca-drawer__close { color: var(--ca-text-placeholder); }
-.ca-drawer__close:hover { color: var(--ca-text-regular); }
-.ca-drawer__body { flex: 1; padding: var(--ca-space-5); overflow-y: auto; color: var(--ca-text-regular); font-size: var(--ca-font-size-md); }
-.ca-drawer__footer { display: flex; justify-content: flex-end; gap: var(--ca-space-3); padding: var(--ca-space-4) var(--ca-space-5); border-top: 1px solid var(--ca-border-color); }
-.ca-drawer-enter-active, .ca-drawer-leave-active { transition: opacity .2s; }
-.ca-drawer-enter-active .ca-drawer__panel, .ca-drawer-leave-active .ca-drawer__panel { transition: transform .24s ease; }
-.ca-drawer-enter-from, .ca-drawer-leave-to { opacity: 0; }
-.ca-drawer-enter-from .ca-drawer__panel.right, .ca-drawer-leave-to .ca-drawer__panel.right { transform: translateX(100%); }
-.ca-drawer-enter-from .ca-drawer__panel.left, .ca-drawer-leave-to .ca-drawer__panel.left { transform: translateX(-100%); }
-.ca-drawer-enter-from .ca-drawer__panel.bottom, .ca-drawer-leave-to .ca-drawer__panel.bottom { transform: translateY(100%); }
-@media (prefers-reduced-motion: reduce) {
-  .ca-drawer-enter-active, .ca-drawer-leave-active, .ca-drawer-enter-active .ca-drawer__panel, .ca-drawer-leave-active .ca-drawer__panel { transition: none; }
-}
-</style>
+<style src="../style/index.css"></style>

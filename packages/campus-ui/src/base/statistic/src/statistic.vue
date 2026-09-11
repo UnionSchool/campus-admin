@@ -45,16 +45,4 @@ const display = computed(() => (typeof props.value === 'number' ? props.value.to
   </div>
 </template>
 
-<style scoped>
-.ca-statistic { display: grid; gap: 4px; }
-.ca-statistic--card { padding: var(--ca-space-4); border-radius: var(--ca-radius-lg); background: var(--ca-surface-card); box-shadow: var(--ca-shadow-md); }
-.ca-statistic__label { color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
-.ca-statistic__value { color: var(--ca-text-primary); font-size: 22px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
-.ca-statistic__value small { margin-left: 4px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); font-weight: 400; }
-.ca-statistic__hint { color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); }
-.ca-statistic--primary .ca-statistic__value { color: var(--ca-color-primary); }
-.ca-statistic--success .ca-statistic__value { color: var(--ca-color-success); }
-.ca-statistic--warning .ca-statistic__value { color: var(--ca-color-warning); }
-.ca-statistic--danger .ca-statistic__value { color: var(--ca-color-danger); }
-.ca-statistic--info .ca-statistic__value { color: var(--ca-color-info); }
-</style>
+<style src="../style/index.css"></style>

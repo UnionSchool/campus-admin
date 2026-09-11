@@ -45,23 +45,4 @@ const className = computed(() => cx(
   </span>
 </template>
 
-<style scoped>
-.ca-avatar {
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  width: 32px;
-  height: 32px;
-  background: var(--ca-color-primary-soft);
-  color: var(--ca-color-primary);
-  font-size: var(--ca-font-size-md);
-  user-select: none;
-}
-.ca-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.ca-avatar--circle { border-radius: var(--ca-radius-full); }
-.ca-avatar--square { border-radius: var(--ca-radius-md); }
-.ca-avatar--small { width: 24px; height: 24px; font-size: var(--ca-font-size-sm); }
-.ca-avatar--large { width: 44px; height: 44px; font-size: var(--ca-font-size-lg); }
-.ca-avatar__text { line-height: 1; }
-</style>
+<style src="../style/index.css"></style>

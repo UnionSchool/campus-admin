@@ -57,39 +57,4 @@ const className = computed(() => cx(
   </div>
 </template>
 
-<style scoped>
-.ca-textarea {
-  position: relative;
-  display: block;
-  border: 1px solid var(--ca-border-color);
-  border-radius: var(--ca-radius-md);
-  background: var(--ca-surface-card);
-  transition: border-color .18s, box-shadow .18s;
-}
-.ca-textarea--focused { border-color: var(--ca-color-primary); box-shadow: 0 0 0 3px var(--ca-color-primary-soft); }
-.ca-textarea--invalid { border-color: var(--ca-color-danger); }
-.ca-textarea--disabled { background: var(--ca-surface-sunken); }
-.ca-textarea__inner {
-  display: block;
-  width: 100%;
-  padding: var(--ca-space-2) var(--ca-space-3);
-  border: 0;
-  border-radius: inherit;
-  background: transparent;
-  color: var(--ca-text-primary);
-  font-family: inherit;
-  font-size: var(--ca-font-size-md);
-  line-height: var(--ca-line-height);
-  resize: vertical;
-  outline: none;
-}
-.ca-textarea__inner::placeholder { color: var(--ca-text-placeholder); }
-.ca-textarea__count {
-  position: absolute;
-  right: var(--ca-space-2);
-  bottom: var(--ca-space-1);
-  color: var(--ca-text-placeholder);
-  font-size: var(--ca-font-size-xs);
-  font-variant-numeric: tabular-nums;
-}
-</style>
+<style src="../style/index.css"></style>

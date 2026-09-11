@@ -97,39 +97,4 @@ defineExpose({ focus })
   </div>
 </template>
 
-<style scoped>
-.ca-input {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ca-space-2);
-  width: 100%;
-  min-height: var(--ca-control-height-md);
-  padding: 0 var(--ca-space-3);
-  border: 1px solid var(--ca-border-color);
-  border-radius: var(--ca-radius-md);
-  background: var(--ca-surface-card);
-  color: var(--ca-text-secondary);
-  transition: border-color .18s, box-shadow .18s, background-color .18s;
-}
-.ca-input--focused { border-color: var(--ca-color-primary); box-shadow: 0 0 0 3px var(--ca-color-primary-soft); }
-.ca-input--invalid { border-color: var(--ca-color-danger); }
-.ca-input--invalid.ca-input--focused { box-shadow: 0 0 0 3px var(--ca-color-red-50); }
-.ca-input--disabled { background: var(--ca-surface-sunken); color: var(--ca-text-placeholder); cursor: not-allowed; }
-.ca-input--small { min-height: var(--ca-control-height-sm); padding: 0 var(--ca-space-2); }
-.ca-input--large { min-height: var(--ca-control-height-lg); padding: 0 var(--ca-space-4); }
-.ca-input__inner {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ca-text-primary);
-  font-size: var(--ca-font-size-md);
-  outline: none;
-}
-.ca-input--large .ca-input__inner { font-size: var(--ca-font-size-lg); }
-.ca-input__inner::placeholder { color: var(--ca-text-placeholder); }
-.ca-input__inner:disabled { cursor: not-allowed; }
-.ca-input__affix { display: inline-flex; align-items: center; flex-shrink: 0; }
-.ca-input__clear { display: inline-flex; align-items: center; flex-shrink: 0; color: var(--ca-text-placeholder); }
-.ca-input__clear:hover { color: var(--ca-text-secondary); }
-</style>
+<style src="../style/index.css"></style>

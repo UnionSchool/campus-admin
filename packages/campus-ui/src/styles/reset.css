@@ -1,0 +1,19 @@
+/**
+ * 组件库不接管业务项目的全局样式：不重置标签、不改字体、不动 box-sizing。
+ *
+ * 这里只把“浏览器默认不继承字体”的表单类元素拉回继承，
+ * 并且全部限定在组件自己的类名上，不会影响业务页面里同名的原生元素。
+ */
+.ca-button,
+.ca-input__inner,
+.ca-textarea__inner,
+.ca-select__trigger,
+.ca-modal__button,
+.ca-search-form__button,
+.ca-side-menu__item,
+.ca-pagination__item,
+.ca-pagination__arrow,
+.ca-class-tree__node button,
+.ca-student-picker__item {
+  font-family: inherit;
+}

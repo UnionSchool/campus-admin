@@ -1,0 +1,192 @@
+/**
+ * 设计 Token 契约。
+ *
+ * 分层：基础色（palette）→ 品牌色（primary 派生）→ 语义色（surface / text / tone）。
+ * 使用方式：
+ *
+ * 1. 明暗主题：由 core/theme.ts 的 setTheme() 在 <html> 上写 data-ca-theme，
+ *    本文件用 `:root[data-ca-theme='dark']` 覆盖语义与中性色，组件样式不需要分主题。
+ * 2. 品牌换色：setPrimaryColor('#7c4dff') 会运行时改写下面标注“可运行时覆盖”的变量，
+ *    hover / active / soft / text / contrast 全部按主色重新推导，业务只给一个色值。
+ * 3. 业务项目也可以直接覆盖任意变量换肤，不需要改组件样式，更不要写深层选择器。
+ *
+ * 命名约定：
+ * - `--ca-color-{tone}`        实心填充与描边色
+ * - `--ca-color-{tone}-soft`   浅色底（标签、提示、选中态）
+ * - `--ca-color-{tone}-text`   浅色底上的文字与图标色
+ * - `--ca-color-primary-contrast` 主色实心背景上的文字色
+ */
+:root {
+  color-scheme: light;
+
+  /* ---------- 基础色 palette ---------- */
+  --ca-color-blue-50: #eef6ff;
+  --ca-color-blue-100: #d9ecff;
+  --ca-color-blue-300: #8cc4ff;
+  --ca-color-blue-500: #0878fa;
+  --ca-color-blue-600: #0069e0;
+  --ca-color-blue-700: #0052b3;
+  --ca-color-green-50: #e9faf3;
+  --ca-color-green-500: #2fae85;
+  --ca-color-orange-50: #fff4e8;
+  --ca-color-orange-500: #f59a3c;
+  --ca-color-red-50: #ffefef;
+  --ca-color-red-500: #e8695f;
+  --ca-color-amber-50: #fff8e6;
+  --ca-color-amber-500: #d9a02b;
+  --ca-color-cyan-50: #e9f9fb;
+  --ca-color-cyan-500: #2ab5c9;
+  --ca-color-neutral-0: #ffffff;
+  --ca-color-neutral-50: #f7fafd;
+  --ca-color-neutral-100: #eef3f9;
+  --ca-color-neutral-200: #e2eaf3;
+  --ca-color-neutral-300: #cbd7e3;
+  --ca-color-neutral-500: #8496a6;
+  --ca-color-neutral-700: #4d5f70;
+  --ca-color-neutral-900: #253444;
+
+  /* ---------- 品牌色（可运行时覆盖，其余值由主色推导） ---------- */
+  --ca-color-primary: var(--ca-color-blue-500);
+  --ca-color-primary-hover: var(--ca-color-blue-600);
+  --ca-color-primary-active: var(--ca-color-blue-700);
+  --ca-color-primary-soft: var(--ca-color-blue-50);
+  --ca-color-primary-text: var(--ca-color-blue-500);
+  /** 主色实心背景上的文字色，浅色品牌色会自动切换为深色文字 */
+  --ca-color-primary-contrast: #ffffff;
+
+  /* ---------- 语义色（填充与边框） ---------- */
+  --ca-color-success: var(--ca-color-green-500);
+  --ca-color-warning: var(--ca-color-orange-500);
+  --ca-color-danger: var(--ca-color-red-500);
+  --ca-color-info: var(--ca-color-cyan-500);
+
+  /* ---------- 语义色的浅底与前景 ---------- */
+  --ca-color-success-soft: var(--ca-color-green-50);
+  --ca-color-success-text: var(--ca-color-green-500);
+  --ca-color-warning-soft: var(--ca-color-orange-50);
+  --ca-color-warning-text: #c47a35;
+  --ca-color-danger-soft: var(--ca-color-red-50);
+  --ca-color-danger-text: var(--ca-color-red-500);
+  --ca-color-info-soft: var(--ca-color-cyan-50);
+  --ca-color-info-text: var(--ca-color-cyan-500);
+  --ca-color-neutral-soft: var(--ca-color-neutral-100);
+  --ca-color-neutral-text: #6b7c8d;
+
+  /* ---------- 文本与背景 ---------- */
+  --ca-text-primary: #2f3d4c;
+  --ca-text-regular: #4d5f70;
+  --ca-text-secondary: #7b8b9c;
+  --ca-text-placeholder: #a9b6c4;
+  --ca-text-inverse: #ffffff;
+  --ca-surface-page: #f4f7fb;
+  --ca-surface-card: #ffffff;
+  --ca-surface-sunken: #f7fafd;
+  --ca-border-color: #e6eef6;
+  --ca-border-color-strong: #d3dfeb;
+  --ca-overlay-color: #16283d66;
+
+  /* ---------- 骨架屏 ---------- */
+  --ca-skeleton-base: var(--ca-color-neutral-100);
+  --ca-skeleton-highlight: #f4f8fc;
+
+  /* ---------- 圆角 ---------- */
+  --ca-radius-sm: 4px;
+  --ca-radius-md: 8px;
+  --ca-radius-lg: 12px;
+  --ca-radius-xl: 16px;
+  --ca-radius-full: 999px;
+
+  /* ---------- 阴影 ---------- */
+  --ca-shadow-sm: 0 1px 3px #1e3d5f12;
+  --ca-shadow-md: 0 2px 10px #1e3d5f14;
+  --ca-shadow-lg: 0 12px 30px #1e3d5f1f;
+  --ca-shadow-popup: 0 8px 28px #1e3d5f26;
+
+  /* ---------- 间距（4 的倍数） ---------- */
+  --ca-space-1: 4px;
+  --ca-space-2: 8px;
+  --ca-space-3: 12px;
+  --ca-space-4: 16px;
+  --ca-space-5: 20px;
+  --ca-space-6: 24px;
+  --ca-space-8: 32px;
+
+  /* ---------- 字体 ---------- */
+  --ca-font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --ca-font-size-xs: 11px;
+  --ca-font-size-sm: 12px;
+  --ca-font-size-md: 14px;
+  --ca-font-size-lg: 16px;
+  --ca-font-size-xl: 20px;
+  --ca-line-height: 1.6;
+
+  /* ---------- 控件尺寸 ---------- */
+  --ca-control-height-sm: 28px;
+  --ca-control-height-md: 34px;
+  --ca-control-height-lg: 42px;
+
+  /* ---------- 层级 ---------- */
+  --ca-z-index-dropdown: 1000;
+  --ca-z-index-modal: 2000;
+  --ca-z-index-message: 3000;
+
+  /* ---------- 兼容旧演示样式（跟随主题，不再写死颜色） ---------- */
+  --blue: var(--ca-color-primary);
+  --border: var(--ca-border-color);
+  --muted: var(--ca-text-secondary);
+  --tone: var(--ca-color-primary);
+  --tint: var(--ca-color-primary-soft);
+}
+
+/**
+ * 暗色主题。
+ *
+ * 组件样式只引用语义变量，因此这里覆盖一次即可全局生效；
+ * 中性 palette 在暗色下同步翻转，用于开关轨道、骨架屏、表头等中性底色。
+ */
+:root[data-ca-theme='dark'] {
+  color-scheme: dark;
+
+  --ca-color-neutral-50: #131920;
+  --ca-color-neutral-100: #1e2731;
+  --ca-color-neutral-200: #27313c;
+  --ca-color-neutral-300: #3a4552;
+  --ca-color-neutral-500: #5b6774;
+  --ca-color-neutral-700: #39434f;
+  --ca-color-neutral-900: #e6edf5;
+
+  --ca-surface-page: #0d1117;
+  --ca-surface-card: #161b22;
+  --ca-surface-sunken: #1c232c;
+  --ca-border-color: #262d36;
+  --ca-border-color-strong: #333c47;
+  --ca-overlay-color: #000000b3;
+
+  --ca-text-primary: #e6edf5;
+  --ca-text-regular: #c2cede;
+  --ca-text-secondary: #8b9aac;
+  --ca-text-placeholder: #6b7a8b;
+
+  --ca-shadow-sm: 0 1px 3px #0000004d;
+  --ca-shadow-md: 0 2px 10px #0000005c;
+  --ca-shadow-lg: 0 12px 30px #00000073;
+  --ca-shadow-popup: 0 8px 28px #00000080;
+
+  /* 品牌色在暗色下默认仍取蓝色，浅底改为深底、前景提亮 */
+  --ca-color-primary-soft: #14304d;
+  --ca-color-primary-text: #74b0ff;
+
+  --ca-color-success-soft: #102e27;
+  --ca-color-success-text: #4fd0a5;
+  --ca-color-warning-soft: #33260f;
+  --ca-color-warning-text: #e8b070;
+  --ca-color-danger-soft: #351a1c;
+  --ca-color-danger-text: #ff8f88;
+  --ca-color-info-soft: #0f2f34;
+  --ca-color-info-text: #56ccdd;
+  --ca-color-neutral-soft: #202b36;
+  --ca-color-neutral-text: #a7b4c2;
+
+  --ca-skeleton-base: #1e2731;
+  --ca-skeleton-highlight: #2b3644;
+}

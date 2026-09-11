@@ -7,12 +7,16 @@
  * Props：keyword 过滤关键词
  * 事件：detail(title, description)
  * 逻辑：createWeekDates、filterAgenda、moveWeek、formatAgendaDate、describeAgendaItem
+ *
+ * 数据说明：当前为演示数据，真实项目需要把日程数据改为通过 Props 注入。
+ * 颜色全部走 Token，自动支持暗色主题与自定义品牌色。
 -->
 
 <script setup lang="ts">
 import { CalendarDays, ChevronLeft, ChevronRight } from '@lucide/vue'
 // 只依赖 framework 适配层与纯逻辑 core，不直接依赖 Vue
 import { computed, ref } from '@unionschool/campus-framework'
+import { ns, cx } from '@/core/namespace'
 import {
   createWeekDates,
   describeAgendaItem,
@@ -55,27 +59,62 @@ function showDetail(item: (typeof demoAgendaItems)[number]) {
 </script>
 
 <template>
-  <section class="surface agenda-panel">
-    <div class="section-head"><h3>日程安排</h3><button class="text-link" @click="backToToday">回到今天</button></div>
-    <div class="agenda-month"><span>{{ monthLabel }}</span><span class="subtle">{{ visibleItems.length }} 项日程</span></div>
-    <div class="date-strip">
-      <button class="date-arrow" aria-label="日程上一周" @click="changeWeek(-1)"><ChevronLeft :size="14" /></button>
+  <section :class="ns('agenda')">
+    <div :class="ns('agenda', 'head')">
+      <h3 :class="ns('agenda', 'heading')">日程安排</h3>
+      <button :class="ns('agenda', 'link')" type="button" @click="backToToday">回到今天</button>
+    </div>
+
+    <div :class="ns('agenda', 'month')">
+      <span>{{ monthLabel }}</span>
+      <span :class="ns('agenda', 'count')">{{ visibleItems.length }} 项日程</span>
+    </div>
+
+    <div :class="ns('agenda', 'strip')">
+      <button :class="ns('agenda', 'arrow')" type="button" aria-label="日程上一周" @click="changeWeek(-1)"><ChevronLeft :size="14" /></button>
       <button
         v-for="cell in cells"
         :key="cell.date.toISOString()"
-        :class="['date-item', { selected: cell.date.getTime() === selectedDate.getTime(), 'has-event': cell.hasEvent }]"
+        type="button"
+        :class="cx(
+          ns('agenda', 'date'),
+          cell.date.getTime() === selectedDate.getTime() ? ns('agenda', 'date', 'selected') : '',
+          cell.hasEvent ? ns('agenda', 'date', 'has-event') : '',
+        )"
         :aria-pressed="cell.date.getTime() === selectedDate.getTime()"
         :aria-label="`${cell.date.getMonth() + 1}月${cell.date.getDate()}日日程`"
         @click="selectCell(cell)"
       >
         <small>{{ cell.label }}</small><b>{{ cell.date.getDate().toString().padStart(2, '0') }}</b>
       </button>
-      <button class="date-arrow" aria-label="日程下一周" @click="changeWeek(1)"><ChevronRight :size="14" /></button>
+      <button :class="ns('agenda', 'arrow')" type="button" aria-label="日程下一周" @click="changeWeek(1)"><ChevronRight :size="14" /></button>
     </div>
-    <div class="agenda-list" aria-live="polite">
-      <div v-for="item in visibleItems" :key="item.title" :class="['agenda-item', { completed: item.done }]"><span class="timeline-dot"></span><div class="agenda-card"><div><time>{{ item.time }}</time><button @click="showDetail(item)">详情</button></div><p>{{ item.title }}</p><small>{{ item.location }}</small></div></div>
-      <div v-if="!visibleItems.length" class="agenda-empty"><CalendarDays :size="30" /><p>{{ props.keyword ? '未找到相关日程' : '当天暂无日程' }}</p><span>{{ props.keyword ? '试试其他关键词' : '可以查看其他日期的安排' }}</span></div>
+
+    <div :class="ns('agenda', 'list')" aria-live="polite">
+      <div
+        v-for="item in visibleItems"
+        :key="item.title"
+        :class="cx(ns('agenda', 'item'), item.done ? ns('agenda', 'item', 'done') : '')"
+      >
+        <span :class="ns('agenda', 'dot')"></span>
+        <div :class="ns('agenda', 'card')">
+          <div :class="ns('agenda', 'card-head')">
+            <time :class="ns('agenda', 'time')">{{ item.time }}</time>
+            <button :class="ns('agenda', 'detail')" type="button" @click="showDetail(item)">详情</button>
+          </div>
+          <p>{{ item.title }}</p>
+          <small :class="ns('agenda', 'location')">{{ item.location }}</small>
+        </div>
+      </div>
+      <div v-if="!visibleItems.length" :class="ns('agenda', 'empty')">
+        <CalendarDays :size="30" />
+        <p>{{ props.keyword ? '未找到相关日程' : '当天暂无日程' }}</p>
+        <span>{{ props.keyword ? '试试其他关键词' : '可以查看其他日期的安排' }}</span>
+      </div>
     </div>
-    <div class="agenda-footer"><i></i>所有日程均为本地演示数据</div>
+
+    <div :class="ns('agenda', 'footer')"><i></i>所有日程均为本地演示数据</div>
   </section>
 </template>
+
+<style src="../style/index.css"></style>

@@ -16,9 +16,9 @@
 import { computed, ref } from '@unionschool/campus-framework'
 import { Search } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
-import CaAvatar from '../../../base/avatar/index'
-import CaCheckbox from '../../../form/checkbox/index'
-import CaEmpty from '../../../feedback/empty/index'
+import CaAvatar from '../../../atom/avatar/index'
+import CaCheckbox from '../../../atom/checkbox/index'
+import CaEmpty from '../../../base/empty/index'
 import { filterStudents, isSelected, toggleMultiple, toggleSingle } from './core'
 import type { StudentOption, StudentValue } from './core'
 
@@ -109,18 +109,4 @@ function onSearch() {
   </div>
 </template>
 
-<style scoped>
-.ca-student-picker { display: grid; gap: var(--ca-space-3); }
-.ca-student-picker__search { display: flex; align-items: center; gap: var(--ca-space-2); padding: 0 var(--ca-space-3); min-height: var(--ca-control-height-md); border: 1px solid var(--ca-border-color); border-radius: var(--ca-radius-md); color: var(--ca-text-placeholder); }
-.ca-student-picker__search:focus-within { border-color: var(--ca-color-primary); box-shadow: 0 0 0 3px var(--ca-color-primary-soft); }
-.ca-student-picker__input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ca-text-primary); font-size: var(--ca-font-size-md); outline: none; }
-.ca-student-picker__count { flex-shrink: 0; color: var(--ca-color-primary); font-size: var(--ca-font-size-xs); }
-.ca-student-picker__list { display: grid; gap: 2px; max-height: 320px; overflow-y: auto; }
-.ca-student-picker__item { display: flex; align-items: center; gap: var(--ca-space-2); width: 100%; padding: var(--ca-space-2); border-radius: var(--ca-radius-md); text-align: left; }
-.ca-student-picker__item:hover { background: var(--ca-surface-sunken); }
-.ca-student-picker__item--selected { background: var(--ca-color-primary-soft); }
-.ca-student-picker__info { display: grid; gap: 2px; min-width: 0; }
-.ca-student-picker__info b { color: var(--ca-text-primary); font-size: var(--ca-font-size-md); font-weight: 500; }
-.ca-student-picker__info small { color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
-.ca-student-picker__loading { padding: var(--ca-space-5); color: var(--ca-text-secondary); font-size: var(--ca-font-size-sm); text-align: center; }
-</style>
+<style src="../style/index.css"></style>

@@ -1,9 +1,11 @@
 # @unionschool/campus-ui
 
-面向智慧校园后台管理场景的 Vue 3 组件库，共 26 个组件。
+面向智慧校园后台管理场景的 Vue 3 组件库，共 27 个组件，分**原子 / 基础 / 功能**三层。
 
 组件只负责渲染，**不访问接口、不读全局状态**：数据通过 Props 传入，
 用户操作通过 Events 抛出。
+
+主题支持**明暗两套配色**与**运行时品牌换色**：一行代码切换暗色，一行代码把主色换成学校品牌色。
 
 ## 安装
 
@@ -41,38 +43,50 @@ createApp(App).use(CampusUI).mount('#app')
 
 ## 组件清单
 
-| 分类 | 组件 | 用途 |
-| --- | --- | --- |
-| 基础 | `CaButton` | 操作按钮 |
-| | `CaIcon` | 单色图标容器 |
-| | `CaTag` | 状态/分类标记 |
-| | `CaAvatar` | 用户/学生头像 |
-| 表单 | `CaInput` | 单行文本 |
-| | `CaTextarea` | 多行文本 |
-| | `CaSelect` | 下拉选择 |
-| | `CaCheckbox` | 勾选 / 半选 |
-| | `CaSwitch` | 开关 |
-| 数据 | `CaTable` | 数据表格（泛型 + 排序） |
-| | `CaPagination` | 分页 |
-| | `CaStatistic` | 指标数值 |
-| 反馈 | `CaModal` | 对话框 |
-| | `CaDrawer` | 抽屉 |
-| | `CaEmpty` | 空状态 |
-| | `CaSkeleton` | 骨架屏 |
-| | `CaProgress` | 进度条 |
-| | `CaToastContainer` + `toast` | 轻提示（挂载式） |
-| 导航 | `CaBreadcrumb` | 面包屑 |
-| | `CaSideMenu` | 侧边多级菜单 |
-| 布局 | `CaPageHeader` | 页面标题栏 |
-| | `CaSearchForm` | 查询表单 |
-| 校园业务 | `CaStudentPicker` | 学生选择器 |
-| | `CaClassTree` | 年级班级树 |
-| | `CaAttendanceBadge` | 考勤状态标签 |
-| 课表日程 | `CaWeeklyTimetable` | 课程表 |
-| | `CaDailyAgenda` | 日程安排 |
+**原子（`src/atom`）** —— 元素级，不占版面，多为其他组件的零件
+
+| 组件 | 用途 |
+| --- | --- |
+| `CaButton` | 操作按钮 |
+| `CaIcon` | 单色图标容器 |
+| `CaTag` | 状态/分类标记 |
+| `CaAvatar` | 用户/学生头像 |
+| `CaInput` | 单行文本 |
+| `CaTextarea` | 多行文本 |
+| `CaSelect` | 下拉选择 |
+| `CaCheckbox` | 勾选 / 半选 |
+| `CaSwitch` | 开关 |
+| `CaProgress` | 进度条 / 环形进度 |
+| `CaAttendanceBadge` | 考勤状态标签 |
+
+**基础（`src/base`）** —— 区域级，可直接放进页面布局，与业务无关
+
+| 组件 | 用途 |
+| --- | --- |
+| `CaTable` | 数据表格（泛型 + 排序） |
+| `CaPagination` | 分页 |
+| `CaStatistic` | 指标数值 |
+| `CaModal` | 对话框 |
+| `CaDrawer` | 抽屉 |
+| `CaEmpty` | 空状态 |
+| `CaSkeleton` | 骨架屏 |
+| `CaToastContainer` + `toast` | 轻提示（挂载式） |
+| `CaBreadcrumb` | 面包屑 |
+| `CaSideMenu` | 侧边多级菜单 |
+| `CaPageHeader` | 页面标题栏 |
+| `CaSearchForm` | 查询表单 |
+| `CaClassTree` | 年级班级树 |
+
+**功能（`src/feature`）** —— 多个组件组合起来完成一件事，不区分角色
+
+| 组件 | 用途 |
+| --- | --- |
+| `CaStudentPicker` | 学生选择器 |
+| `CaWeeklyTimetable` | 课程表 |
+| `CaDailyAgenda` | 日程安排 |
 
 每个组件的 `.vue` 文件顶部都有使用说明（用法、Props、事件、插槽），
-分类目录下另有详细文档：`src/components/<分类>/README.md`。
+各层的判据与目录约定见 `src/atom/README.md`、`src/base/README.md`、`src/feature/README.md`。
 
 ## 快速示例
 
@@ -185,13 +199,47 @@ ca.toast('保存成功')        // 与 toast.success('保存成功') 等效
 import '@unionschool/campus-ui/style.css'
 ```
 
-### 覆盖 Token（推荐换肤方式）
+### 明暗主题
+
+```ts
+import { setTheme } from '@unionschool/campus-ui'
+
+setTheme('dark')   // 暗色
+setTheme('light')  // 亮色
+setTheme('auto')   // 跟随系统，系统切换时自动更新
+```
+
+`setTheme` 只是在 `<html>` 上写 `data-ca-theme`，配色由 Token 决定，
+组件样式不区分主题。也可以不用 JS，直接写 `<html data-ca-theme="dark">`。
+
+### 品牌换色（运行时）
+
+学校品牌色不是蓝色时，只给一个主色，其余色阶自动推导：
+
+```ts
+import { setPrimaryColor, resetPrimaryColor } from '@unionschool/campus-ui'
+
+setPrimaryColor('#7c4dff')   // 紫色品牌
+resetPrimaryColor()          // 恢复默认蓝色
+```
+
+会自动生成并写入以下变量：`--ca-color-primary`、`-hover`、`-active`、`-soft`、`-text`、`-contrast`。
+推导规则是：
+
+- 亮色下 hover / active 变深，暗色下变亮；
+- `-soft` 浅底跟随当前主题（亮色混合白、暗色混合深色卡片底）；
+- `-text` 用于浅底上的文字，品牌色过浅时自动加深（暗色下自动提亮）以满足对比度；
+- `-contrast` 是主色实心背景上的文字色，浅色品牌（如黄色）自动切换成深色文字。
+
+因此按钮、标签、菜单选中态、表格悬停、课表色块都会一起跟着变，不需要逐个组件配置。
+
+### 覆盖 Token（更细粒度的换肤）
 
 所有视觉都走 CSS 变量，改变量即可换肤，**不要写深层选择器覆盖**：
 
 ```css
 :root {
-  --ca-color-primary: #1f6fe0;    /* 主题色 */
+  --ca-color-primary: #1f6fe0;    /* 主色（等价于 setPrimaryColor） */
   --ca-color-success: #2fae85;
   --ca-radius-md: 6px;
   --ca-control-height-md: 32px;   /* 控件高度，可用于调整信息密度 */
@@ -201,9 +249,9 @@ import '@unionschool/campus-ui/style.css'
 Token 分三层，完整清单见 `src/styles/token.css`：
 
 ```text
-基础 Token      --ca-color-blue-500、--ca-space-4、--ca-radius-md
-语义 Token      --ca-color-primary、--ca-text-secondary、--ca-surface-card
-组件 Token      --ca-button-primary-bg 等（按需补充）
+基础色 palette   --ca-color-blue-500、--ca-space-4、--ca-radius-md
+品牌与语义色     --ca-color-primary-soft、--ca-color-success-text、--ca-text-secondary、--ca-surface-card
+主题覆盖         :root[data-ca-theme='dark'] 覆盖语义与中性色
 ```
 
 层级 Token 同样可覆盖：`--ca-z-index-modal`、`--ca-z-index-message`。
@@ -216,26 +264,30 @@ Token 分三层，完整清单见 `src/styles/token.css`：
 修饰符    .ca-button--primary
 ```
 
-业务侧覆盖样式时优先用 CSS 变量；确实需要覆盖类名时，注意组件样式是 scoped。
+组件样式是统一 `ca-` 前缀的 BEM 类名，**只有 Token 是稳定的公共契约**，类名不作为 API。
+业务侧换肤请覆盖变量，不要写深层选择器。
 
 ## 开发约定
 
-每个组件目录的结构：
+三层目录结构（`atom` / `base` / `feature`），每个组件目录结构统一：
 
 ```text
-src/components/<分类>/<组件名>/
+src/<层>/<组件名>/
 ├── src/core.ts           纯逻辑，不依赖 Vue（可单测）
 ├── src/data.ts           演示数据（可选）
 ├── src/<组件名>.vue      只做渲染
-├── style/index.css       样式（可选，简单组件写在 .vue 里）
+├── style/index.css       样式，由 .vue 通过 `<style src="../style/index.css">` 引入
 └── index.ts              导出 Ca 前缀组件与公开类型
 ```
 
-新增组件后需要在 `src/index.ts` 登记，`campus-admin` 会自动纳入全局注册表。
+新增组件只需要改两处：组件自己的目录 + 所属层的 `index.ts`（加入命名导出与注册表）。
+顶层 `builtInComponents` 由三层合并，`campus-admin` 会自动纳入全局注册表。
 
 ## 设计要求
 
 - **组件不访问接口**。数据用 Props 传入，操作通过 Events 抛出。
+- **不写死颜色**。任何颜色都必须来自 `--ca-*` Token，否则暗色主题与品牌换色会失效。
+- 主色实心背景上的文字用 `--ca-color-primary-contrast`，保证浅色品牌色下仍可读。
 - 所有 ID 使用字符串，避免后端大整数在 JavaScript 中丢失精度。
 - 覆盖默认、Hover、Focus、Disabled、Loading、Empty、Error 等状态。
 - 弹层类组件需处理 Esc 关闭、焦点锁定、关闭后焦点恢复。

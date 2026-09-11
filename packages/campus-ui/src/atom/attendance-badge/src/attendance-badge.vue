@@ -46,15 +46,4 @@ const className = computed(() => cx(
   </span>
 </template>
 
-<style scoped>
-.ca-attendance-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: var(--ca-radius-full); font-size: var(--ca-font-size-sm); line-height: 1.6; white-space: nowrap; }
-.ca-attendance-badge--small { padding: 0 6px; font-size: var(--ca-font-size-xs); }
-.ca-attendance-badge__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.ca-attendance-badge__time { margin-left: 2px; opacity: .75; font-variant-numeric: tabular-nums; }
-.ca-attendance-badge--success { background: var(--ca-color-green-50); color: var(--ca-color-success); }
-.ca-attendance-badge--warning { background: var(--ca-color-orange-50); color: #c47a35; }
-.ca-attendance-badge--danger { background: var(--ca-color-red-50); color: var(--ca-color-danger); }
-.ca-attendance-badge--info { background: var(--ca-color-cyan-50); color: var(--ca-color-info); }
-.ca-attendance-badge--primary { background: var(--ca-color-primary-soft); color: var(--ca-color-primary); }
-.ca-attendance-badge--neutral { background: var(--ca-color-neutral-100); color: var(--ca-text-secondary); }
-</style>
+<style src="../style/index.css"></style>

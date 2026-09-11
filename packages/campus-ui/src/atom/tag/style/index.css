@@ -1,0 +1,44 @@
+/**
+ * 标签样式。
+ * 浅底用 `--ca-color-{tone}-soft`，文字用 `--ca-color-{tone}-text`，
+ * 暗色主题下由 Token 自动换成深底与提亮前景。
+ */
+.ca-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ca-space-1);
+  padding: 0 var(--ca-space-2);
+  min-height: 22px;
+  border: 1px solid transparent;
+  border-radius: var(--ca-radius-sm);
+  font-size: var(--ca-font-size-sm);
+  line-height: 1;
+  white-space: nowrap;
+}
+.ca-tag--small { min-height: 18px; padding: 0 var(--ca-space-1); font-size: var(--ca-font-size-xs); }
+.ca-tag__dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.ca-tag__close { display: inline-flex; align-items: center; margin-right: -3px; padding: 0; border: 0; background: transparent; color: currentColor; opacity: .7; }
+.ca-tag__close:hover { opacity: 1; }
+
+.ca-tag--soft.ca-tag--primary { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); }
+.ca-tag--soft.ca-tag--success { background: var(--ca-color-success-soft); color: var(--ca-color-success-text); }
+.ca-tag--soft.ca-tag--warning { background: var(--ca-color-warning-soft); color: var(--ca-color-warning-text); }
+.ca-tag--soft.ca-tag--danger { background: var(--ca-color-danger-soft); color: var(--ca-color-danger-text); }
+.ca-tag--soft.ca-tag--info { background: var(--ca-color-info-soft); color: var(--ca-color-info-text); }
+.ca-tag--soft.ca-tag--neutral { background: var(--ca-color-neutral-soft); color: var(--ca-color-neutral-text); }
+
+.ca-tag--solid { color: var(--ca-text-inverse); }
+.ca-tag--solid.ca-tag--primary { background: var(--ca-color-primary); color: var(--ca-color-primary-contrast); }
+.ca-tag--solid.ca-tag--success { background: var(--ca-color-success); }
+.ca-tag--solid.ca-tag--warning { background: var(--ca-color-warning); }
+.ca-tag--solid.ca-tag--danger { background: var(--ca-color-danger); }
+.ca-tag--solid.ca-tag--info { background: var(--ca-color-info); }
+.ca-tag--solid.ca-tag--neutral { background: var(--ca-color-neutral-500); }
+
+.ca-tag--outline { background: transparent; }
+.ca-tag--outline.ca-tag--primary { border-color: var(--ca-color-primary); color: var(--ca-color-primary-text); }
+.ca-tag--outline.ca-tag--success { border-color: var(--ca-color-success); color: var(--ca-color-success-text); }
+.ca-tag--outline.ca-tag--warning { border-color: var(--ca-color-warning); color: var(--ca-color-warning-text); }
+.ca-tag--outline.ca-tag--danger { border-color: var(--ca-color-danger); color: var(--ca-color-danger-text); }
+.ca-tag--outline.ca-tag--info { border-color: var(--ca-color-info); color: var(--ca-color-info-text); }
+.ca-tag--outline.ca-tag--neutral { border-color: var(--ca-border-color-strong); color: var(--ca-color-neutral-text); }

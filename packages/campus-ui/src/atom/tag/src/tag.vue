@@ -55,44 +55,4 @@ const className = computed(() => cx(
   </span>
 </template>
 
-<style scoped>
-.ca-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ca-space-1);
-  padding: 0 var(--ca-space-2);
-  min-height: 22px;
-  border: 1px solid transparent;
-  border-radius: var(--ca-radius-sm);
-  font-size: var(--ca-font-size-sm);
-  line-height: 1;
-  white-space: nowrap;
-}
-.ca-tag--small { min-height: 18px; padding: 0 var(--ca-space-1); font-size: var(--ca-font-size-xs); }
-.ca-tag__dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-.ca-tag__close { display: inline-flex; align-items: center; margin-right: -3px; color: currentColor; opacity: .7; }
-.ca-tag__close:hover { opacity: 1; }
-
-.ca-tag--soft.ca-tag--primary { background: var(--ca-color-primary-soft); color: var(--ca-color-primary); }
-.ca-tag--soft.ca-tag--success { background: var(--ca-color-green-50); color: var(--ca-color-success); }
-.ca-tag--soft.ca-tag--warning { background: var(--ca-color-orange-50); color: #c47a35; }
-.ca-tag--soft.ca-tag--danger { background: var(--ca-color-red-50); color: var(--ca-color-danger); }
-.ca-tag--soft.ca-tag--info { background: var(--ca-color-cyan-50); color: var(--ca-color-info); }
-.ca-tag--soft.ca-tag--neutral { background: var(--ca-color-neutral-100); color: var(--ca-text-secondary); }
-
-.ca-tag--solid { color: var(--ca-text-inverse); }
-.ca-tag--solid.ca-tag--primary { background: var(--ca-color-primary); }
-.ca-tag--solid.ca-tag--success { background: var(--ca-color-success); }
-.ca-tag--solid.ca-tag--warning { background: var(--ca-color-warning); }
-.ca-tag--solid.ca-tag--danger { background: var(--ca-color-danger); }
-.ca-tag--solid.ca-tag--info { background: var(--ca-color-info); }
-.ca-tag--solid.ca-tag--neutral { background: var(--ca-color-neutral-500); }
-
-.ca-tag--outline { background: transparent; }
-.ca-tag--outline.ca-tag--primary { border-color: var(--ca-color-primary); color: var(--ca-color-primary); }
-.ca-tag--outline.ca-tag--success { border-color: var(--ca-color-success); color: var(--ca-color-success); }
-.ca-tag--outline.ca-tag--warning { border-color: var(--ca-color-warning); color: #c47a35; }
-.ca-tag--outline.ca-tag--danger { border-color: var(--ca-color-danger); color: var(--ca-color-danger); }
-.ca-tag--outline.ca-tag--info { border-color: var(--ca-color-info); color: var(--ca-color-info); }
-.ca-tag--outline.ca-tag--neutral { border-color: var(--ca-border-color-strong); color: var(--ca-text-secondary); }
-</style>
+<style src="../style/index.css"></style>

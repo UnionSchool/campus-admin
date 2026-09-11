@@ -13,11 +13,12 @@
 
 <script setup lang="ts">
 import { ArrowLeft } from '@lucide/vue'
-import { ns } from '@/core/namespace'
+import { computed } from '@unionschool/campus-framework'
+import { ns, cx } from '@/core/namespace'
 
 defineOptions({ name: 'CaPageHeader' })
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   title: string
   description?: string
   /** 显示返回按钮，点击抛出 back 事件 */
@@ -29,7 +30,14 @@ withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{ back: [] }>()
-const className = ns('page-header')
+/**
+ * bordered 用类名表达而不是属性选择器：
+ * defineProps 声明的 prop 不会作为属性落到根元素上，用 [bordered='true'] 匹配不到。
+ */
+const className = computed(() => cx(
+  ns('page-header'),
+  props.bordered ? ns('page-header', undefined, 'bordered') : '',
+))
 </script>
 
 <template>
@@ -45,14 +53,4 @@ const className = ns('page-header')
   </header>
 </template>
 
-<style scoped>
-.ca-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ca-space-4); padding-bottom: var(--ca-space-4); }
-.ca-page-header[bordered='true'] { border-bottom: 1px solid var(--ca-border-color); }
-.ca-page-header__main { display: flex; align-items: center; gap: var(--ca-space-3); min-width: 0; }
-.ca-page-header__back { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--ca-border-color); border-radius: var(--ca-radius-md); color: var(--ca-text-secondary); }
-.ca-page-header__back:hover { border-color: var(--ca-color-primary); color: var(--ca-color-primary); }
-.ca-page-header__text { min-width: 0; }
-.ca-page-header__title { color: var(--ca-text-primary); font-size: var(--ca-font-size-xl); font-weight: 600; line-height: 1.3; }
-.ca-page-header__desc { margin-top: 2px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-sm); }
-.ca-page-header__actions { display: flex; align-items: center; gap: var(--ca-space-2); flex-shrink: 0; }
-</style>
+<style src="../style/index.css"></style>

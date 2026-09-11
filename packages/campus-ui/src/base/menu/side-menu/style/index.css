@@ -1,0 +1,85 @@
+/**
+ * 侧边菜单样式。
+ *
+ * 布局约定：
+ * - 一级：[占位箭头 14px][图标 16px][文字][角标]
+ * - 二级：无箭头列，[图标 14px][文字][角标]，整体向右缩进
+ * - 箭头占位保留，保证同级「有子菜单」与「无子菜单」的图标和文字对齐
+ * - 箭头放在文字之后，靠 margin-left:auto 推到最右
+ *
+ * 颜色：选中与悬停用品牌色浅底 + `--ca-color-primary-text` 前景，
+ * 暗色主题与自定义品牌色下都保持可读。
+ */
+.ca-side-menu {
+  --ca-side-menu-arrow: 14px;
+  --ca-side-menu-icon: 16px;
+  display: grid;
+  gap: 2px;
+}
+
+/* 基础态与尺寸 */
+.ca-side-menu__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  min-height: 42px;
+  padding-right: var(--ca-space-4);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ca-text-secondary);
+  font-family: inherit;
+  font-size: var(--ca-font-size-md);
+  text-align: left;
+  transition: background-color .18s, color .18s;
+}
+.ca-side-menu__item:hover:not(:disabled) { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); }
+
+/* 图标列固定尺寸：一级 16px，二级 14px，与文字垂直居中 */
+.ca-side-menu__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--ca-side-menu-icon); height: var(--ca-side-menu-icon); }
+.ca-side-menu__icon[data-size='14'] { width: 14px; height: 14px; }
+
+/* 一级左侧占位，保证同级图标与文字对齐 */
+.ca-side-menu__arrow-slot { width: var(--ca-side-menu-arrow); flex-shrink: 0; }
+/* 角标与箭头组成右侧尾部区域，整体贴右 */
+.ca-side-menu__tail { display: inline-flex; align-items: center; gap: var(--ca-space-1); margin-left: auto; flex-shrink: 0; }
+.ca-side-menu__arrow { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--ca-text-placeholder); transition: transform .18s; }
+
+/* 层级尺寸：二级及以下更紧凑，文字略小，形成清晰的层级对比 */
+.ca-side-menu__item:not([data-level='0']) { min-height: 38px; }
+.ca-side-menu__item:not([data-level='0']) .ca-side-menu__label { font-size: var(--ca-font-size-sm); }
+
+/* 状态色统一写在后边：与层级规则特异度接近，靠顺序决定优先级 */
+.ca-side-menu__item--branch { color: var(--ca-color-primary-text); }
+.ca-side-menu__item--active { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); font-weight: 600; }
+.ca-side-menu__item--disabled { color: var(--ca-text-placeholder); cursor: not-allowed; }
+.ca-side-menu__item--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 2px;
+  background: currentColor;
+}
+
+/* 箭头：展开时旋转，处于选中路径时跟随文字色 */
+.ca-side-menu__item--open .ca-side-menu__arrow { transform: rotate(180deg); }
+.ca-side-menu__item--active .ca-side-menu__arrow,
+.ca-side-menu__item--branch .ca-side-menu__arrow { color: currentColor; }
+
+.ca-side-menu__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ca-side-menu__badge {
+  min-width: 18px;
+  padding: 2px;
+  border-radius: var(--ca-radius-full);
+  background: var(--ca-color-danger-soft);
+  color: var(--ca-color-danger-text);
+  font-size: var(--ca-font-size-xs);
+  font-style: normal;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-side-menu__item, .ca-side-menu__arrow { transition: none; }
+}

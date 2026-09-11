@@ -45,41 +45,4 @@ const icons = {
   </div>
 </template>
 
-<style scoped>
-.ca-toast-container {
-  position: fixed;
-  z-index: var(--ca-z-index-message);
-  top: var(--ca-space-5);
-  left: 50%;
-  display: grid;
-  gap: var(--ca-space-2);
-  width: min(360px, calc(100vw - 32px));
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.ca-toast {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--ca-space-2);
-  padding: var(--ca-space-3);
-  border: 1px solid var(--ca-border-color);
-  border-radius: var(--ca-radius-lg);
-  background: var(--ca-surface-card);
-  box-shadow: var(--ca-shadow-popup);
-  pointer-events: auto;
-}
-.ca-toast--primary { color: var(--ca-color-primary); }
-.ca-toast--success { color: var(--ca-color-success); }
-.ca-toast--warning { color: var(--ca-color-warning); }
-.ca-toast--danger { color: var(--ca-color-danger); }
-.ca-toast__body { flex: 1; min-width: 0; }
-.ca-toast__body b { display: block; color: var(--ca-text-primary); font-size: var(--ca-font-size-md); font-weight: 500; }
-.ca-toast__body p { margin-top: 2px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-sm); line-height: var(--ca-line-height); }
-.ca-toast__close { flex-shrink: 0; color: var(--ca-text-placeholder); }
-.ca-toast__close:hover { color: var(--ca-text-secondary); }
-.ca-toast-move-enter-active, .ca-toast-move-leave-active { transition: opacity .2s, transform .2s; }
-.ca-toast-move-enter-from, .ca-toast-move-leave-to { opacity: 0; transform: translateY(-8px); }
-@media (prefers-reduced-motion: reduce) {
-  .ca-toast-move-enter-active, .ca-toast-move-leave-active { transition: none; }
-}
-</style>
+<style src="../style/index.css"></style>

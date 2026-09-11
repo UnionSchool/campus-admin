@@ -1,0 +1,6 @@
+/* 空状态：占位图标用中性色，暗色下自动降低亮度 */
+.ca-empty { display: grid; justify-items: center; gap: 6px; padding: 32px 16px; text-align: center; }
+.ca-empty__icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--ca-surface-sunken); color: var(--ca-color-neutral-300); }
+.ca-empty__title { color: var(--ca-text-regular); font-size: var(--ca-font-size-md); }
+.ca-empty__desc { color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); }
+.ca-empty__action { margin-top: var(--ca-space-2); }

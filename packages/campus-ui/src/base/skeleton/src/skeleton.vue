@@ -43,16 +43,4 @@ const className = ns('skeleton')
   </div>
 </template>
 
-<style scoped>
-.ca-skeleton { display: grid; gap: var(--ca-space-2); width: 100%; }
-.ca-skeleton--avatar { grid-template-columns: 40px 1fr; align-items: center; }
-.ca-skeleton--card { gap: var(--ca-space-3); }
-.ca-skeleton span { display: block; height: 12px; border-radius: var(--ca-radius-sm); background: linear-gradient(90deg, var(--ca-color-neutral-100) 25%, #f4f8fc 37%, var(--ca-color-neutral-100) 63%); background-size: 400% 100%; animation: ca-skeleton-shine 1.4s ease infinite; }
-.ca-skeleton__avatar { width: 40px; height: 40px; border-radius: 50%; }
-.ca-skeleton__block { height: 96px; border-radius: var(--ca-radius-lg); }
-.ca-skeleton__lines { display: grid; gap: var(--ca-space-2); }
-@keyframes ca-skeleton-shine { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
-@media (prefers-reduced-motion: reduce) {
-  .ca-skeleton span { animation: none; }
-}
-</style>
+<style src="../style/index.css"></style>

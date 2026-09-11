@@ -46,7 +46,7 @@ const dashOffset = computed(() => circumference.value * (1 - safePercent.value /
   <div :class="className" role="progressbar" :aria-valuenow="Math.round(safePercent)" aria-valuemin="0" aria-valuemax="100">
     <template v-if="type === 'circle'">
       <svg :width="size" :height="size" :viewBox="`0 0 ${size} ${size}`" aria-hidden="true">
-        <circle :cx="size / 2" :cy="size / 2" :r="radius" fill="none" stroke="var(--ca-color-neutral-100)" :stroke-width="strokeWidth" />
+        <circle :cx="size / 2" :cy="size / 2" :r="radius" fill="none" stroke="var(--ca-color-neutral-soft)" :stroke-width="strokeWidth" />
         <circle
           :cx="size / 2"
           :cy="size / 2"
@@ -71,19 +71,4 @@ const dashOffset = computed(() => circumference.value * (1 - safePercent.value /
   </div>
 </template>
 
-<style scoped>
-.ca-progress { display: flex; align-items: center; gap: var(--ca-space-2); width: 100%; }
-.ca-progress--circle { position: relative; display: inline-grid; place-items: center; width: auto; }
-.ca-progress--primary { color: var(--ca-color-primary); }
-.ca-progress--success { color: var(--ca-color-success); }
-.ca-progress--warning { color: var(--ca-color-warning); }
-.ca-progress--danger { color: var(--ca-color-danger); }
-.ca-progress__track { flex: 1; height: 6px; border-radius: var(--ca-radius-full); background: var(--ca-color-neutral-100); overflow: hidden; }
-.ca-progress__bar { display: block; height: 100%; border-radius: inherit; background: currentColor; transition: width .3s ease; }
-.ca-progress__text { flex-shrink: 0; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); font-variant-numeric: tabular-nums; }
-.ca-progress--circle .ca-progress__text { position: absolute; font-size: var(--ca-font-size-sm); font-weight: 500; color: var(--ca-text-primary); }
-.ca-progress circle { transition: stroke-dashoffset .3s ease; }
-@media (prefers-reduced-motion: reduce) {
-  .ca-progress__bar, .ca-progress circle { transition: none; }
-}
-</style>
+<style src="../style/index.css"></style>

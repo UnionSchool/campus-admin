@@ -40,14 +40,17 @@ packages/
 │       └── index.ts
 ├── campus-ui/                 # 组件层：每个组件独立目录
 │   └── src/
-│       ├── components/
-│       │   ├── daily-agenda/
-│       │   │   ├── src/core.ts    # 纯逻辑：日期、过滤、文案
-│       │   │   ├── src/data.ts    # 演示数据，真实项目由 Props 注入
-│       │   │   ├── src/daily-agenda.vue
-│       │   │   ├── style/index.css
-│       │   │   └── index.ts
-│       │   └── weekly-timetable/
+│       ├── atom/                  # 原子：元素级、不占版面
+│       ├── base/                  # 基础：区域级、可直接布局
+│       ├── feature/               # 功能：多个组件完成一件事
+│       │   └── daily-agenda/
+│       │       ├── src/core.ts    # 纯逻辑：日期、过滤、文案
+│       │       ├── src/data.ts    # 演示数据，真实项目由 Props 注入
+│       │       ├── src/daily-agenda.vue
+│       │       ├── style/index.css
+│       │       └── index.ts
+│       ├── core/                  # ns、cx、主题与品牌色
+│       └── styles/                # token / base / reset
 │       ├── styles/               # Token、基础类，后续迁移到主题包
 │       └── index.ts
 └── campus-admin/              # 装配层
@@ -97,7 +100,7 @@ examples/*（只从包名引用，不引用源码）
 | Facade | `campus('service')` | `packages/campus-core/src/facade.ts` |
 | config/*.php | `CampusConfig` 对象 | `packages/campus-core/src/contracts/config.ts` |
 | bootstrap/app.php | `createCampusAdmin()` | `packages/campus-admin/src/plugin.ts` |
-| Blade 视图 | `.vue` 组件 | `packages/campus-ui/src/components/*` |
+| Blade 视图 | `.vue` 组件 | `packages/campus-ui/src/{atom,base,feature}/*` |
 
 生命周期与 Laravel 一致：**register 只做绑定，boot 才允许依赖其他提供者**。
 
@@ -142,7 +145,7 @@ import { computed, ref } from '@unionschool/campus-framework'
 
 ### 第二道：业务逻辑与渲染分离
 
-日期计算、过滤、文案拼装放在 `packages/campus-ui/src/components/<name>/src/core.ts`，
+日期计算、过滤、文案拼装放在 `packages/campus-ui/src/<层>/<name>/src/core.ts`，
 纯 TypeScript，不依赖 Vue，可以：
 
 - 直接用 `tsx` / Node 跑单测，不需要挂载组件。
@@ -176,15 +179,21 @@ import { computed, ref } from '@unionschool/campus-framework'
 ### 新增组件
 
 ```text
-packages/campus-ui/src/components/<kebab-name>/
+packages/campus-ui/src/<atom|base|feature>/<kebab-name>/
 ├── src/core.ts             # 纯逻辑，必须有
 ├── src/data.ts             # 演示数据，可省略
 ├── src/<kebab-name>.vue    # 只做渲染
-├── style/index.css         # 组件样式
+├── style/index.css         # 组件样式，由 .vue 通过 <style src> 引入
 └── index.ts                # 导出 Ca 前缀组件与公开类型
 ```
 
-然后在 `packages/campus-admin/src/plugin.ts` 的 `builtInComponents` 登记一行即可全局可用。
+组件按判据归入三层：元素级是 `atom`、区域级是 `base`、多组件组合完成一件事是 `feature`。
+
+新增后只需要改两处：组件自己的目录 + 所属层的 `index.ts`（命名导出 + 加入该层注册表）。
+顶层 `builtInComponents` 由三层注册表合并而来，`campus-admin` 会自动纳入全局注册。
+
+组件内**不允许出现硬编码颜色**：颜色必须来自 `--ca-*` Token（见 `src/styles/token.css`），
+否则暗色主题与运行时品牌换色会失效。主色实心背景上的文字统一用 `--ca-color-primary-contrast`。
 
 ### 新增能力（请求、权限、国际化）
 
@@ -230,7 +239,7 @@ export const permissionProvider = defineProvider({
 
 ## 9. 后续可选演进
 
-- 引入 Vitest，为 `packages/campus-ui/src/components/*/src/core.ts` 补纯函数测试。
+- 引入 Vitest，为 `packages/campus-ui/src/*/*/src/core.ts` 补纯函数测试。
 - 引入 ESLint `no-restricted-imports`，把边界规则前移到编辑器。
 - 抽出独立主题包，把 `packages/campus-ui/src/styles` 迁出为 `campus-theme`。
 - 按需从 `campus-core` 拆分 `campus-request`、`campus-auth`、`campus-permission`。

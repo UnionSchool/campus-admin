@@ -1,0 +1,43 @@
+/**
+ * 共享基础类。
+ *
+ * 这几条是给示例与业务页面直接用的轻量工具类，组件内部不依赖它们。
+ * 颜色全部走 Token，暗色与品牌换色会自动跟随。
+ */
+
+/* 语义色块：--tone 为前景色，--tint 为底色 */
+.blue { --tone: var(--ca-color-primary-text); --tint: var(--ca-color-primary-soft); }
+.orange { --tone: var(--ca-color-warning-text); --tint: var(--ca-color-warning-soft); }
+.amber { --tone: var(--ca-color-warning-text); --tint: var(--ca-color-warning-soft); }
+.red { --tone: var(--ca-color-danger-text); --tint: var(--ca-color-danger-soft); }
+.green { --tone: var(--ca-color-success-text); --tint: var(--ca-color-success-soft); }
+.cyan { --tone: var(--ca-color-info-text); --tint: var(--ca-color-info-soft); }
+
+.blue, .orange, .amber, .red, .green, .cyan { color: var(--tone); background: var(--tint); }
+
+.surface {
+  background: var(--ca-surface-card);
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-lg);
+}
+
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: var(--ca-space-2); }
+.section-head h3 { font-size: var(--ca-font-size-md); font-weight: 500; color: var(--ca-text-primary); }
+
+.text-link { color: var(--ca-color-primary-text); display: inline-flex; align-items: center; gap: 5px; font-size: var(--ca-font-size-xs); padding: 0; white-space: nowrap; }
+.text-link:hover { color: var(--ca-color-primary-hover); }
+
+.subtle { color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); }
+
+/* 仅供屏幕阅读器：图表标题、补充说明等视觉隐藏但需要被读出的内容 */
+.ca-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

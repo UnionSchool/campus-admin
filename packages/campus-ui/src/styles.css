@@ -1,8 +1,10 @@
-/* 设计令牌 */
+/* 设计令牌与主题（明暗 + 品牌色） */
 @import './styles/token.css';
-/* 共享基础类 */
+/* 基础一致性 */
 @import './styles/reset.css';
+/* 共享基础类 */
 @import './styles/base.css';
-/* 组件样式 */
-@import './components/daily-agenda/style/index.css';
-@import './components/weekly-timetable/style/index.css';
+/**
+ * 组件样式由各自的 index.ts 通过 `import './style/index.css'` 引入，
+ * 不在这里集中 import：新增组件不需要改这个文件，按需引入时样式也会自动跟随。
+ */

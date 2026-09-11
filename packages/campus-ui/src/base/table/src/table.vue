@@ -24,7 +24,7 @@
 import { computed, ref, watch } from '@unionschool/campus-framework'
 import { ArrowDown, ArrowUp, ChevronsUpDown } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
-import CaEmpty from '../../../feedback/empty/index'
+import CaEmpty from '../../empty/index'
 import { cellValue, columnAlign, resolveRowKey, sortRows } from './core'
 import type { SortOrder, TableColumn } from './core'
 
@@ -149,30 +149,4 @@ function toggleSort(column: TableColumn<T>) {
   </div>
 </template>
 
-<style scoped>
-.ca-table { display: block; width: 100%; }
-.ca-table__scroll { overflow-x: auto; }
-.ca-table table { width: 100%; min-width: 520px; border-collapse: separate; border-spacing: 0; font-size: var(--ca-font-size-sm); }
-.ca-table th { padding: var(--ca-space-2) var(--ca-space-3); background: var(--ca-surface-sunken); color: var(--ca-text-secondary); font-weight: 500; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--ca-border-color); }
-.ca-table th:first-child { border-top-left-radius: var(--ca-radius-md); }
-.ca-table th:last-child { border-top-right-radius: var(--ca-radius-md); }
-.ca-table th button { display: inline-flex; align-items: center; gap: 4px; color: inherit; font-size: inherit; }
-.ca-table th button:hover { color: var(--ca-color-primary); }
-.ca-table__sort-idle { color: var(--ca-color-neutral-300); }
-.ca-table td { padding: var(--ca-space-3); color: var(--ca-text-regular); border-bottom: 1px solid var(--ca-border-color); vertical-align: middle; }
-.ca-table--compact th, .ca-table--compact td { padding: var(--ca-space-1) var(--ca-space-2); }
-.ca-table--stripe tbody tr:nth-child(even) { background: var(--ca-surface-sunken); }
-.ca-table__row { transition: background-color .16s; }
-.ca-table__row:hover { background: var(--ca-color-primary-soft); }
-.ca-table__row { cursor: pointer; }
-.ca-table--left { text-align: left; }
-.ca-table--center { text-align: center; }
-.ca-table--right { text-align: right; font-variant-numeric: tabular-nums; }
-.ca-table__state { padding: var(--ca-space-6); color: var(--ca-text-secondary); text-align: center; }
-.ca-table__spinner { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; vertical-align: -2px; animation: ca-table-spin .7s linear infinite; }
-.ca-table__empty { padding: var(--ca-space-2) 0; }
-@keyframes ca-table-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {
-  .ca-table__spinner { animation-duration: 2s; }
-}
-</style>
+<style src="../style/index.css"></style>

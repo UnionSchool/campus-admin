@@ -55,13 +55,4 @@ const className = ns('breadcrumb')
   </nav>
 </template>
 
-<style scoped>
-.ca-breadcrumb { display: flex; align-items: center; justify-content: space-between; gap: var(--ca-space-3); }
-.ca-breadcrumb__list { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-.ca-breadcrumb__item { display: inline-flex; align-items: center; gap: 4px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
-.ca-breadcrumb__link { display: inline-flex; align-items: center; gap: 4px; color: var(--ca-text-secondary); font-size: inherit; }
-.ca-breadcrumb__link:hover { color: var(--ca-color-primary); }
-.ca-breadcrumb__current { color: var(--ca-text-regular); font-weight: 500; }
-.ca-breadcrumb__separator { color: var(--ca-color-neutral-300); }
-.ca-breadcrumb__extra { flex-shrink: 0; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
-</style>
+<style src="../style/index.css"></style>
