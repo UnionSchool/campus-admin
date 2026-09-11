@@ -115,6 +115,13 @@ pnpm run deploy -- --dry-run
 
 演练模式不会推送代码、创建标签或发布 npm。下面各节保留手工发布方法，供排错或特殊情况使用。
 
+两点约定：
+
+- **本地发布不生成 provenance**。npm 只支持在 GitHub Actions、GitLab CI 这类受支持的 CI 环境里生成 provenance，本地执行会报 `Automatic provenance generation not supported for provider: null`，脚本因此显式关闭它；`package.json` 里的 `publishConfig.provenance` 是给 CI 用的。
+- 需要带 provenance 的正式发布，用 `pnpm run deploy -- --skip-npm`：只推标签，由 `.github/workflows/release.yml` 在 CI 里发布（见 7.4）。
+
+预发布版本（`0.1.0-alpha.1`）必须显式指定 dist-tag，脚本会按版本号自动使用 `next`，与 CI 规则一致。
+
 ### 7.1 发布前准备
 
 确认当前位于 `main` 分支且工作区干净：
@@ -179,19 +186,19 @@ npm whoami
 pnpm run check
 ```
 
-四个子包必须同时发布，预发布版本使用 `alpha` 标签，避免占用 `latest`：
+四个子包必须同时发布，预发布版本使用 `next` 标签，避免占用 `latest`（与 `.github/workflows/release.yml`、第 2 节版本规范一致）：
 
 ```bash
-pnpm --filter @unionschool/campus-core publish --access public --tag alpha
-pnpm --filter @unionschool/campus-framework publish --access public --tag alpha
-pnpm --filter @unionschool/campus-ui publish --access public --tag alpha
-pnpm --filter @unionschool/campus-admin publish --access public --tag alpha
+pnpm --filter @unionschool/campus-core publish --access public --tag next --no-provenance
+pnpm --filter @unionschool/campus-framework publish --access public --tag next --no-provenance
+pnpm --filter @unionschool/campus-ui publish --access public --tag next --no-provenance
+pnpm --filter @unionschool/campus-admin publish --access public --tag next --no-provenance
 ```
 
-稳定版本发布到默认的 `latest` 标签时，去掉 `--tag alpha`：
+稳定版本发布到默认的 `latest` 标签时，去掉 `--tag next`：
 
 ```bash
-pnpm --filter @unionschool/campus-admin publish --access public
+pnpm --filter @unionschool/campus-admin publish --access public --no-provenance
 ```
 
 发布顺序必须是 `campus-core` → `campus-framework` → `campus-ui` → `campus-admin`，否则依赖方会指向尚未发布的版本。同一版本号不能重复发布，如果需要修正内容，必须增加根版本号并同步全部子包后重新发布。

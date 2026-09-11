@@ -8,7 +8,9 @@ import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 
 const dryRun = process.argv.includes('--dry-run')
-const allowedArgs = new Set(['--dry-run'])
+/** 跳过本地 npm 发布：交给推标签后触发的 release.yml 在 CI 里发布（只有 CI 能生成 provenance） */
+const skipNpm = process.argv.includes('--skip-npm')
+const allowedArgs = new Set(['--dry-run', '--skip-npm'])
 const unknownArgs = process.argv.slice(2).filter(arg => !allowedArgs.has(arg))
 
 if (unknownArgs.length > 0) {
@@ -21,6 +23,19 @@ const tag = `v${version}`
 const branch = 'main'
 const remotes = ['origin', 'gitee']
 const publishable = ['campus-core', 'campus-framework', 'campus-ui', 'campus-admin']
+
+/**
+ * npm 的 dist-tag：预发布版本（0.1.0-alpha.1）必须显式指定，否则 npm 直接拒绝发布，
+ * 与 .github/workflows/release.yml 的规则保持一致。
+ */
+const distTag = version.includes('-') ? 'next' : 'latest'
+
+/**
+ * 本地没有受支持的 CI 环境，npm 生成 provenance 会直接报错
+ * （`Automatic provenance generation not supported for provider: null`），
+ * 所以本地发布显式关闭；在 CI 里执行时保留 package.json 的 publishConfig.provenance。
+ */
+const provenanceArgs = process.env.CI ? [] : ['--no-provenance']
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -85,7 +100,10 @@ if (!dryRun) run('npm', ['run', 'check'])
 console.log(`创建标签 ${tag} 并推送...`)
 if (dryRun) {
   remotes.forEach(remote => console.log(`[dry-run] git push ${remote} ${branch} 与 ${tag}`))
-  publishable.forEach(name => console.log(`[dry-run] pnpm --filter @unionschool/${name} publish`))
+  publishable.forEach(name => console.log(
+    `[dry-run] pnpm --filter @unionschool/${name} publish --access public --tag ${distTag} ${provenanceArgs.join(' ')}`
+      + (skipNpm ? '（已按 --skip-npm 跳过）' : ''),
+  ))
   console.log('演练完成，未产生任何提交、标签或发布。')
   process.exit(0)
 }
@@ -96,9 +114,27 @@ remotes.forEach((remote) => {
   run('git', ['push', remote, tag])
 })
 
-console.log('发布 npm 包（统一版本号）...')
-publishable.forEach((name) => {
-  run('pnpm', ['--filter', `@unionschool/${name}`, 'publish', '--access', 'public'])
-})
+/**
+ * 本地发布不带 provenance：
+ * npm 只支持在 GitHub Actions / GitLab CI 这类受支持的 CI 环境里生成 provenance，
+ * 本地执行会直接报 `Automatic provenance generation not supported for provider: null`，
+ * 所以这里显式关掉（package.json 里的 publishConfig.provenance 是给 CI 用的）。
+ * 需要带 provenance 的发布请用 `--skip-npm`，由 Git 标签触发 release.yml 在 CI 里完成。
+ */
+if (skipNpm) {
+  console.log('已跳过本地 npm 发布，标签推送到 GitHub 后会触发 release.yml 在 CI 中发布（带 provenance）。')
+}
+else {
+  console.log(`发布 npm 包（统一版本号，dist-tag ${distTag}，本地不生成 provenance）...`)
+  publishable.forEach((name) => {
+    run('pnpm', [
+      '--filter', `@unionschool/${name}`,
+      'publish',
+      '--access', 'public',
+      '--tag', distTag,
+      ...provenanceArgs,
+    ])
+  })
+}
 
 console.log(`发布完成：Campus ${version}`)

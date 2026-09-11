@@ -22,6 +22,7 @@
 - 示例自身的样式（外壳、首页、学生管理、课程表、组件总览）全部改为引用 `--ca-*` Token，暗色下不再残留硬编码浅色；首页彩色图标底在暗色下改用固定 palette 色，避免白图标对比度不足。
 - 示例后台新增业务语言包（`examples/admin/src/locale`，app / menu / page 三个命名空间），通过 `createCampusAdmin` 的 `config.locale` 交给框架；顶栏语言开关切换并记住选择，组件文案与业务文案一起切换。
 - 示例后台的主题开关升级为三态：浅色 / 深色 / 自动（跟随系统），自动模式在标题里带出当前实际明暗；`index.html` 内联一段首屏脚本，在样式生效前先定好 `data-ca-theme`，避免自动模式下先亮后暗的闪屏。
+- 示例构建产物改用相对路径（`base: './'`）：此前资源写死为 `/assets/...`，直接双击 `dist/index.html`（file://）会因为拿不到资源而白屏。
 - 侧栏菜单文案按「后端返回稳定 id + 可选 labelKey」取词条（`menu.<id>`），取不到时用后端下发的 label 兜底，后端还没接入多语言时页面也不会出现裸 key。
 - 新增顶栏语言开关：`中 / EN` 分段按钮，选择记在 `localStorage`，入口先定语言再挂载，避免首屏先中文再切英文。
 
@@ -33,6 +34,7 @@
 - 组件库对 vue-i18n 保持零依赖：`useLocale()` 注入不到实例时回退到内置 zh-CN 默认实例，单独使用组件库也能正常工作。
 - `campus-admin` 的 `createCampusAdmin` 支持 `config.locale`（locale / fallbackLocale / messages），业务词条与组件库内置词条深合并到同一个语言实例。
 - 新增 `scripts/check-locale.mjs` 并纳入 `npm run check`：校验代码用到的词条键都存在、各语言词条数量一致。
+- 修复 `pnpm run deploy` 本地发布：本地环境无法生成 npm provenance（会报 `Automatic provenance generation not supported for provider: null`），改为本地自动加 `--no-provenance`、CI 中保留；预发布版本自动带 `--tag next`；新增 `--skip-npm` 用于只推标签、交给 `release.yml` 在 CI 里发布。
 - 新增《Campus Admin 国际化使用指南》（`docs/Campus-Admin-国际化使用指南.md`）：一分钟接入、词条与命名空间约定、取词切换到日期数字格式化、后端文案对接、与 vue-i18n 共存、加语言与排查清单；组件使用指南、根 README、组件库 README 与示例 README 均已加入入口。
 - 组件导出统一 `Ca` 前缀：`CaDailyAgenda`、`CaWeeklyTimetable`。
 - 组件逻辑与渲染分离，日期计算、过滤与文案抽到纯 TypeScript 的 `core.ts`。
