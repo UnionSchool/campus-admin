@@ -1,0 +1,70 @@
+/**
+ * 日程安排样式。
+ *
+ * 面板自带底色与边框，不依赖业务侧容器；选中日期用品牌色实心 + primary-contrast 文字，
+ * 有日程的日期用品牌色文字提示，暗色与自定义品牌色下都保持一致。
+ */
+.ca-agenda {
+  display: grid;
+  padding: var(--ca-space-4) var(--ca-space-4) var(--ca-space-3);
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-lg);
+  background: var(--ca-surface-card);
+}
+.ca-agenda__head { display: flex; align-items: center; justify-content: space-between; gap: var(--ca-space-2); }
+.ca-agenda__heading { color: var(--ca-text-primary); font-size: var(--ca-font-size-md); font-weight: 600; }
+.ca-agenda__link { padding: 0; border: 0; background: transparent; color: var(--ca-color-primary-text); font-family: inherit; font-size: var(--ca-font-size-xs); }
+.ca-agenda__link:hover { color: var(--ca-color-primary-hover); }
+.ca-agenda__month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: var(--ca-space-3) 0 var(--ca-space-2);
+  color: var(--ca-text-secondary);
+  font-size: var(--ca-font-size-xs);
+}
+.ca-agenda__count { color: var(--ca-text-placeholder); }
+
+.ca-agenda__strip { display: grid; grid-template-columns: 22px repeat(7, 1fr) 22px; gap: 3px; align-items: center; }
+.ca-agenda__arrow { display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: var(--ca-text-placeholder); border-radius: var(--ca-radius-sm); }
+.ca-agenda__arrow:hover { color: var(--ca-color-primary-text); background: var(--ca-color-primary-soft); }
+.ca-agenda__date { display: grid; gap: 3px; justify-items: center; padding: 5px 0; border: 0; border-radius: var(--ca-radius-sm); background: transparent; color: var(--ca-text-placeholder); font-family: inherit; }
+.ca-agenda__date small { font-size: var(--ca-font-size-xs); }
+.ca-agenda__date > b { color: var(--ca-text-regular); font-size: var(--ca-font-size-sm); font-weight: 500; }
+.ca-agenda__date--has-event:not(.ca-agenda__date--selected) > b { color: var(--ca-color-primary-text); }
+.ca-agenda__date:hover { background: var(--ca-color-primary-soft); }
+.ca-agenda__date--selected { background: var(--ca-color-primary); color: var(--ca-color-primary-contrast); }
+.ca-agenda__date--selected > b { color: var(--ca-color-primary-contrast); }
+
+.ca-agenda__list { display: grid; gap: var(--ca-space-2); margin-top: var(--ca-space-3); min-height: 96px; }
+.ca-agenda__item { display: grid; grid-template-columns: 12px 1fr; gap: 9px; }
+.ca-agenda__dot { width: 6px; height: 6px; margin: 6px 0 0 3px; border-radius: 50%; background: var(--ca-color-primary); }
+.ca-agenda__item--done .ca-agenda__dot { background: var(--ca-color-neutral-300); }
+.ca-agenda__card {
+  padding: 7px 9px;
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-md);
+  background: var(--ca-surface-sunken);
+}
+.ca-agenda__card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.ca-agenda__time { color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); font-variant-numeric: tabular-nums; }
+.ca-agenda__detail { padding: 0; border: 0; background: transparent; color: var(--ca-color-primary-text); font-family: inherit; font-size: var(--ca-font-size-xs); }
+.ca-agenda__card p { margin-top: 3px; color: var(--ca-text-regular); font-size: var(--ca-font-size-sm); line-height: var(--ca-line-height); }
+.ca-agenda__location { display: block; margin-top: 3px; color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); }
+.ca-agenda__item--done .ca-agenda__card p { color: var(--ca-text-placeholder); }
+
+.ca-agenda__empty { display: grid; place-items: center; gap: var(--ca-space-1); padding: var(--ca-space-4) 0; color: var(--ca-text-placeholder); text-align: center; }
+.ca-agenda__empty p { color: var(--ca-text-secondary); font-size: var(--ca-font-size-sm); }
+.ca-agenda__empty span { font-size: var(--ca-font-size-xs); }
+
+.ca-agenda__footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--ca-space-3);
+  padding-top: var(--ca-space-2);
+  border-top: 1px dashed var(--ca-border-color);
+  color: var(--ca-text-placeholder);
+  font-size: var(--ca-font-size-xs);
+}
+.ca-agenda__footer i { width: 5px; height: 5px; border-radius: 50%; background: var(--ca-color-neutral-300); }

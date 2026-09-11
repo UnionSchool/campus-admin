@@ -1,0 +1,42 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "term": "2026–2027 学年 · 第一学期",
+    "periods": [
+      { "group": "早自习", "label": "早读", "time": "07:30–08:00" },
+      { "group": "上午", "label": "第 1 节", "time": "08:10–08:55" },
+      { "group": "", "label": "第 2 节", "time": "09:05–09:50" },
+      { "group": "", "label": "第 3 节", "time": "10:10–10:55" },
+      { "group": "", "label": "第 4 节", "time": "11:05–11:50" },
+      { "group": "下午", "label": "第 5 节", "time": "14:00–14:45" },
+      { "group": "", "label": "第 6 节", "time": "14:55–15:40" },
+      { "group": "", "label": "第 7 节", "time": "15:50–16:35" }
+    ],
+    "lessons": [
+      { "day": 0, "row": 0, "subject": "语文", "className": "高二（3）班", "teacher": "林老师", "tone": "blue" },
+      { "day": 0, "row": 1, "subject": "数学", "className": "高二（3）班", "teacher": "周老师", "tone": "green" },
+      { "day": 0, "row": 2, "subject": "英语", "className": "高二（3）班", "teacher": "王老师", "tone": "orange" },
+      { "day": 0, "row": 4, "subject": "物理", "className": "高二（3）班", "teacher": "赵老师", "tone": "blue" },
+      { "day": 0, "row": 5, "subject": "化学", "className": "高二（3）班", "teacher": "孙老师", "tone": "green" },
+      { "day": 1, "row": 1, "subject": "语文", "className": "高二（3）班", "teacher": "林老师", "tone": "blue" },
+      { "day": 1, "row": 2, "subject": "数学", "className": "高二（3）班", "teacher": "周老师", "tone": "green" },
+      { "day": 1, "row": 3, "subject": "历史", "className": "高二（3）班", "teacher": "陈老师", "tone": "orange" },
+      { "day": 1, "row": 5, "subject": "体育", "className": "高二（3）班", "teacher": "吴老师", "tone": "green" },
+      { "day": 2, "row": 0, "subject": "英语", "className": "高二（3）班", "teacher": "王老师", "tone": "orange" },
+      { "day": 2, "row": 1, "subject": "语文", "className": "高二（3）班", "teacher": "林老师", "tone": "blue" },
+      { "day": 2, "row": 3, "subject": "物理", "className": "高二（3）班", "teacher": "赵老师", "tone": "blue" },
+      { "day": 2, "row": 6, "subject": "班会", "className": "高二（3）班", "teacher": "林老师", "tone": "orange" },
+      { "day": 3, "row": 1, "subject": "数学", "className": "高二（3）班", "teacher": "周老师", "tone": "green" },
+      { "day": 3, "row": 2, "subject": "化学", "className": "高二（3）班", "teacher": "孙老师", "tone": "green" },
+      { "day": 3, "row": 4, "subject": "语文", "className": "高二（3）班", "teacher": "林老师", "tone": "blue" },
+      { "day": 4, "row": 1, "subject": "英语", "className": "高二（3）班", "teacher": "王老师", "tone": "orange" },
+      { "day": 4, "row": 2, "subject": "语文", "className": "高二（3）班", "teacher": "林老师", "tone": "blue" },
+      { "day": 4, "row": 5, "subject": "历史", "className": "高二（3）班", "teacher": "陈老师", "tone": "orange" }
+    ]
+  },
+  "count": 19,
+  "extra": {
+    "weekLabel": "第 2 周 · 9.7 — 9.13"
+  }
+}

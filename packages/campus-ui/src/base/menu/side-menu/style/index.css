@@ -1,0 +1,105 @@
+/**
+ * 侧边菜单样式。
+ *
+ * 布局约定：
+ * - 每级：[图标][文字][角标]，图标起点 = indent + level × indentStep + levelOffset[level]
+ * - 一级图标 16px，二级及以下 14px，左内边距完全由 indent 决定，不再保留占位空列
+ * - 箭头放在文字之后，靠 margin-left:auto 推到最右
+ *
+ * 颜色：选中与悬停用品牌色浅底 + `--ca-color-primary-text` 前景，
+ * 暗色主题与自定义品牌色下都保持可读。
+ */
+.ca-side-menu {
+  --ca-side-menu-icon: 16px;
+  /**
+   * 菜单字号：一级 → 二级 → 三级每级递减 1px，四级及以下不再变小（保证可读）。
+   * 默认比全局正文大一档，业务想单独调整改这三个变量即可。
+   */
+  --ca-side-menu-font-size: 18px;
+  --ca-side-menu-sub-font-size: 17px;
+  --ca-side-menu-deep-font-size: 16px;
+  /** 行高（item 最小高度）：一级 → 二级 → 三级每级递减 2px，四级及以下不再变小 */
+  --ca-side-menu-item-height: 50px;
+  --ca-side-menu-sub-item-height: 48px;
+  --ca-side-menu-deep-item-height: 46px;
+  display: grid;
+  gap: 2px;
+}
+
+/* 基础态与尺寸 */
+.ca-side-menu__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  min-height: var(--ca-side-menu-item-height);
+  padding-right: var(--ca-space-4);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  /* 菜单文字色：亮色下是纯黑（--ca-text-menu），暗色下自动换成次级灰 */
+  color: var(--ca-text-menu);
+  font-family: inherit;
+  font-size: var(--ca-side-menu-font-size);
+  text-align: left;
+  transition: background-color .18s, color .18s;
+}
+.ca-side-menu__item:hover:not(:disabled) { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); }
+
+/* 图标列固定尺寸：一级 16px，二级 14px，与文字垂直居中 */
+.ca-side-menu__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--ca-side-menu-icon); height: var(--ca-side-menu-icon); }
+.ca-side-menu__icon[data-size='14'] { width: 14px; height: 14px; }
+
+/* 角标与箭头组成右侧尾部区域，整体贴右 */
+.ca-side-menu__tail { display: inline-flex; align-items: center; gap: var(--ca-space-1); margin-left: auto; flex-shrink: 0; }
+.ca-side-menu__arrow { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--ca-text-placeholder); transition: transform .18s; }
+
+/**
+ * 层级：字号每级递减 1px、行高每级递减 2px，文字色每级深（浅）一档。
+ * 用 :where() 把层级选择器的特异度压到与状态类同级，
+ * 这样后面的 --active / --branch / --disabled 仍能正常覆盖颜色。
+ */
+.ca-side-menu__item:where([data-level='1']) {
+  color: var(--ca-text-menu-sub);
+  font-size: var(--ca-side-menu-sub-font-size);
+  min-height: var(--ca-side-menu-sub-item-height);
+}
+.ca-side-menu__item:where(:not([data-level='0']):not([data-level='1'])) {
+  color: var(--ca-text-menu-deep);
+  font-size: var(--ca-side-menu-deep-font-size);
+  min-height: var(--ca-side-menu-deep-item-height);
+}
+
+/* 状态色统一写在后边：与层级规则特异度接近，靠顺序决定优先级 */
+.ca-side-menu__item--branch { color: var(--ca-color-primary-text); }
+.ca-side-menu__item--active { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); font-weight: 600; }
+.ca-side-menu__item--disabled { color: var(--ca-text-placeholder); cursor: not-allowed; }
+.ca-side-menu__item--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 2px;
+  background: currentColor;
+}
+
+/* 箭头：展开时旋转，处于选中路径时跟随文字色 */
+.ca-side-menu__item--open .ca-side-menu__arrow { transform: rotate(180deg); }
+.ca-side-menu__item--active .ca-side-menu__arrow,
+.ca-side-menu__item--branch .ca-side-menu__arrow { color: currentColor; }
+
+.ca-side-menu__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ca-side-menu__badge {
+  min-width: 18px;
+  padding: 2px;
+  border-radius: var(--ca-radius-full);
+  background: var(--ca-color-danger-soft);
+  color: var(--ca-color-danger-text);
+  font-size: var(--ca-font-size-xs);
+  font-style: normal;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-side-menu__item, .ca-side-menu__arrow { transition: none; }
+}

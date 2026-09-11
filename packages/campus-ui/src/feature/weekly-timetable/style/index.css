@@ -1,0 +1,125 @@
+/**
+ * 课程表样式。
+ *
+ * 面板自带边框与底色；三色课程块与图例都映射到语义 Token，
+ * 暗色主题下自动换成深底浅字，自定义品牌色时蓝色课程块跟随主色。
+ */
+.ca-timetable {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-lg);
+  background: var(--ca-surface-card);
+}
+
+.ca-timetable__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ca-space-3);
+  padding: var(--ca-space-3) var(--ca-space-4);
+  border-bottom: 1px solid var(--ca-border-color);
+}
+.ca-timetable__tabs { display: flex; gap: var(--ca-space-4); }
+.ca-timetable__tab { position: relative; padding: 0 0 7px; border: 0; background: transparent; color: var(--ca-text-secondary); font-family: inherit; font-size: var(--ca-font-size-sm); }
+.ca-timetable__tab--active { color: var(--ca-text-primary); font-weight: 600; }
+.ca-timetable__tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ca-color-primary);
+}
+
+.ca-timetable__week { display: flex; align-items: center; gap: var(--ca-space-2); color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
+.ca-timetable__week b { color: var(--ca-text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ca-timetable__nav { display: grid; place-items: center; width: 21px; height: 21px; padding: 0; border: 0; background: transparent; border-radius: var(--ca-radius-sm); color: var(--ca-text-placeholder); }
+.ca-timetable__nav:hover { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); }
+.ca-timetable__today {
+  width: auto;
+  padding: 0 var(--ca-space-2);
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-sm);
+  background: transparent;
+  color: var(--ca-text-secondary);
+  font-family: inherit;
+  font-size: var(--ca-font-size-xs);
+}
+.ca-timetable__today:hover { border-color: var(--ca-color-primary); color: var(--ca-color-primary-text); }
+
+.ca-timetable__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  padding: var(--ca-space-3) var(--ca-space-4) var(--ca-space-2);
+  color: var(--ca-text-placeholder);
+  font-size: var(--ca-font-size-xs);
+}
+.ca-timetable__meta > span { display: flex; align-items: center; gap: var(--ca-space-2); }
+.ca-timetable__divider { width: 1px; height: 10px; background: var(--ca-border-color); }
+.ca-timetable__select {
+  padding: 3px 6px;
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-sm);
+  background: var(--ca-surface-card);
+  color: var(--ca-text-secondary);
+  font-family: inherit;
+  font-size: var(--ca-font-size-xs);
+}
+.ca-timetable__count b { color: var(--ca-color-primary-text); font-weight: 600; }
+
+/* 表格左右不留白：直接铺满面板，单元格背景与面板边缘齐平 */
+.ca-timetable__scroll { overflow-x: auto; }
+.ca-timetable__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.ca-timetable__table th, .ca-timetable__table td { padding: 0; }
+.ca-timetable__table thead th { padding: 0 0 7px; color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); font-weight: 400; text-align: center; }
+/* 左侧两列固定宽度，七个星期列平分剩余空间 */
+.ca-timetable__col--group { width: 44px; }
+.ca-timetable__col--period { width: 76px; }
+/* 「时段 / 节次」跨分组 + 节次两列，在左侧区域内居中 */
+.ca-timetable__period-head { padding: 0 0 7px; text-align: center; }
+.ca-timetable__table thead th span { display: block; }
+.ca-timetable__table thead th b { display: block; margin-top: 2px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); font-weight: 500; font-variant-numeric: tabular-nums; }
+.ca-timetable__day--today b { color: var(--ca-color-primary-text); }
+
+.ca-timetable__group {
+  color: var(--ca-text-placeholder);
+  font-size: var(--ca-font-size-xs);
+  font-weight: 400;
+  writing-mode: vertical-rl;
+  text-align: center;
+  border-right: 1px solid var(--ca-border-color);
+}
+.ca-timetable__period { padding: 0 6px 0 4px; text-align: left; }
+.ca-timetable__period span { display: block; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
+.ca-timetable__period small { display: block; margin-top: 1px; color: var(--ca-text-placeholder); font-size: 11px; font-variant-numeric: tabular-nums; }
+.ca-timetable__table td { height: 40px; border-bottom: 1px solid var(--ca-border-color); }
+.ca-timetable__row--afternoon td, .ca-timetable__row--afternoon th { border-top: 6px solid transparent; }
+.ca-timetable__cell--weekend { background: var(--ca-surface-sunken); }
+.ca-timetable__cell--today { background: var(--ca-color-primary-soft); }
+
+.ca-timetable__lesson { display: grid; gap: 1px; width: 100%; height: 100%; padding: 5px 3px; border: 0; border-radius: var(--ca-radius-sm); font-family: inherit; text-align: center; }
+.ca-timetable__lesson b { font-size: 11px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ca-timetable__lesson span { font-size: 11px; opacity: .85; }
+.ca-timetable__lesson--blue { color: var(--ca-color-primary-text); background: var(--ca-color-primary-soft); }
+.ca-timetable__lesson--green { color: var(--ca-color-success-text); background: var(--ca-color-success-soft); }
+.ca-timetable__lesson--orange { color: var(--ca-color-warning-text); background: var(--ca-color-warning-soft); }
+.ca-timetable__lesson:hover { filter: brightness(.97); }
+
+.ca-timetable__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ca-space-3);
+  padding: var(--ca-space-2) var(--ca-space-4) var(--ca-space-3);
+  color: var(--ca-text-placeholder);
+  font-size: var(--ca-font-size-xs);
+}
+.ca-timetable__legend { display: inline-block; width: 7px; height: 7px; margin-left: var(--ca-space-2); border-radius: 2px; }
+.ca-timetable__legend--blue { background: var(--ca-color-primary); }
+.ca-timetable__legend--green { background: var(--ca-color-success); }
+.ca-timetable__legend--orange { background: var(--ca-color-warning); }

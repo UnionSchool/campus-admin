@@ -1,0 +1,16 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    { "id": "r1", "time": "2026-09-11T12:10:00", "place": "食堂二楼 · 午餐", "amount": 12.5, "type": "consume" },
+    { "id": "r2", "time": "2026-09-11T07:32:00", "place": "食堂一楼 · 早餐", "amount": 5.5, "type": "consume" },
+    { "id": "r3", "time": "2026-09-10T18:20:00", "place": "校园超市", "amount": 9.8, "type": "consume" },
+    { "id": "r4", "time": "2026-09-10T12:05:00", "place": "食堂二楼 · 午餐", "amount": 13, "type": "consume" },
+    { "id": "r5", "time": "2026-09-09T20:15:00", "place": "家长充值", "amount": 200, "type": "recharge" }
+  ],
+  "count": 5,
+  "extra": {
+    "monthlySpend": 312.6,
+    "monthlyLimit": 800
+  }
+}

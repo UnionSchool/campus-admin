@@ -1,4 +1,4 @@
-name: Release npm package
+name: Release npm packages
 
 on:
   push:
@@ -12,19 +12,34 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: npm
+    strategy:
+      # 按依赖顺序串行发布：core → framework → ui → admin
+      max-parallel: 1
+      matrix:
+        package:
+          - campus-core
+          - campus-framework
+          - campus-ui
+          - campus-admin
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.6.9
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-          cache: npm
-      - run: npm ci
-      - run: npm run check
-      - name: Publish package
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Typecheck and build
+        run: |
+          pnpm run typecheck
+          pnpm run build:packages
+      - name: Publish ${{ matrix.package }}
         run: |
           if [[ "${GITHUB_REF_NAME}" == *-* ]]; then
-            npm publish --access public --tag next
+            pnpm --filter "@unionschool/${{ matrix.package }}" publish --access public --tag next --no-git-checks
           else
-            npm publish --access public
+            pnpm --filter "@unionschool/${{ matrix.package }}" publish --access public --no-git-checks
           fi

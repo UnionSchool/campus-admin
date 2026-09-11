@@ -1,0 +1,12 @@
+/* 统计数值：tone 只作用于数值文字，用 text 系列 Token 保证暗色可读 */
+.ca-statistic { display: grid; gap: 4px; }
+.ca-statistic--card { padding: var(--ca-space-4); border-radius: var(--ca-radius-lg); background: var(--ca-surface-card); box-shadow: var(--ca-shadow-md); }
+.ca-statistic__label { color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
+.ca-statistic__value { color: var(--ca-text-primary); font-size: 22px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.ca-statistic__value small { margin-left: 4px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); font-weight: 400; }
+.ca-statistic__hint { color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); }
+.ca-statistic--primary .ca-statistic__value { color: var(--ca-color-primary-text); }
+.ca-statistic--success .ca-statistic__value { color: var(--ca-color-success-text); }
+.ca-statistic--warning .ca-statistic__value { color: var(--ca-color-warning-text); }
+.ca-statistic--danger .ca-statistic__value { color: var(--ca-color-danger-text); }
+.ca-statistic--info .ca-statistic__value { color: var(--ca-color-info-text); }

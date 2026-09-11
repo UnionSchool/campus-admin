@@ -1,0 +1,18 @@
+/**
+ * 进度条：进度色用 `--ca-color-{tone}-text`（暗色下自动提亮），
+ * 轨道用中性浅底，环形与线形共用同一套颜色。
+ */
+.ca-progress { display: flex; align-items: center; gap: var(--ca-space-2); width: 100%; }
+.ca-progress--circle { position: relative; display: inline-grid; place-items: center; width: auto; }
+.ca-progress--primary { color: var(--ca-color-primary-text); }
+.ca-progress--success { color: var(--ca-color-success-text); }
+.ca-progress--warning { color: var(--ca-color-warning-text); }
+.ca-progress--danger { color: var(--ca-color-danger-text); }
+.ca-progress__track { flex: 1; height: 6px; border-radius: var(--ca-radius-full); background: var(--ca-color-neutral-soft); overflow: hidden; }
+.ca-progress__bar { display: block; height: 100%; border-radius: inherit; background: currentColor; transition: width .3s ease; }
+.ca-progress__text { flex-shrink: 0; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); font-variant-numeric: tabular-nums; }
+.ca-progress--circle .ca-progress__text { position: absolute; font-size: var(--ca-font-size-sm); font-weight: 500; color: var(--ca-text-primary); }
+.ca-progress circle { transition: stroke-dashoffset .3s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .ca-progress__bar, .ca-progress circle { transition: none; }
+}

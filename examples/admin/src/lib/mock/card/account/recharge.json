@@ -1,0 +1,9 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "tradeNo": "MOCK20260911001",
+    "amount": 200,
+    "status": "success"
+  }
+}

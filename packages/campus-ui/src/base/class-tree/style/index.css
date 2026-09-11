@@ -1,0 +1,19 @@
+/* 年级班级树：搜索框与选中态都使用主题变量，暗色下自动反色 */
+.ca-class-tree { display: grid; gap: var(--ca-space-2); }
+.ca-class-tree__search { min-height: var(--ca-control-height-md); padding: 0 var(--ca-space-3); border: 1px solid var(--ca-border-color); border-radius: var(--ca-radius-md); background: var(--ca-surface-card); color: var(--ca-text-primary); font-family: inherit; font-size: var(--ca-font-size-md); outline: none; }
+.ca-class-tree__search::placeholder { color: var(--ca-text-placeholder); }
+.ca-class-tree__search:focus { border-color: var(--ca-color-primary); box-shadow: 0 0 0 3px var(--ca-color-primary-soft); }
+.ca-class-tree__list { display: grid; gap: 2px; max-height: 360px; overflow-y: auto; }
+.ca-class-tree__node button { display: flex; align-items: center; gap: var(--ca-space-2); width: 100%; padding: 7px var(--ca-space-2); border: 0; border-radius: var(--ca-radius-md); background: transparent; color: var(--ca-text-regular); font-family: inherit; font-size: var(--ca-font-size-md); text-align: left; }
+.ca-class-tree__node button:hover { background: var(--ca-surface-sunken); }
+.ca-class-tree__node--level-1 button { padding-left: var(--ca-space-5); }
+.ca-class-tree__node--selected button { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); font-weight: 500; }
+.ca-class-tree__node--disabled button { color: var(--ca-text-placeholder); cursor: not-allowed; }
+.ca-class-tree__arrow { color: var(--ca-text-placeholder); transition: transform .16s; }
+.ca-class-tree__arrow--open { transform: rotate(90deg); }
+.ca-class-tree__icon { color: var(--ca-color-primary-text); }
+.ca-class-tree__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ca-class-tree__empty { padding: var(--ca-space-4); color: var(--ca-text-placeholder); font-size: var(--ca-font-size-sm); text-align: center; }
+@media (prefers-reduced-motion: reduce) {
+  .ca-class-tree__arrow { transition: none; }
+}

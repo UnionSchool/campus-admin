@@ -1,0 +1,14 @@
+/**
+ * 考勤状态标签：状态色来自 attendanceMeta()，这里只负责把 tone 映射到 Token，
+ * 明暗主题与自定义品牌色都不需要改这个文件。
+ */
+.ca-attendance-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: var(--ca-radius-full); font-size: var(--ca-font-size-sm); line-height: 1.6; white-space: nowrap; }
+.ca-attendance-badge--small { padding: 0 6px; font-size: var(--ca-font-size-xs); }
+.ca-attendance-badge__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.ca-attendance-badge__time { margin-left: 2px; opacity: .75; font-variant-numeric: tabular-nums; }
+.ca-attendance-badge--primary { background: var(--ca-color-primary-soft); color: var(--ca-color-primary-text); }
+.ca-attendance-badge--success { background: var(--ca-color-success-soft); color: var(--ca-color-success-text); }
+.ca-attendance-badge--warning { background: var(--ca-color-warning-soft); color: var(--ca-color-warning-text); }
+.ca-attendance-badge--danger { background: var(--ca-color-danger-soft); color: var(--ca-color-danger-text); }
+.ca-attendance-badge--info { background: var(--ca-color-info-soft); color: var(--ca-color-info-text); }
+.ca-attendance-badge--neutral { background: var(--ca-color-neutral-soft); color: var(--ca-color-neutral-text); }

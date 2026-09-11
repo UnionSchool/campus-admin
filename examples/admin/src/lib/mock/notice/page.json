@@ -1,0 +1,10 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    { "id": "n1", "title": "关于 9 月家长开放日的安排通知", "source": "校办公室", "date": "2026-09-11", "unread": true, "tag": "通知" },
+    { "id": "n2", "title": "数学作业：函数与导数综合练习", "source": "周老师", "date": "2026-09-11", "unread": true, "tag": "作业" },
+    { "id": "n3", "title": "高二（3）班秋季运动会报名统计", "source": "班主任", "date": "2026-09-10", "unread": true, "tag": "班级" }
+  ],
+  "count": 3
+}

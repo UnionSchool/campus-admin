@@ -1,0 +1,68 @@
+/**
+ * 按钮样式。
+ *
+ * 颜色约定：实心用 `--ca-color-{tone}` 填充、主色实心用 `--ca-color-primary-contrast` 文字色，
+ * 描边与文字形态用 `--ca-color-{tone}-text`，浅色底用 `--ca-color-{tone}-soft`，
+ * 这样明暗主题与自定义品牌色都不需要改样式。
+ */
+.ca-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ca-space-1);
+  min-height: var(--ca-control-height-md);
+  padding: 0 var(--ca-space-3);
+  border: 1px solid var(--ca-border-color);
+  border-radius: var(--ca-radius-md);
+  background: var(--ca-surface-card);
+  color: var(--ca-text-regular);
+  font-size: var(--ca-font-size-md);
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color .18s, border-color .18s, color .18s, opacity .18s;
+}
+.ca-button:hover:not(:disabled) { border-color: var(--ca-border-color-strong); background: var(--ca-surface-sunken); }
+.ca-button:active:not(:disabled) { background: var(--ca-color-neutral-soft); }
+.ca-button:disabled { opacity: .55; }
+
+.ca-button--small { min-height: var(--ca-control-height-sm); padding: 0 var(--ca-space-2); font-size: var(--ca-font-size-sm); border-radius: var(--ca-radius-sm); }
+.ca-button--large { min-height: var(--ca-control-height-lg); padding: 0 var(--ca-space-4); font-size: var(--ca-font-size-lg); }
+.ca-button--block { display: flex; width: 100%; }
+.ca-button--icon-only { width: var(--ca-control-height-md); padding: 0; }
+.ca-button--small.ca-button--icon-only { width: var(--ca-control-height-sm); }
+.ca-button--large.ca-button--icon-only { width: var(--ca-control-height-lg); }
+
+.ca-button--solid { border-color: transparent; color: var(--ca-text-inverse); background: var(--ca-color-neutral-500); }
+.ca-button--solid.ca-button--primary { background: var(--ca-color-primary); color: var(--ca-color-primary-contrast); }
+.ca-button--solid.ca-button--primary:hover:not(:disabled) { background: var(--ca-color-primary-hover); }
+.ca-button--solid.ca-button--success { background: var(--ca-color-success); }
+.ca-button--solid.ca-button--warning { background: var(--ca-color-warning); }
+.ca-button--solid.ca-button--danger { background: var(--ca-color-danger); }
+.ca-button--solid.ca-button--info { background: var(--ca-color-info); }
+.ca-button--solid.ca-button--neutral:hover:not(:disabled) { background: var(--ca-color-neutral-700); }
+.ca-button--solid:hover:not(:disabled) { filter: brightness(1.04); }
+
+.ca-button--outline.ca-button--primary { border-color: var(--ca-color-primary); color: var(--ca-color-primary-text); background: var(--ca-color-primary-soft); }
+.ca-button--outline.ca-button--success { border-color: var(--ca-color-success); color: var(--ca-color-success-text); background: var(--ca-color-success-soft); }
+.ca-button--outline.ca-button--warning { border-color: var(--ca-color-warning); color: var(--ca-color-warning-text); background: var(--ca-color-warning-soft); }
+.ca-button--outline.ca-button--danger { border-color: var(--ca-color-danger); color: var(--ca-color-danger-text); background: var(--ca-color-danger-soft); }
+.ca-button--outline.ca-button--info { border-color: var(--ca-color-info); color: var(--ca-color-info-text); background: var(--ca-color-info-soft); }
+
+.ca-button--text { border-color: transparent; background: transparent; padding: 0 var(--ca-space-1); }
+.ca-button--text.ca-button--primary { color: var(--ca-color-primary-text); }
+.ca-button--text.ca-button--danger { color: var(--ca-color-danger-text); }
+.ca-button--text:hover:not(:disabled) { background: var(--ca-color-neutral-soft); }
+
+.ca-button__icon { display: inline-flex; align-items: center; }
+.ca-button__spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ca-button-spin .7s linear infinite;
+}
+@keyframes ca-button-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .ca-button__spinner { animation-duration: 2s; }
+}

@@ -1,0 +1,2 @@
+/* 图标容器：只负责尺寸与对齐，颜色默认继承父级 currentColor */
+.ca-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; line-height: 1; }
