@@ -45,6 +45,16 @@
 - 组件导出收敛为「组件目录 + 所属层 index.ts」两处修改，顶层 `builtInComponents` 由三层注册表合并。
 - 修复 `CaPageHeader` 的 `bordered` 分隔线不生效：`defineProps` 声明的 prop 不会落到根元素，改为类名修饰符控制。
 - 新增设计 Token 层（`--ca-*` 三层变量）与 `ns()` BEM 类名工具。
+- 亮色主题的主文字色改为中性黑 `#333333`（原 `#2f3d4c`），标题与正文更接近常见的后台观感；次级文字仍保留蓝调灰形成层级。
+- 可读性调整：字号整体上调一档（xs/sm/md/lg/xl = 12/13/15/17/21px），次级文字加深到 ≥4.5:1（`--ca-text-secondary: #5c6d7e`）、占位/禁用加深到 ≥3:1（`--ca-text-placeholder: #72808d`）。
+- 暗色主题主文字改为纯白 `#ffffff`，与深色底对比度 13:1 以上。
+- 新增菜单文字色 Token：亮色一级 `#000000`、二级 `#222222`、三级及以下 `#333333`（暗色依次为 `#ffffff` / `#dddddd` / `#cccccc`），业务可单独覆盖。
+- 侧栏菜单字号与行高整体调大并按层级递减：字号一级 18px、二级 17px、三级及以下 16px（`--ca-side-menu-font-size` / `--ca-side-menu-sub-font-size` / `--ca-side-menu-deep-font-size`），行高一级 50px、二级 48px、三级及以下 46px（`--ca-side-menu-item-height` / `--ca-side-menu-sub-item-height` / `--ca-side-menu-deep-item-height`）。
+- `CaSideMenu` 去掉一级图标前的占位空列：`indent` 现在就是图标的左内边距（示例一级 20px，每级递进 20px），层级缩进公式为 `indent + level × indentStep + levelOffset[level]`。
+- 示例站点去掉 `-webkit-font-smoothing: antialiased`：灰度抗锯齿会让中文笔画发虚，改回系统默认的次像素抗锯齿；同时把示例里 9–11px 的文字统一提到 12px 以上。
+- 修复 `CaWeeklyTimetable` 左侧列被压扁的问题：列宽改由 `colgroup` 声明（分组 44px、节次 76px），此前表头首格 `colspan="2"` 让 `table-layout: fixed` 把两列挤成 22px，节次文案溢出、并且周一列被 `nth-child(2)` 误设为 62px 导致七个星期列不等宽。
+- `CaWeeklyTimetable` 的「时段 / 节次」表头跨分组 + 节次两列，在左侧区域内左右居中。
+- `CaWeeklyTimetable` 表格左右铺满面板，不再留 16px 内边距（工具栏、说明行与图例仍保留原有内边距）。
 - `CaTable` 支持泛型列配置、自定义单元格插槽、受控与非受控排序。
 - 新增组件使用文档：`docs/Campus-Admin-组件使用指南.md`。
 

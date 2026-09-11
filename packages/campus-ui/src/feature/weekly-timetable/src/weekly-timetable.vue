@@ -102,9 +102,16 @@ function openLesson(row: number, day: number) {
     <div :class="ns('timetable', 'scroll')">
       <table :class="ns('timetable', 'table')">
         <caption class="ca-sr-only">{{ t('ca.timetable.caption', { range }) }}</caption>
+        <!-- 列宽用 colgroup 声明：表头首格是 colspan=2，靠 nth-child 定宽会把两列挤在一起 -->
+        <colgroup>
+          <col :class="ns('timetable', 'col', 'group')" />
+          <col :class="ns('timetable', 'col', 'period')" />
+          <col v-for="day in days" :key="day.date.toISOString()" :class="ns('timetable', 'col', 'day')" />
+        </colgroup>
         <thead>
           <tr>
-            <th colspan="2">{{ t('ca.timetable.periodHeader') }}</th>
+            <!-- 跨分组 + 节次两列，在整个左侧区域内左右居中 -->
+            <th colspan="2" :class="ns('timetable', 'period-head')">{{ t('ca.timetable.periodHeader') }}</th>
             <th
               v-for="day in days"
               :key="day.date.toISOString()"

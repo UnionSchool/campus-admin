@@ -73,10 +73,21 @@
   --ca-color-neutral-text: #6b7c8d;
 
   /* ---------- 文本与背景 ---------- */
-  --ca-text-primary: #2f3d4c;
+  /**
+   * 文字色四档：主文字是中性黑，其余三档是同一色系的蓝调灰，靠明度区分层级。
+   * 明度按「可读优先」选：正文级 ≥ 4.5:1，次级 ≥ 4.5:1，占位/禁用 ≥ 3:1（白底）。
+   */
+  --ca-text-primary: #333333;
   --ca-text-regular: #4d5f70;
-  --ca-text-secondary: #7b8b9c;
-  --ca-text-placeholder: #a9b6c4;
+  --ca-text-secondary: #5c6d7e;
+  --ca-text-placeholder: #72808d;
+  /**
+   * 侧栏菜单文字色，按层级递深一档：一级 #000、二级 #222、三级及以下 #333。
+   * 与正文的 #333 相比都更实，保证菜单在浅底上足够清晰。
+   */
+  --ca-text-menu: #000000;
+  --ca-text-menu-sub: #222222;
+  --ca-text-menu-deep: #333333;
   --ca-text-inverse: #ffffff;
   --ca-surface-page: #f4f7fb;
   --ca-surface-card: #ffffff;
@@ -111,13 +122,19 @@
   --ca-space-6: 24px;
   --ca-space-8: 32px;
 
-  /* ---------- 字体 ---------- */
-  --ca-font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
-  --ca-font-size-xs: 11px;
-  --ca-font-size-sm: 12px;
-  --ca-font-size-md: 14px;
-  --ca-font-size-lg: 16px;
-  --ca-font-size-xl: 20px;
+  /* ---------- 字体 ----------
+     Apple 优先的系统字体栈：macOS / iOS 走系统 SF，中文按 Apple 自己的搭配
+     回落 PingFang SC；Windows 走 Segoe UI + 微软雅黑；其余平台退回系统无衬线。
+     这样任何平台都不会出现衬线体或 Arial 这类与系统界面不一致的字形。 */
+  --ca-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  /** 等宽：编号、卡号、设备号这类需要逐位对齐的内容 */
+  --ca-font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  /* 字号整体偏大一档，避免中文在小字号下发虚、看着累 */
+  --ca-font-size-xs: 12px;
+  --ca-font-size-sm: 13px;
+  --ca-font-size-md: 15px;
+  --ca-font-size-lg: 17px;
+  --ca-font-size-xl: 21px;
   --ca-line-height: 1.6;
 
   /* ---------- 控件尺寸 ---------- */
@@ -162,10 +179,15 @@
   --ca-border-color-strong: #333c47;
   --ca-overlay-color: #000000b3;
 
-  --ca-text-primary: #e6edf5;
+  /** 主文字在暗色下用纯白，正文看起来更扎实 */
+  --ca-text-primary: #ffffff;
   --ca-text-regular: #c2cede;
   --ca-text-secondary: #8b9aac;
   --ca-text-placeholder: #6b7a8b;
+  /** 菜单与亮色对称：一级纯白，二级 #ddd、三级及以下 #ccc */
+  --ca-text-menu: #ffffff;
+  --ca-text-menu-sub: #dddddd;
+  --ca-text-menu-deep: #cccccc;
 
   --ca-shadow-sm: 0 1px 3px #0000004d;
   --ca-shadow-md: 0 2px 10px #0000005c;

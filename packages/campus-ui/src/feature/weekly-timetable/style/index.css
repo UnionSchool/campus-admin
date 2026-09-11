@@ -72,12 +72,16 @@
 }
 .ca-timetable__count b { color: var(--ca-color-primary-text); font-weight: 600; }
 
-.ca-timetable__scroll { overflow-x: auto; padding: 0 var(--ca-space-4); }
+/* 表格左右不留白：直接铺满面板，单元格背景与面板边缘齐平 */
+.ca-timetable__scroll { overflow-x: auto; }
 .ca-timetable__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .ca-timetable__table th, .ca-timetable__table td { padding: 0; }
 .ca-timetable__table thead th { padding: 0 0 7px; color: var(--ca-text-placeholder); font-size: var(--ca-font-size-xs); font-weight: 400; text-align: center; }
-.ca-timetable__table thead th:nth-child(1) { width: 44px; }
-.ca-timetable__table thead th:nth-child(2) { width: 62px; }
+/* 左侧两列固定宽度，七个星期列平分剩余空间 */
+.ca-timetable__col--group { width: 44px; }
+.ca-timetable__col--period { width: 76px; }
+/* 「时段 / 节次」跨分组 + 节次两列，在左侧区域内居中 */
+.ca-timetable__period-head { padding: 0 0 7px; text-align: center; }
 .ca-timetable__table thead th span { display: block; }
 .ca-timetable__table thead th b { display: block; margin-top: 2px; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); font-weight: 500; font-variant-numeric: tabular-nums; }
 .ca-timetable__day--today b { color: var(--ca-color-primary-text); }
@@ -92,15 +96,15 @@
 }
 .ca-timetable__period { padding: 0 6px 0 4px; text-align: left; }
 .ca-timetable__period span { display: block; color: var(--ca-text-secondary); font-size: var(--ca-font-size-xs); }
-.ca-timetable__period small { display: block; margin-top: 1px; color: var(--ca-text-placeholder); font-size: 10px; font-variant-numeric: tabular-nums; }
+.ca-timetable__period small { display: block; margin-top: 1px; color: var(--ca-text-placeholder); font-size: 11px; font-variant-numeric: tabular-nums; }
 .ca-timetable__table td { height: 40px; border-bottom: 1px solid var(--ca-border-color); }
 .ca-timetable__row--afternoon td, .ca-timetable__row--afternoon th { border-top: 6px solid transparent; }
 .ca-timetable__cell--weekend { background: var(--ca-surface-sunken); }
 .ca-timetable__cell--today { background: var(--ca-color-primary-soft); }
 
 .ca-timetable__lesson { display: grid; gap: 1px; width: 100%; height: 100%; padding: 5px 3px; border: 0; border-radius: var(--ca-radius-sm); font-family: inherit; text-align: center; }
-.ca-timetable__lesson b { font-size: 10px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ca-timetable__lesson span { font-size: 10px; opacity: .85; }
+.ca-timetable__lesson b { font-size: 11px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ca-timetable__lesson span { font-size: 11px; opacity: .85; }
 .ca-timetable__lesson--blue { color: var(--ca-color-primary-text); background: var(--ca-color-primary-soft); }
 .ca-timetable__lesson--green { color: var(--ca-color-success-text); background: var(--ca-color-success-soft); }
 .ca-timetable__lesson--orange { color: var(--ca-color-warning-text); background: var(--ca-color-warning-soft); }

@@ -4,8 +4,13 @@
    这里不写死任何与主题相关的色值。 */
 
 :root {
-  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-  color: var(--ca-text-primary); background: var(--ca-surface-page); font-synthesis: none;
+  font-family: var(--ca-font-family);
+  color: var(--ca-text-primary); background: var(--ca-surface-page);
+  /* 字体渲染：保留系统默认的次像素抗锯齿（改成灰度抗锯齿会让中文笔画发虚、看着累），
+     只关掉合成粗体/斜体，避免没有真实字重时浏览器把字伪加粗 */
+  font-synthesis: none;
+  font-optical-sizing: auto;
+  text-size-adjust: 100%;
   --blue: var(--ca-color-primary); --sidebar: 192px; --border: var(--ca-border-color); --muted: var(--ca-text-secondary);
 }
 * { box-sizing: border-box; }
@@ -22,10 +27,10 @@ h1, h2, h3, p { margin: 0; }
 .topbar { height: 72px; position: fixed; inset: 0 0 auto; background: var(--ca-color-primary); color: var(--ca-color-primary-contrast); z-index: 40; display: flex; align-items: center; gap: 28px; padding: 0 24px; }
 .topbar::after { content: ''; position: absolute; left: 0; right: 0; top: 72px; height: 28px; background: inherit; z-index: -1; }
 .brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; width: 288px; }
-.brand strong { font-weight: 600; font-size: 17px; letter-spacing: .4px; }
-.brand span { display: block; font-size: 10px; margin-top: 5px; opacity: .85; }
+.brand strong { font-weight: 600; font-size: 18px; letter-spacing: .4px; }
+.brand span { display: block; font-size: 12px; margin-top: 5px; opacity: .85; }
 .top-nav { height: 100%; display: flex; gap: 34px; }
-.top-nav button { position: relative; color: var(--ca-color-primary-contrast); opacity: .76; padding: 0; white-space: nowrap; font-size: 14px; }
+.top-nav button { position: relative; color: var(--ca-color-primary-contrast); opacity: .76; padding: 0; white-space: nowrap; font-size: 15px; }
 .top-nav button.active { opacity: 1; font-weight: 500; }
 .top-nav button.active::after { position: absolute; content: ''; height: 3px; background: currentColor; border-radius: 2px; bottom: 13px; left: 0; right: 0; }
 .top-nav button:hover { opacity: 1; }
@@ -52,16 +57,16 @@ h1, h2, h3, p { margin: 0; }
 /* 菜单背景右上角圆角：外层负责圆角裁切，内层负责滚动，避免滚动容器覆盖圆角 */
 .sidebar { position: fixed; top: 72px; bottom: 0; left: 0; width: var(--sidebar); z-index: 41; border-radius: 0 16px 0 0; overflow: hidden; background: var(--ca-surface-card); display: flex; flex-direction: column; padding-top: 13px; }
 .sidebar-scroll { flex: 1; min-height: 0; overflow-y: auto; }
-.school-switch { display: flex; align-items: center; gap: 7px; padding: 15px 17px 22px; font-size: 11px; color: var(--ca-text-secondary); }
+.school-switch { display: flex; align-items: center; gap: 7px; padding: 15px 17px 22px; font-size: 12px; color: var(--ca-text-secondary); }
 .school-switch>svg:first-child { color: var(--ca-color-primary); }
 .school-switch>svg:last-child { margin-left: auto; }
 /* 侧栏菜单样式由 campus-ui 的 CaSideMenu 提供，此处只保留布局相关规则 */
 .sidebar-foot { margin-top: auto; padding: 19px 18px 15px; display: grid; gap: 15px; }
-.sidebar-foot button { display: flex; align-items: center; gap: 12px; color: var(--ca-text-secondary); font-size: 12px; padding: 0 3px; }
-.version { font-size: 9px; color: var(--ca-text-placeholder); margin-top: 7px; }
+.sidebar-foot button { display: flex; align-items: center; gap: 12px; color: var(--ca-text-secondary); font-size: 13px; padding: 0 3px; }
+.version { font-size: 12px; color: var(--ca-text-placeholder); margin-top: 7px; }
 .main-content { margin-left: var(--sidebar); padding: 72px 20px 0; position: relative; z-index: 42; pointer-events: none; }
 .workspace { background: var(--ca-surface-page); border-radius: 15px 15px 0 0; padding: 0 17px 12px; min-height: calc(100dvh - 72px); max-width: 1560px; margin: 0 auto; pointer-events: auto; }
-.breadcrumb { display: flex; align-items: center; justify-content: space-between; min-height: 45px; font-size: 10px; color: var(--ca-text-secondary); gap: 8px; }
+.breadcrumb { display: flex; align-items: center; justify-content: space-between; min-height: 45px; font-size: 12px; color: var(--ca-text-secondary); gap: 8px; }
 .breadcrumb>div, .breadcrumb>div>span { display: flex; align-items: center; gap: 7px; }
 .breadcrumb>div>svg { color: var(--blue); }
 .breadcrumb b { color: var(--ca-text-regular); font-weight: 400; }
@@ -71,13 +76,13 @@ h1, h2, h3, p { margin: 0; }
 
 .welcome-panel { position: relative; min-height: 155px; background: var(--ca-color-primary-soft); border: 1px solid var(--ca-border-color); border-radius: 7px; padding: 21px 20px 17px; overflow: hidden; }
 .welcome-copy { position: relative; z-index: 1; }
-.welcome-copy h1 { color: var(--ca-text-primary); font-size: 16px; font-weight: 600; }
-.welcome-copy h1>span { margin-left: 12px; font-size: 11px; font-weight: 400; color: var(--ca-text-secondary); }
-.welcome-copy p { margin-top: 7px; font-size: 11px; color: var(--ca-text-secondary); max-width: calc(100% - 95px); line-height: 1.7; }
+.welcome-copy h1 { color: var(--ca-text-primary); font-size: 17px; font-weight: 600; }
+.welcome-copy h1>span { margin-left: 12px; font-size: 13px; font-weight: 400; color: var(--ca-text-secondary); }
+.welcome-copy p { margin-top: 7px; font-size: 13px; color: var(--ca-text-secondary); max-width: calc(100% - 95px); line-height: 1.7; }
 .summary-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: calc(100% - 100px); margin-top: 23px; }
 .summary-stats button { display: flex; align-items: center; gap: 8px; text-align: left; padding: 0; }
 .summary-stats button:hover strong { color: var(--blue); }
-.summary-stats button>div>span { color: var(--ca-text-secondary); font-size: 10px; display: block; white-space: nowrap; }
+.summary-stats button>div>span { color: var(--ca-text-secondary); font-size: 12px; display: block; white-space: nowrap; }
 .summary-stats strong { display: block; color: var(--ca-text-primary); font-size: 23px; font-weight: 500; line-height: 1.25; font-variant-numeric: tabular-nums; }
 .stat-icon { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; flex-shrink: 0; color: white; background: var(--tone); }
 /* 首页的图标底是「实心底 + 白图标」，暗色下不能跟着主题变浅：
@@ -108,9 +113,9 @@ h1, h2, h3, p { margin: 0; }
 /* 指引卡片是固定的品牌强调块：用 palette 蓝而不是语义 Token，
    这样在亮色和暗色下都是同一块亮蓝色卡片，不会随主题翻转。 */
 .guide-panel { position: relative; min-height: 155px; padding: 26px 22px; border-radius: 7px; overflow: hidden; background: linear-gradient(135deg, var(--ca-color-blue-500), var(--ca-color-blue-300)); color: white; }
-.guide-panel h2 { font-size: 15px; font-weight: 600; }
-.guide-panel p { margin-top: 7px; font-size: 11px; opacity: .9; }
-.primary-button { display: inline-flex; align-items: center; gap: 5px; margin-top: 19px; padding: 7px 12px; border-radius: 5px; background: white; color: var(--ca-color-blue-600); font-size: 11px; font-weight: 600; }
+.guide-panel h2 { font-size: 16px; font-weight: 600; }
+.guide-panel p { margin-top: 7px; font-size: 13px; opacity: .9; }
+.primary-button { display: inline-flex; align-items: center; gap: 5px; margin-top: 19px; padding: 7px 12px; border-radius: 5px; background: white; color: var(--ca-color-blue-600); font-size: 13px; font-weight: 600; }
 .guide-art { position: absolute; right: 0; top: 0; bottom: 0; width: 120px; }
 .guide-orbit { position: absolute; right: -30px; top: 10px; width: 120px; height: 120px; border: 1px dashed #ffffff55; border-radius: 50%; }
 .mini-screen { position: absolute; right: 22px; top: 46px; width: 74px; height: 52px; border-radius: 6px; background: #ffffff26; border: 1px solid #ffffff55; padding: 8px; display: grid; gap: 4px; }
@@ -120,7 +125,7 @@ h1, h2, h3, p { margin: 0; }
 
 .shortcut-section { padding: 17px 19px 14px; }
 .shortcut-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: 16px; }
-.shortcut { display: flex; flex-direction: column; align-items: center; gap: 9px; font-size: 11px; padding: 2px 4px 5px; border-radius: 5px; }
+.shortcut { display: flex; flex-direction: column; align-items: center; gap: 9px; font-size: 13px; padding: 2px 4px 5px; border-radius: 5px; }
 .shortcut:hover { background: var(--ca-surface-sunken); color: var(--blue); }
 .shortcut-icon { height: 38px; width: 38px; border-radius: 6px; display: grid; place-items: center; position: relative; }
 .shortcut-icon::before { content: ''; position: absolute; inset: 6px; border-radius: 4px; background: var(--tone); opacity: .82; }
@@ -131,32 +136,32 @@ h1, h2, h3, p { margin: 0; }
 .overview-stats { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 17px; }
 .overview-stats>div { padding-left: 20px; border-left: 1px solid var(--ca-border-color); }
 .overview-stats>div:first-child { padding-left: 0; border-left: 0; }
-.overview-stats span { display: block; color: var(--ca-text-secondary); font-size: 10px; }
+.overview-stats span { display: block; color: var(--ca-text-secondary); font-size: 12px; }
 .overview-stats b { display: block; font-size: 21px; font-weight: 500; margin-top: 8px; color: var(--ca-text-primary); }
-.overview-stats small { font-size: 10px; margin-left: 5px; font-weight: 400; color: var(--ca-text-placeholder); }
+.overview-stats small { font-size: 12px; margin-left: 5px; font-weight: 400; color: var(--ca-text-placeholder); }
 
 .files-panel { padding: 17px 16px 6px; }
 .file-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border-bottom: 1px solid var(--ca-border-color); padding: 14px 0; }
 .file-item:last-child { border-bottom: 0; }
 .file-icon { width: 28px; height: 32px; border-radius: 4px; display: grid; place-items: center; flex-shrink: 0; }
 .file-item>div { min-width: 0; flex: 1; }
-.file-item b { font-size: 10px; font-weight: 400; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.file-item small { display: flex; justify-content: space-between; font-size: 9px; color: var(--ca-text-placeholder); margin-top: 6px; }
+.file-item b { font-size: 12px; font-weight: 400; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.file-item small { display: flex; justify-content: space-between; font-size: 12px; color: var(--ca-text-placeholder); margin-top: 6px; }
 .file-item>i { width: 4px; height: 4px; background: var(--ca-color-danger); border-radius: 50%; flex-shrink: 0; }
 .file-item:hover b { color: var(--blue); }
-.service-note { color: var(--ca-text-placeholder); font-size: 9px; display: flex; justify-content: center; gap: 6px; align-items: center; }
-.page-footer { font-size: 9px; display: flex; justify-content: center; gap: 10px; color: var(--ca-text-placeholder); padding: 21px 0 6px; }
+.service-note { color: var(--ca-text-placeholder); font-size: 12px; display: flex; justify-content: center; gap: 6px; align-items: center; }
+.page-footer { font-size: 12px; display: flex; justify-content: center; gap: 10px; color: var(--ca-text-placeholder); padding: 21px 0 6px; }
 .page-footer span { border-left: 1px solid var(--ca-border-color); padding-left: 10px; }
 
 .modal-backdrop { position: fixed; inset: 0; background: var(--ca-overlay-color); z-index: 100; display: grid; place-items: center; padding: 20px; backdrop-filter: blur(2px); }
 .dialog { width: min(480px, 100%); border-radius: 9px; background: var(--ca-surface-card); padding: 23px; box-shadow: var(--ca-shadow-popup); }
 .dialog header { display: flex; justify-content: space-between; gap: 20px; align-items: start; }
-.dialog h2 { font-size: 17px; font-weight: 500; }
+.dialog h2 { font-size: 18px; font-weight: 500; }
 .dialog header button { padding: 0; color: var(--ca-text-secondary); }
-.dialog p { font-size: 13px; color: var(--ca-text-regular); line-height: 1.9; margin: 19px 0; }
-.dialog footer { display: flex; justify-content: flex-end; gap: 15px; font-size: 12px; margin-top: 20px; }
+.dialog p { font-size: 14px; color: var(--ca-text-regular); line-height: 1.9; margin: 19px 0; }
+.dialog footer { display: flex; justify-content: flex-end; gap: 15px; font-size: 13px; margin-top: 20px; }
 .shortcut-options { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
-.shortcut-options label { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.shortcut-options label { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .shortcut-options input { accent-color: var(--blue); }
 
 .mobile-menu, .sidebar-mobile-head, .backdrop { display: none; }
@@ -177,8 +182,9 @@ h1, h2, h3, p { margin: 0; }
   .primary-column, .secondary-column { gap: 12px; }
 }
 @media (max-width: 1000px) {
-  :root { --sidebar: 168px; }
-  .school-switch { padding-left: 13px; padding-right: 13px; font-size: 10px; }
+  /* 菜单字号调大后，168px 放不下三级菜单，收到 184px */
+  :root { --sidebar: 184px; }
+  .school-switch { padding-left: 13px; padding-right: 13px; font-size: 12px; }
   .brand { width: 235px; } .top-nav { gap: 20px; } .top-nav button { font-size: 12px; } .top-actions { gap: 10px; }
   .home-grid { grid-template-columns: minmax(0, 1fr) 260px; }
   .summary-stats { gap: 3px; } .summary-stats button { gap: 5px; } .stat-icon { width: 26px; height: 26px; }
@@ -194,13 +200,13 @@ h1, h2, h3, p { margin: 0; }
   .summary-stats { width: calc(100% - 100px); }
   .welcome-panel { padding: 21px 20px; }
   .secondary-column { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .breadcrumb>span { font-size: 9px; }
+  .breadcrumb>span { font-size: 11px; }
 }
 @media (max-width: 620px) {
   .topbar { height: 60px; padding: 0 12px; gap: 8px; }
   .topbar::after { display: none; }
   .mobile-menu { display: grid; place-items: center; color: white; padding: 3px; }
-  .brand { width: auto; gap: 7px; } .brand>svg { width: 28px; } .brand strong { font-size: 14px; } .brand span { font-size: 7px; margin-top: 3px; }
+  .brand { width: auto; gap: 7px; } .brand>svg { width: 28px; } .brand strong { font-size: 15px; } .brand span { font-size: 10px; margin-top: 3px; }
   .profile>span:not(.avatar), .profile>svg { display: none; } .top-actions { gap: 9px; }
   .sidebar { top: 0; z-index: 80; width: 230px; transform: translateX(-100%); transition: transform .2s; border-radius: 0 12px 12px 0; }
   .sidebar.open { transform: translateX(0); }
@@ -211,16 +217,16 @@ h1, h2, h3, p { margin: 0; }
   .language-switch>svg { display: none; }
   .main-content { margin-left: 0; padding: 72px 10px 0; z-index: auto; }
   .workspace { padding: 0 10px 10px; min-height: calc(100dvh - 72px); }
-  .breadcrumb { font-size: 9px; min-height: 36px; } .breadcrumb>span { display: none; }
+  .breadcrumb { font-size: 11px; min-height: 36px; } .breadcrumb>span { display: none; }
   .welcome-panel { padding: 18px 13px; min-height: 168px; }
-  .welcome-copy h1 { font-size: 15px; } .welcome-copy h1>span { display: none; }
-  .welcome-copy p { font-size: 10px; max-width: 90%; } .book-art { display: none; }
+  .welcome-copy h1 { font-size: 16px; } .welcome-copy h1>span { display: none; }
+  .welcome-copy p { font-size: 12px; max-width: 90%; } .book-art { display: none; }
   .summary-stats { width: 100%; margin-top: 24px; } .summary-stats strong { font-size: 21px; }
-  .summary-stats button>div>span { font-size: 9px; } .stat-icon { width: 25px; height: 25px; } .stat-icon svg { width: 15px; }
+  .summary-stats button>div>span { font-size: 11px; } .stat-icon { width: 25px; height: 25px; } .stat-icon svg { width: 15px; }
   .shortcut-grid { grid-template-columns: repeat(3, 1fr); row-gap: 17px; } .shortcut-section { padding: 16px; }
   .overview-stats { grid-template-columns: repeat(2, 1fr); row-gap: 20px; }
   .overview-stats>div:nth-child(3) { border-left: 0; padding-left: 0; }
-  .page-footer { font-size: 8px; }
+  .page-footer { font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }

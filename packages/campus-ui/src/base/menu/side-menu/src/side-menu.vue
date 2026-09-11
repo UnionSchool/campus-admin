@@ -216,8 +216,6 @@ function handleSelect(row: SideMenuItem) {
       :aria-current="isActive(row.itemKey) ? 'page' : undefined"
       @click="handleSelect(row)"
     >
-      <!-- 一级保留箭头列的占位，保证同级「有/无子菜单」的图标与文字左对齐 -->
-      <span v-if="row.level === 0" :class="ns('side-menu', 'arrow-slot')" aria-hidden="true"></span>
       <span v-if="resolveIcon(row) || $slots.icon" :class="ns('side-menu', 'icon')" :data-size="row.level === 0 ? 16 : 14">
         <!-- 图标可自定义：通过 #icon 插槽按节点渲染，未提供时回退到默认图标 -->
         <slot name="icon" :item="row">

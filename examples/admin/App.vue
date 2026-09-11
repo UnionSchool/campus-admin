@@ -138,7 +138,7 @@ function handleTopMenu(item: { labelKey: string; path: string; descriptionKey?: 
           <Building2 :size="18" /><span>{{ t('app.school') }}</span>
           <ChevronDown :size="12" />
         </div>
-        <CaSideMenu :items="sideMenus" :model-value="route.path" :indent="2" :indent-step="32"
+        <CaSideMenu :items="sideMenus" :model-value="route.path" :indent="20" :indent-step="20"
           :level-offset="[0, 0, -10]" @select="handleSideMenu" />
         <div class="sidebar-foot">
           <button @click="showDetail(t('app.help'), t('app.helpDetail'))">

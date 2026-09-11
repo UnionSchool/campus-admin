@@ -251,6 +251,7 @@ Token 分三层，完整清单见 `src/styles/token.css`：
 ```text
 基础色 palette   --ca-color-blue-500、--ca-space-4、--ca-radius-md
 品牌与语义色     --ca-color-primary-soft、--ca-color-success-text、--ca-text-secondary、--ca-surface-card
+文字层级         --ca-text-primary、--ca-text-regular、--ca-text-secondary、--ca-text-placeholder、--ca-text-menu
 主题覆盖         :root[data-ca-theme='dark'] 覆盖语义与中性色
 ```
 
