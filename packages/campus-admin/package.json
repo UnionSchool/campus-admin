@@ -1,6 +1,6 @@
 {
   "name": "@unionschool/campus-admin",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "面向智慧校园后台管理场景的完整 Vue 3 框架入口",
   "type": "module",
   "license": "MIT",

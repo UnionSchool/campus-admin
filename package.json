@@ -1,6 +1,6 @@
 {
   "name": "campus",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "private": true,
   "description": "众校通智慧校园 Vue 3 前端框架 Monorepo",
   "type": "module",

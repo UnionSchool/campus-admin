@@ -1,6 +1,6 @@
 {
   "name": "@unionschool/campus-core",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Campus Admin 框架核心：应用生命周期、服务容器、配置与契约",
   "type": "module",
   "license": "MIT",

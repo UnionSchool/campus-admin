@@ -1,6 +1,6 @@
 {
   "name": "@unionschool/campus-framework",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Campus Admin 与 Vue 之间的适配层，全项目唯一直接依赖 vue 的位置",
   "type": "module",
   "license": "MIT",
