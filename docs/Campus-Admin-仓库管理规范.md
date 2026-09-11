@@ -5,6 +5,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | GitHub 仓库 | `UnionSchool/campus-admin` |
+| Gitee 仓库 | `UnionSchool/campus-admin` |
 | npm 包 | `@unionschool/campus-admin` |
 | 演示与文档 | <https://campus.zhongxiaotong.com> |
 | 技术栈 | Vue 3、TypeScript、Vite |
@@ -90,25 +91,136 @@ chore: update build configuration
 
 根目录 `package.json` 的 `version` 是唯一版本源。Git 标签必须与其完全一致，例如 `v0.1.0-alpha.1`。任何已发布版本不得覆盖或复用版本号。
 
-## 7. npm 发布流程
+## 7. 发布流程
 
-首次发布由 npm 账号持有人执行：
+完成版本号、`CHANGELOG.md` 和发布提交后，推荐直接运行统一发布脚本：
+
+```bash
+npm run deploy
+```
+
+脚本会检查 `main` 分支、干净工作区、两端远程分支、重复 Git 标签和 npm 重复版本，执行 `npm run check`，随后依次推送 GitHub、Gitee，并通过 GitHub 标签触发 npm 自动发布。正式发布前可先演练检查：
+
+```bash
+npm run deploy -- --dry-run
+```
+
+演练模式不会推送代码、创建标签或发布 npm。下面各节保留手工发布方法，供排错或特殊情况使用。
+
+### 7.1 发布前准备
+
+确认当前位于 `main` 分支且工作区干净：
+
+```bash
+git switch main
+git pull --ff-only origin main
+git status
+npm ci
+npm run check
+```
+
+`npm run check` 会依次执行类型检查、库构建和 `npm pack --dry-run`。发布前还必须更新 `CHANGELOG.md`，并确认 `package.json` 中的版本号尚未在 npm 发布过。
+
+版本号通过 npm 命令更新，预发布版本和稳定版本示例：
+
+```bash
+npm version prerelease --preid=alpha --no-git-tag-version
+# 或
+npm version patch --no-git-tag-version
+```
+
+检查变更后提交：
+
+```bash
+git add package.json package-lock.json CHANGELOG.md
+git commit -m "chore: release v<版本号>"
+```
+
+### 7.2 发布到 GitHub 和 Gitee
+
+项目配置了两个远程仓库：
+
+```text
+origin  https://github.com/UnionSchool/campus-admin.git
+gitee   https://gitee.com/UnionSchool/campus-admin.git
+```
+
+先将同一个 `main` 提交分别推送到两个平台：
+
+```bash
+git push origin main
+git push gitee main
+```
+
+两个仓库的默认分支均应设置为 `main`。可使用以下命令核对：
+
+```bash
+git remote show origin
+git remote show gitee
+```
+
+如果新建 Gitee 仓库时自动生成了初始化提交，应先确认远端文件可以覆盖，再使用 `git push --force-with-lease -u gitee main` 完成首次同步。该命令只用于初始化历史不一致的场景，日常发布禁止强制推送。
+
+### 7.3 发布到 npm
+
+首次发布或需要本机手动发布时：
 
 ```bash
 npm login
 npm whoami
 npm run check
-npm publish --access public --tag next
 ```
 
-首次发布成功后，在 npm 包设置中配置 GitHub Trusted Publishing，绑定：
+预发布版本使用对应标签，避免占用 `latest`：
+
+```bash
+npm publish --access public --tag alpha
+```
+
+稳定版本发布到默认的 `latest` 标签：
+
+```bash
+npm publish --access public
+```
+
+同一版本号不能重复发布。如果发布内容需要修正，必须增加 `package.json` 版本号后重新发布。
+
+### 7.4 使用 Git 标签自动发布 npm
+
+仓库已配置 `.github/workflows/release.yml`。完成代码推送后，创建与 `package.json` 完全一致的标签，并推送到 GitHub：
+
+```bash
+git tag -a v<版本号> -m "v<版本号>"
+git push origin v<版本号>
+```
+
+GitHub Actions 会执行安装、检查和 npm 发布。带连字符的预发布版本（例如 `v0.2.0-alpha.1`）发布到 `next`，稳定版本发布到 `latest`。
+
+如需让 Gitee 同时保留发布标签，再执行：
+
+```bash
+git push gitee v<版本号>
+```
+
+自动发布需在 npm 包设置中配置 GitHub Trusted Publishing：
 
 - GitHub Owner：`UnionSchool`
 - Repository：`campus-admin`
 - Workflow：`release.yml`
 - GitHub Environment：`npm`
 
-以后发布：更新版本和 `CHANGELOG.md`，合并到 `main`，创建对应 `v*` 标签并推送。GitHub Actions 对预发布版本使用 `next`，稳定版本使用 `latest`。正式接入 Trusted Publishing 后不保存长期 `NPM_TOKEN`。
+正式接入 Trusted Publishing 后，不在 GitHub 中保存长期 `NPM_TOKEN`。
+
+### 7.5 发布后验证
+
+```bash
+npm view @unionschool/campus-admin version
+npm view @unionschool/campus-admin dist-tags
+git ls-remote --heads origin main
+git ls-remote --heads gitee main
+```
+
+还应检查 GitHub Actions 发布任务是否成功，并确认 GitHub、Gitee 的 `main` 指向同一个提交。
 
 ## 8. 发布门禁
 
@@ -133,5 +245,6 @@ npm publish --access public --tag next
 - 已隔离 npm 库源码、演示应用、公开文档和本地内部文档。
 - 已通过 npm `files` 白名单限制发布内容。
 - 已配置库构建、类型声明、CI 和基于 Git 标签的 npm 发布流程。
-- 首次 npm 发布仍需账号持有人在本机完成登录。
-- GitHub 仓库创建、首次推送、分支保护和 Trusted Publishing 绑定需要在平台端完成。
+- npm 包 `@unionschool/campus-admin` 已完成首次发布。
+- GitHub 和 Gitee 仓库均已完成首次推送，默认分支为 `main`。
+- GitHub 分支保护和 npm Trusted Publishing 仍需按平台实际配置持续检查。

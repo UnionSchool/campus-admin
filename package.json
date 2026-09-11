@@ -27,6 +27,7 @@
     "build:lib": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.lib.json && vite build --config vite.config.lib.ts",
     "build": "npm run build:lib",
     "check": "npm run typecheck && npm run build:lib && npm pack --dry-run",
+    "deploy": "node scripts/deploy.mjs",
     "preview": "vite preview",
     "prepublishOnly": "npm run check"
   },
