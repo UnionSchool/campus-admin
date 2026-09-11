@@ -12,3 +12,4 @@ npm-debug.log*
 
 # 内部规划、讨论稿和未公开设计资料，仅保留在本机
 .local-docs/
+.code-review-graph
