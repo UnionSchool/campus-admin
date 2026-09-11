@@ -12,13 +12,13 @@ Vue、Vite、UI 组件库升级时，最容易出问题的不是版本号，而�
 - 业务逻辑和渲染写在一个 `.vue` 文件里，无法单独测试，也无法移植到小程序或 Node。
 - 应用没有统一入口，插件、权限、请求各写各的，替换实现时全项目搜索。
 
-Laravel 之所以“升级框架不影响业务”，关键不是目录好看，而是三条硬约束：
+成熟框架之所以能做到“升级框架不影响业务”，关键不是目录好看，而是三条硬约束：
 
 1. 业务只依赖稳定的**契约**（Controller 约定、契约接口、Facade），不依赖框架内部实现。
 2. 框架相关代码集中在**可替换的外壳**里，例如 `bootstrap/` 和 `config/`。
 3. 服务通过**容器 + 服务提供者 + 插件**装配，业务代码主动 `new` 依赖的情况很少。
 
-Campus Admin 按同样思路分层，区别只是渲染层从 PHP 换成了 Vue。
+Campus Admin 采用同一套思路分层，区别只是渲染层换成了 Vue。
 
 ## 2. 包与目录分层
 
@@ -89,20 +89,22 @@ examples/*（只从包名引用，不引用源码）
 
 判断标准很简单：**在 `campus-core` 里写不出来的东西，都属于 framework 或更高层。**
 
-## 4. 对 Laravel 概念的对应关系
+## 4. 概念对应关系
 
-| Laravel | Campus Admin | 位置 |
+下表把常见的服务端框架概念对应到本项目的实现，便于从服务端转过来的同学快速定位：
+
+| 常见概念 | Campus Admin | 位置 |
 | --- | --- | --- |
 | Application | `CampusApplication` | `packages/campus-core/src/application.ts` |
 | Service Container | `CampusContainer` | `packages/campus-core/src/container.ts` |
 | Service Provider | `CampusProvider` 契约 + `defineProvider` | `packages/campus-core/src/contracts/provider.ts` |
 | Package / Plugin | `CampusPlugin` 契约 + `definePlugin` | `packages/campus-core/src/contracts/provider.ts` |
 | Facade | `campus('service')` | `packages/campus-core/src/facade.ts` |
-| config/*.php | `CampusConfig` 对象 | `packages/campus-core/src/contracts/config.ts` |
-| bootstrap/app.php | `createCampusAdmin()` | `packages/campus-admin/src/plugin.ts` |
-| Blade 视图 | `.vue` 组件 | `packages/campus-ui/src/{atom,base,feature}/*` |
+| 配置文件 | `CampusConfig` 对象 | `packages/campus-core/src/contracts/config.ts` |
+| 应用入口 / 引导文件 | `createCampusAdmin()` | `packages/campus-admin/src/plugin.ts` |
+| 视图模板 | `.vue` 组件 | `packages/campus-ui/src/{atom,base,feature}/*` |
 
-生命周期与 Laravel 一致：**register 只做绑定，boot 才允许依赖其他提供者**。
+生命周期约定：**register 只做绑定，boot 才允许依赖其他提供者**。
 
 ```ts
 import { createCampusAdmin, defineProvider } from '@unionschool/campus-admin'

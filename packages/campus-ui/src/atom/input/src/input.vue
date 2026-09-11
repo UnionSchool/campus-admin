@@ -17,8 +17,11 @@
 import { computed, ref } from '@unionschool/campus-framework'
 import { X } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 
 defineOptions({ name: 'CaInput' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   modelValue?: string | number
@@ -92,7 +95,7 @@ defineExpose({ focus })
       @blur="focused = false"
       @keyup.enter="emit('enter')"
     />
-    <button v-if="showClear" :class="ns('input', 'clear')" type="button" aria-label="清空" @click="clear"><X :size="12" /></button>
+    <button v-if="showClear" :class="ns('input', 'clear')" type="button" :aria-label="t('ca.common.clear')" @click="clear"><X :size="12" /></button>
     <span v-if="$slots.suffix" :class="ns('input', 'affix')"><slot name="suffix" /></span>
   </div>
 </template>

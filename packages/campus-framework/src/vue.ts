@@ -29,6 +29,7 @@ export type {
   App,
   Component,
   ComputedRef,
+  InjectionKey,
   PropType,
   Ref,
   ShallowRef,

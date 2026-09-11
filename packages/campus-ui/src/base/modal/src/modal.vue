@@ -14,12 +14,15 @@
 -->
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, ref, watch } from '@unionschool/campus-framework'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from '@unionschool/campus-framework'
 import { X } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { focusableElements, lockScroll, unlockScroll } from './core'
 
 defineOptions({ name: 'CaModal' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   modelValue?: boolean
@@ -39,9 +42,11 @@ const props = withDefaults(defineProps<{
   maskClosable: true,
   escClosable: true,
   showFooter: false,
-  confirmText: '确定',
-  cancelText: '取消',
 })
+
+/** 未显式传文案时用当前语言的默认值 */
+const confirmTextValue = computed(() => props.confirmText ?? t('ca.common.confirm'))
+const cancelTextValue = computed(() => props.cancelText ?? t('ca.common.cancel'))
 
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
@@ -122,14 +127,14 @@ onBeforeUnmount(() => {
         >
           <header :class="ns('modal', 'header')">
             <h2 :class="ns('modal', 'title')"><slot name="title">{{ title }}</slot></h2>
-            <button :class="ns('modal', 'close')" type="button" aria-label="关闭" @click="close"><X :size="18" /></button>
+            <button :class="ns('modal', 'close')" type="button" :aria-label="t('ca.common.close')" @click="close"><X :size="18" /></button>
           </header>
           <div :class="ns('modal', 'body')"><slot /></div>
           <footer v-if="showFooter || $slots.footer" :class="ns('modal', 'footer')">
             <slot name="footer">
-              <button :class="ns('modal', 'button')" type="button" @click="close">{{ cancelText }}</button>
+              <button :class="ns('modal', 'button')" type="button" @click="close">{{ cancelTextValue }}</button>
               <button :class="cx(ns('modal', 'button'), ns('modal', 'button', 'primary'))" type="button" :disabled="confirmLoading" @click="confirm">
-                {{ confirmLoading ? '处理中…' : confirmText }}
+                {{ confirmLoading ? t('ca.common.processing') : confirmTextValue }}
               </button>
             </slot>
           </footer>

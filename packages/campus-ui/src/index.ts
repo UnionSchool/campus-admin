@@ -4,6 +4,7 @@ import './styles.css'
 import { atomComponents } from './atom'
 import { baseComponents } from './base'
 import { featureComponents } from './feature'
+import { createLocale, installLocale } from './locale'
 
 /**
  * 组件库入口。
@@ -15,6 +16,9 @@ import { featureComponents } from './feature'
 export * from './atom'
 export * from './base'
 export * from './feature'
+
+// 国际化：内置 zh-CN / en-US 词条，业务可通过 config.locale 追加自己的词条
+export * from './locale'
 
 // 工具
 export { COMPONENT_PREFIX, cx, ns } from './core/namespace'
@@ -52,6 +56,8 @@ export const CampusUI = {
     Object.entries(builtInComponents).forEach(([name, component]) => {
       app.component(name, component as Parameters<App['component']>[1])
     })
+    // 单独使用组件库时提供一份默认语言实例，业务无需额外配置
+    installLocale(app, createLocale())
   },
 }
 

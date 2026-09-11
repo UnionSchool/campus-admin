@@ -24,7 +24,7 @@ lib/api/*.ts          按场景定义的接口函数
     ↓  useRequest()
 lib/request.ts        统一处理 URL、token、超时、拆包、错误
     ↓  fetch
-Laravel API
+后端 API
 ```
 
 组件不直接调用 `lib/api`，而是通过 Provider 装配（`src/services/*.ts`），

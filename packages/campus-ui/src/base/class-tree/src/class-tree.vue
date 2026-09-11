@@ -15,10 +15,13 @@
 import { computed, ref, watch } from '@unionschool/campus-framework'
 import { ChevronRight, GraduationCap, UsersRound } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { defaultExpanded, filterTree, flattenTree } from './core'
 import type { GradeNode } from './core'
 
 defineOptions({ name: 'CaClassTree' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   modelValue?: string
@@ -71,8 +74,8 @@ function select(id: string, label: string, isLeaf: boolean, disabled?: boolean) 
       v-model="keyword"
       :class="ns('class-tree', 'search')"
       type="search"
-      placeholder="搜索年级或班级"
-      aria-label="搜索班级"
+      :placeholder="t('ca.classTree.searchPlaceholder')"
+      :aria-label="t('ca.classTree.searchLabel')"
     />
     <ul :class="ns('class-tree', 'list')" role="tree">
       <li
@@ -99,7 +102,7 @@ function select(id: string, label: string, isLeaf: boolean, disabled?: boolean) 
           <span :class="ns('class-tree', 'label')">{{ row.label }}</span>
         </button>
       </li>
-      <li v-if="!rows.length" :class="ns('class-tree', 'empty')">没有匹配的年级或班级</li>
+      <li v-if="!rows.length" :class="ns('class-tree', 'empty')">{{ t('ca.classTree.empty') }}</li>
     </ul>
   </div>
 </template>

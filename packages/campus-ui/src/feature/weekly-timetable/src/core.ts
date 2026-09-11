@@ -1,6 +1,9 @@
 /**
  * WeeklyTimetable 的核心逻辑，纯 TypeScript，不依赖 Vue。
+ * 星期标签与详情文案通过参数传入，日期格式统一走 Intl。
  */
+import { formatDay, weekdayLabels } from '@/locale/format'
+import type { TranslateFn } from '@/locale/types'
 
 export type TimetableMode = 'personal' | 'class'
 export type LessonTone = 'blue' | 'green' | 'orange'
@@ -25,17 +28,22 @@ export interface TimetableDay {
   today: boolean
 }
 
-const DAY_LABELS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 const TONES: LessonTone[] = ['blue', 'green', 'orange']
 
 export const CLASS_OPTIONS = ['高一（1）班', '高一（2）班', '高一（3）班']
 
+/**
+ * 以下都是演示数据：班级名、科目与节次表在真实项目里由接口下发，
+ * 因此不放进语言包（语言包只放组件自身的界面文案）。
+ */
+
 /** 基准周：2026-09-07 起，今天固定为 2026-09-11 */
-export function createDays(weekOffset: number, today = new Date(2026, 8, 11)): TimetableDay[] {
+export function createDays(weekOffset: number, locale: string, today = new Date(2026, 8, 11)): TimetableDay[] {
+  const labels = weekdayLabels(locale, 'short')
   return Array.from({ length: 7 }, (_, index) => {
     const date = new Date(2026, 8, 7 + weekOffset * 7 + index)
     return {
-      label: DAY_LABELS[index] as string,
+      label: labels[index] as string,
       date,
       today: date.getTime() === today.getTime(),
     }
@@ -65,8 +73,14 @@ export function findLesson(lessons: Lesson[], row: number, day: number): Lesson 
   return lessons.find(item => item.row === row && item.day === day)
 }
 
-export function describeLesson(lesson: Lesson, date: Date, period: LessonPeriod): string {
-  return `${date.getMonth() + 1} 月 ${date.getDate()} 日 ${period.time}，授课教师：林老师。请提前准备教学资料。`
+export function describeLesson(
+  lesson: Lesson,
+  date: Date,
+  period: LessonPeriod,
+  locale: string,
+  t: TranslateFn,
+): string {
+  return t('ca.timetable.detail', { date: formatDay(date, locale), time: period.time })
 }
 
 export const timetablePeriods: LessonPeriod[] = [

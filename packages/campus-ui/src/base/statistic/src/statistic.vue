@@ -10,9 +10,12 @@
 <script setup lang="ts">
 import { computed } from '@unionschool/campus-framework'
 import { ns, cx } from '@/core/namespace'
+import { formatNumber, useLocale } from '@/locale'
 import type { ComponentTone } from '@/core/namespace'
 
 defineOptions({ name: 'CaStatistic' })
+
+const { locale } = useLocale()
 
 const props = withDefaults(defineProps<{
   label: string
@@ -33,8 +36,10 @@ const className = computed(() => cx(
   props.card ? ns('statistic', undefined, 'card') : '',
 ))
 
-/** 数值保留原样，仅统一显示口径 */
-const display = computed(() => (typeof props.value === 'number' ? props.value.toLocaleString('zh-CN') : props.value))
+/** 数值按当前语言格式化（千分位等），字符串原样显示 */
+const display = computed(() => (
+  typeof props.value === 'number' ? formatNumber(props.value, locale.value) : props.value
+))
 </script>
 
 <template>

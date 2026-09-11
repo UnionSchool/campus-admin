@@ -16,11 +16,11 @@ export interface CampusApplicationOptions {
   plugins?: CampusPlugin[]
 }
 
-/** Laravel 风格的应用生命周期：register → boot → start */
+/** 应用生命周期：register（绑定服务）→ boot（初始化）→ start（触发启动回调） */
 export type CampusLifecycle = 'created' | 'registered' | 'booted' | 'started'
 
 /**
- * Campus 应用实例，对应 Laravel 的 Application。
+ * Campus 应用实例：持有服务容器、应用上下文与生命周期状态。
  *
  * 该类属于核心层，不引入 Vue 或任何 UI 框架。
  * 与 Vue 的桥接放在 @unionschool/campus-framework 中，
@@ -97,7 +97,7 @@ export class CampusApplication {
     return this
   }
 
-  /** 注册启动回调，等价于 Laravel 的 booted 回调 */
+  /** 注册启动回调，在所有 boot 完成后触发 */
   started(callback: () => void): this {
     const hooks = this.container.make<Array<() => void>>('campus.started') ?? []
     hooks.push(callback)

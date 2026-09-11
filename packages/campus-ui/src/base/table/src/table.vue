@@ -24,11 +24,14 @@
 import { computed, ref, watch } from '@unionschool/campus-framework'
 import { ArrowDown, ArrowUp, ChevronsUpDown } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import CaEmpty from '../../empty/index'
 import { cellValue, columnAlign, resolveRowKey, sortRows } from './core'
 import type { SortOrder, TableColumn } from './core'
 
 defineOptions({ name: 'CaTable' })
+
+const { locale, t } = useLocale()
 
 const props = withDefaults(defineProps<{
   columns: TableColumn<T>[]
@@ -46,8 +49,10 @@ const props = withDefaults(defineProps<{
   data: () => [],
   loading: false,
   sortOrder: null,
-  emptyText: '暂无数据',
 })
+
+/** 未显式传空态文案时用当前语言的默认值 */
+const emptyTextValue = computed(() => props.emptyText ?? t('ca.table.empty'))
 
 const emit = defineEmits<{
   'update:sortKey': [key: string]
@@ -82,7 +87,7 @@ const rows = computed(() => {
   if (!key || !order) return props.data
   const column = props.columns.find(item => item.key === key)
   if (!column?.sortable) return props.data
-  return sortRows(props.data, column, order)
+  return sortRows(props.data, column, order, locale.value)
 })
 
 function toggleSort(column: TableColumn<T>) {
@@ -124,7 +129,7 @@ function toggleSort(column: TableColumn<T>) {
         <tbody>
           <tr v-if="loading">
             <td :colspan="columns.length" :class="ns('table', 'state')">
-              <span :class="ns('table', 'spinner')" aria-hidden="true"></span>加载中…
+              <span :class="ns('table', 'spinner')" aria-hidden="true"></span>{{ t('ca.common.loading') }}
             </td>
           </tr>
           <tr
@@ -144,7 +149,7 @@ function toggleSort(column: TableColumn<T>) {
       </table>
     </div>
     <div v-if="!rows.length && !loading" :class="ns('table', 'empty')">
-      <slot name="empty"><CaEmpty :title="emptyText" size="small" /></slot>
+      <slot name="empty"><CaEmpty :title="emptyTextValue" size="small" /></slot>
     </div>
   </div>
 </template>

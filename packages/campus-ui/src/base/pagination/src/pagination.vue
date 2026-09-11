@@ -13,9 +13,12 @@
 import { computed } from '@unionschool/campus-framework'
 import { ChevronLeft, ChevronRight } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { buildPages, totalPagesOf } from './core'
 
 defineOptions({ name: 'CaPagination' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   /** 当前页，从 1 开始 */
@@ -52,9 +55,9 @@ function go(page: number) {
 </script>
 
 <template>
-  <nav :class="ns('pagination')" aria-label="分页导航">
-    <span v-if="showTotal" :class="ns('pagination', 'total')">共 {{ total }} 条</span>
-    <button :class="ns('pagination', 'arrow')" type="button" aria-label="上一页" :disabled="disabled || current <= 1" @click="go(current - 1)">
+  <nav :class="ns('pagination')" :aria-label="t('ca.pagination.label')">
+    <span v-if="showTotal" :class="ns('pagination', 'total')">{{ t('ca.pagination.total', { total }) }}</span>
+    <button :class="ns('pagination', 'arrow')" type="button" :aria-label="t('ca.pagination.prev')" :disabled="disabled || current <= 1" @click="go(current - 1)">
       <ChevronLeft :size="14" />
     </button>
     <template v-for="(item, index) in pages" :key="`${item.type}-${item.page}-${index}`">
@@ -70,7 +73,7 @@ function go(page: number) {
         {{ item.page }}
       </button>
     </template>
-    <button :class="ns('pagination', 'arrow')" type="button" aria-label="下一页" :disabled="disabled || current >= totalPages" @click="go(current + 1)">
+    <button :class="ns('pagination', 'arrow')" type="button" :aria-label="t('ca.pagination.next')" :disabled="disabled || current >= totalPages" @click="go(current + 1)">
       <ChevronRight :size="14" />
     </button>
   </nav>

@@ -1,10 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { shallowRef } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import type { SideMenuItem } from '@unionschool/campus-ui'
+import type { TranslateFn } from '@unionschool/campus-ui'
 import * as icons from '@lucide/vue'
 import { getMainMenu } from '../lib/api/menu'
 import type { MenuNode } from '../lib/api/menu'
 import { scanPages } from './pages'
+import { menuKeyOf, translateOr } from '../lib/translate'
 
 /**
  * 路由与菜单。
@@ -46,14 +49,21 @@ export const router = createRouter({
   scrollBehavior: () => ({ top: 0 }),
 })
 
-/** 侧边菜单，登录后由 initApp 填充 */
-export const sideMenus: SideMenuItem[] = []
+/**
+ * 菜单原始数据，登录后由 initApp 填充。
+ * 用 shallowRef 而不是普通数组：菜单文案要跟随语言切换重新渲染。
+ */
+export const menuNodes = shallowRef<MenuNode[]>([])
 
 /** 扁平化的菜单信息，便于按 path 查标题与栏目 */
 interface MenuEntry {
   path: string
   title: string
+  /** 标题词条键 = menu.<菜单 id> */
+  titleKey: string
   section: string
+  /** 栏目（一级菜单）词条键 */
+  sectionKey: string
 }
 
 /**
@@ -66,7 +76,13 @@ const menuEntryByPath = new Map<string, MenuEntry>()
 
 /** 取当前路由的标题与栏目，供面包屑和文档标题使用 */
 export function routeInfo(path: string, fallback: { title: string; section: string }): MenuEntry {
-  return menuEntryByPath.get(path) ?? { path, ...fallback }
+  return menuEntryByPath.get(path) ?? {
+    path,
+    title: fallback.title,
+    titleKey: '',
+    section: fallback.section,
+    sectionKey: '',
+  }
 }
 
 router.afterEach((to) => {
@@ -82,12 +98,23 @@ router.afterEach((to) => {
  * 遍历菜单树，收集「有页面」的菜单项。
  * section 记录所属一级分组，用于面包屑。
  */
-function collectMenuEntries(nodes: MenuNode[], section = ''): MenuEntry[] {
+function collectMenuEntries(nodes: MenuNode[], section = '', sectionKey = ''): MenuEntry[] {
   const entries: MenuEntry[] = []
   nodes.forEach((node) => {
     const currentSection = section || node.label
-    if (node.path) entries.push({ path: node.path, title: node.label, section: currentSection })
-    if (node.children?.length) entries.push(...collectMenuEntries(node.children, currentSection))
+    const currentSectionKey = sectionKey || menuKeyOf(node)
+    if (node.path) {
+      entries.push({
+        path: node.path,
+        title: node.label,
+        titleKey: menuKeyOf(node),
+        section: currentSection,
+        sectionKey: currentSectionKey,
+      })
+    }
+    if (node.children?.length) {
+      entries.push(...collectMenuEntries(node.children, currentSection, currentSectionKey))
+    }
   })
   return entries
 }
@@ -97,14 +124,22 @@ function collectMenuEntries(nodes: MenuNode[], section = ''): MenuEntry[] {
  * 图标是接口下发的字符串名，这里映射成组件；
  * 找不到同名图标时降级为不显示图标，不影响菜单可用性。
  */
-function toSideMenu(nodes: MenuNode[]): SideMenuItem[] {
+function toSideMenu(nodes: MenuNode[], t: TranslateFn, te: (key: string) => boolean): SideMenuItem[] {
   return nodes.map(node => ({
-    label: node.label,
+    label: translateOr(t, te, menuKeyOf(node), node.label),
     value: node.path,
     icon: node.icon ? (icons as Record<string, unknown>)[node.icon] : undefined,
     badge: node.badge,
-    children: node.children?.length ? toSideMenu(node.children) : undefined,
+    children: node.children?.length ? toSideMenu(node.children, t, te) : undefined,
   }))
+}
+
+/**
+ * 按当前语言生成侧栏菜单数据。
+ * 在 App.vue 里用 computed 调用，语言切换后菜单文案自动跟随。
+ */
+export function buildSideMenus(t: TranslateFn, te: (key: string) => boolean): SideMenuItem[] {
+  return toSideMenu(menuNodes.value, t, te)
 }
 
 /**
@@ -135,7 +170,7 @@ async function setupRoutes(): Promise<void> {
   menuEntryByPath.clear()
   collectMenuEntries(menu).forEach(entry => menuEntryByPath.set(entry.path, entry))
 
-  sideMenus.splice(0, sideMenus.length, ...toSideMenu(menu))
+  menuNodes.value = menu
 
   // 菜单就绪后按当前地址刷新一次标题，避免首屏显示文件名兜底标题
   const current = router.currentRoute.value

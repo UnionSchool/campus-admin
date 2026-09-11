@@ -15,8 +15,11 @@
 import { ArrowLeft } from '@lucide/vue'
 import { computed } from '@unionschool/campus-framework'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 
 defineOptions({ name: 'CaPageHeader' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   title: string
@@ -43,7 +46,7 @@ const className = computed(() => cx(
 <template>
   <header :class="className">
     <div :class="ns('page-header', 'main')">
-      <button v-if="backable" :class="ns('page-header', 'back')" type="button" aria-label="返回" @click="emit('back')"><ArrowLeft :size="16" /></button>
+      <button v-if="backable" :class="ns('page-header', 'back')" type="button" :aria-label="t('ca.common.back')" @click="emit('back')"><ArrowLeft :size="16" /></button>
       <div :class="ns('page-header', 'text')">
         <h1 :class="ns('page-header', 'title')">{{ title }}</h1>
         <p v-if="description" :class="ns('page-header', 'desc')">{{ description }}</p>

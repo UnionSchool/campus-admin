@@ -13,6 +13,12 @@ export interface MenuNode {
   /** 显示名 */
   label: string
   /**
+   * 词条键，可选。
+   * 后端不传时前端按 menu.<id> 取词条，取不到就用 label 兜底，
+   * 这样后端只需要返回稳定 id 就能支持多语言。
+   */
+  labelKey?: string
+  /**
    * 路由地址。
    * 有 path 的是可跳转页面，没有 path 的是分组标题（用于展开收起）。
    */

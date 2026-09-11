@@ -189,16 +189,16 @@ const total = 46
 
 <style scoped>
 .showcase { display: grid; gap: var(--ca-space-5, 20px); }
-.showcase__section { display: grid; gap: var(--ca-space-3, 12px); padding: var(--ca-space-4, 16px); border: 1px solid var(--ca-border-color, #e6eef6); border-radius: var(--ca-radius-lg, 12px); background: #fff; }
+.showcase__section { display: grid; gap: var(--ca-space-3, 12px); padding: var(--ca-space-4, 16px); border: 1px solid var(--ca-border-color, #e6eef6); border-radius: var(--ca-radius-lg, 12px); background: var(--ca-surface-card); }
 .showcase__section h2 { font-size: 15px; font-weight: 600; }
-.showcase__section h3 { margin-bottom: 10px; font-size: 13px; font-weight: 600; color: #4d5f70; }
+.showcase__section h3 { margin-bottom: 10px; font-size: 13px; font-weight: 600; color: var(--ca-text-regular); }
 .showcase__row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .showcase__form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.showcase__field { display: grid; gap: 6px; font-size: 12px; color: #7b8b9c; }
+.showcase__field { display: grid; gap: 6px; font-size: 12px; color: var(--ca-text-secondary); }
 .showcase__stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .showcase__two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .showcase__cell { display: inline-flex; align-items: center; gap: 8px; }
-.showcase__muted { margin-top: 8px; color: #7b8b9c; font-size: 12px; }
+.showcase__muted { margin-top: 8px; color: var(--ca-text-secondary); font-size: 12px; }
 @media (max-width: 900px) {
   .showcase__form-grid, .showcase__stat-grid, .showcase__two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

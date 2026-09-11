@@ -17,9 +17,12 @@
 import { computed } from '@unionschool/campus-framework'
 import { X } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import type { ComponentTone } from '@/core/namespace'
 
 defineOptions({ name: 'CaTag' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   tone?: ComponentTone
@@ -49,7 +52,7 @@ const className = computed(() => cx(
   <span :class="className">
     <i v-if="dot" :class="ns('tag', 'dot')" aria-hidden="true"></i>
     <slot />
-    <button v-if="closable" :class="ns('tag', 'close')" type="button" aria-label="移除" @click="emit('close')">
+    <button v-if="closable" :class="ns('tag', 'close')" type="button" :aria-label="t('ca.common.remove')" @click="emit('close')">
       <X :size="11" />
     </button>
   </span>

@@ -15,6 +15,7 @@
 import { ChevronLeft, ChevronRight } from '@lucide/vue'
 import { computed, ref } from '@unionschool/campus-framework'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import {
   CLASS_OPTIONS,
   createDays,
@@ -29,12 +30,14 @@ import { demoLessons } from './data'
 
 defineOptions({ name: 'CaWeeklyTimetable' })
 
+const { locale, t } = useLocale()
+
 const emit = defineEmits<{ detail: [title: string, description: string] }>()
 
 const mode = ref<TimetableMode>('personal')
 const selectedClass = ref(CLASS_OPTIONS[0] as string)
 const weekOffset = ref(0)
-const days = computed(() => createDays(weekOffset.value))
+const days = computed(() => createDays(weekOffset.value, locale.value))
 const range = computed(() => formatWeekRange(days.value))
 
 function lessonAt(row: number, day: number): Lesson | undefined {
@@ -48,56 +51,60 @@ function openLesson(row: number, day: number) {
   const period = timetablePeriods[row]
   const cell = days.value[day]
   if (!lesson || !period || !cell) return
-  emit('detail', `${lesson.className} · ${lesson.subject}`, describeLesson(lesson, cell.date, period))
+  emit(
+    'detail',
+    `${lesson.className} · ${lesson.subject}`,
+    describeLesson(lesson, cell.date, period, locale.value, t),
+  )
 }
 </script>
 
 <template>
   <section :class="ns('timetable')">
     <div :class="ns('timetable', 'toolbar')">
-      <div :class="ns('timetable', 'tabs')" role="tablist" aria-label="课表类型">
+      <div :class="ns('timetable', 'tabs')" role="tablist" :aria-label="t('ca.timetable.tabsLabel')">
         <button
           type="button"
           role="tab"
           :aria-selected="mode === 'personal'"
           :class="cx(ns('timetable', 'tab'), mode === 'personal' ? ns('timetable', 'tab', 'active') : '')"
           @click="mode = 'personal'"
-        >个人课表</button>
+        >{{ t('ca.timetable.personal') }}</button>
         <button
           type="button"
           role="tab"
           :aria-selected="mode === 'class'"
           :class="cx(ns('timetable', 'tab'), mode === 'class' ? ns('timetable', 'tab', 'active') : '')"
           @click="mode = 'class'"
-        >班级课表</button>
+        >{{ t('ca.timetable.class') }}</button>
       </div>
 
       <div :class="ns('timetable', 'week')">
-        <button :class="ns('timetable', 'nav')" type="button" aria-label="上一周" @click="weekOffset--"><ChevronLeft :size="15" /></button>
-        <span>第 {{ 2 + weekOffset }} 周 <b>{{ range }}</b></span>
-        <button :class="ns('timetable', 'nav')" type="button" aria-label="下一周" @click="weekOffset++"><ChevronRight :size="15" /></button>
-        <button :class="ns('timetable', 'today')" type="button" @click="weekOffset = 0">本周</button>
+        <button :class="ns('timetable', 'nav')" type="button" :aria-label="t('ca.timetable.prevWeek')" @click="weekOffset--"><ChevronLeft :size="15" /></button>
+        <span>{{ t('ca.timetable.week', { week: 2 + weekOffset }) }} <b>{{ range }}</b></span>
+        <button :class="ns('timetable', 'nav')" type="button" :aria-label="t('ca.timetable.nextWeek')" @click="weekOffset++"><ChevronRight :size="15" /></button>
+        <button :class="ns('timetable', 'today')" type="button" @click="weekOffset = 0">{{ t('ca.timetable.thisWeek') }}</button>
       </div>
     </div>
 
     <div :class="ns('timetable', 'meta')">
       <span>
-        {{ mode === 'personal' ? '林老师 · 语文' : '班级教学安排' }}
+        {{ mode === 'personal' ? t('ca.timetable.personalSubtitle') : t('ca.timetable.classSubtitle') }}
         <i :class="ns('timetable', 'divider')"></i>
-        2026–2027 学年 · 第一学期
+        {{ t('ca.timetable.term') }}
       </span>
-      <select v-if="mode === 'class'" v-model="selectedClass" :class="ns('timetable', 'select')" aria-label="选择班级">
+      <select v-if="mode === 'class'" v-model="selectedClass" :class="ns('timetable', 'select')" :aria-label="t('ca.timetable.classLabel')">
         <option v-for="item in CLASS_OPTIONS" :key="item">{{ item }}</option>
       </select>
-      <span v-else :class="ns('timetable', 'count')">本周 <b>11</b> 节课</span>
+      <span v-else :class="ns('timetable', 'count')">{{ t('ca.timetable.weekCount', { count: 11 }) }}</span>
     </div>
 
     <div :class="ns('timetable', 'scroll')">
       <table :class="ns('timetable', 'table')">
-        <caption class="ca-sr-only">{{ range }} 教学课表</caption>
+        <caption class="ca-sr-only">{{ t('ca.timetable.caption', { range }) }}</caption>
         <thead>
           <tr>
-            <th colspan="2">时段 / 节次</th>
+            <th colspan="2">{{ t('ca.timetable.periodHeader') }}</th>
             <th
               v-for="day in days"
               :key="day.date.toISOString()"
@@ -142,12 +149,13 @@ function openLesson(row: number, day: number) {
     </div>
 
     <div :class="ns('timetable', 'footer')">
+      <!-- 图例是演示班级，与左上角的班级下拉一致，属于演示数据 -->
       <span>
         <i :class="cx(ns('timetable', 'legend'), ns('timetable', 'legend', 'blue'))"></i>高一（2）班
         <i :class="cx(ns('timetable', 'legend'), ns('timetable', 'legend', 'green'))"></i>高一（1）班
         <i :class="cx(ns('timetable', 'legend'), ns('timetable', 'legend', 'orange'))"></i>高一（3）班
       </span>
-      <span>点击课程查看详情</span>
+      <span>{{ t('ca.timetable.hint') }}</span>
     </div>
   </section>
 </template>

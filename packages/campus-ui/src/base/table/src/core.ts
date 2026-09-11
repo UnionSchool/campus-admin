@@ -31,8 +31,16 @@ export function columnAlign<T>(column: TableColumn<T>): 'left' | 'center' | 'rig
   return column.numeric ? 'right' : 'left'
 }
 
-/** 默认排序：数字按大小，字符串按本地化顺序 */
-export function sortRows<T>(rows: T[], column: TableColumn<T>, order: Exclude<SortOrder, null>): T[] {
+/**
+ * 默认排序：数字按大小，字符串按本地化顺序。
+ * locale 决定中英文的字符串比较规则，不传时保持原有的 zh-CN 行为。
+ */
+export function sortRows<T>(
+  rows: T[],
+  column: TableColumn<T>,
+  order: Exclude<SortOrder, null>,
+  locale = 'zh-CN',
+): T[] {
   const sorted = [...rows]
   sorted.sort((a, b) => {
     const left = (a as Record<string, unknown>)[column.key]
@@ -41,8 +49,8 @@ export function sortRows<T>(rows: T[], column: TableColumn<T>, order: Exclude<So
       return order === 'asc' ? left - right : right - left
     }
     return order === 'asc'
-      ? String(left ?? '').localeCompare(String(right ?? ''), 'zh-CN')
-      : String(right ?? '').localeCompare(String(left ?? ''), 'zh-CN')
+      ? String(left ?? '').localeCompare(String(right ?? ''), locale)
+      : String(right ?? '').localeCompare(String(left ?? ''), locale)
   })
   return sorted
 }

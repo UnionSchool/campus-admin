@@ -19,10 +19,13 @@ import { ns, cx } from '@/core/namespace'
 import CaAvatar from '../../../atom/avatar/index'
 import CaCheckbox from '../../../atom/checkbox/index'
 import CaEmpty from '../../../base/empty/index'
+import { useLocale } from '@/locale'
 import { filterStudents, isSelected, toggleMultiple, toggleSingle } from './core'
 import type { StudentOption, StudentValue } from './core'
 
 defineOptions({ name: 'CaStudentPicker' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   modelValue?: StudentValue
@@ -35,10 +38,12 @@ const props = withDefaults(defineProps<{
   clearable?: boolean
 }>(), {
   students: () => [],
-  placeholder: '搜索姓名、学号或班级',
   loading: false,
   clearable: true,
 })
+
+/** 未显式传 placeholder 时用当前语言的默认文案 */
+const placeholderText = computed(() => props.placeholder ?? t('ca.studentPicker.placeholder'))
 
 const emit = defineEmits<{
   'update:modelValue': [value: StudentValue]
@@ -78,15 +83,15 @@ function onSearch() {
         v-model="keyword"
         :class="ns('student-picker', 'input')"
         type="search"
-        :placeholder="placeholder"
-        aria-label="搜索学生"
+        :placeholder="placeholderText"
+        :aria-label="t('ca.studentPicker.searchLabel')"
         @input="onSearch"
       />
-      <span v-if="selectedIds.length" :class="ns('student-picker', 'count')">已选 {{ selectedIds.length }}</span>
+      <span v-if="selectedIds.length" :class="ns('student-picker', 'count')">{{ t('ca.studentPicker.selected', { count: selectedIds.length }) }}</span>
     </div>
 
     <div :class="ns('student-picker', 'list')" role="listbox" :aria-multiselectable="multiple">
-      <div v-if="loading" :class="ns('student-picker', 'loading')">加载中…</div>
+      <div v-if="loading" :class="ns('student-picker', 'loading')">{{ t('ca.common.loading') }}</div>
       <button
         v-for="student in visible"
         v-else
@@ -101,10 +106,10 @@ function onSearch() {
         <CaAvatar :src="student.avatar" :name="student.name" size="small" />
         <span :class="ns('student-picker', 'info')">
           <b>{{ student.name }}</b>
-          <small>{{ [student.className, student.studentNo && `学号 ${student.studentNo}`].filter(Boolean).join(' · ') }}</small>
+          <small>{{ [student.className, student.studentNo && t('ca.studentPicker.studentNo', { no: student.studentNo })].filter(Boolean).join(' · ') }}</small>
         </span>
       </button>
-      <CaEmpty v-if="!visible.length && !loading" title="没有匹配的学生" description="换个关键词试试" size="small" />
+      <CaEmpty v-if="!visible.length && !loading" :title="t('ca.studentPicker.emptyTitle')" :description="t('ca.studentPicker.emptyDescription')" size="small" />
     </div>
   </div>
 </template>

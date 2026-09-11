@@ -24,7 +24,7 @@
 ```text
 examples/admin/
 ├── main.ts                   应用入口：装配 campus、挂载 ca、初始化菜单
-├── App.vue                   外壳：顶栏、侧栏、面包屑、RouterView
+├── App.vue                   外壳：顶栏（含明暗主题开关）、侧栏、面包屑、RouterView
 ├── src/
 │   ├── router/
 │   │   ├── pages.ts          扫描 pages 目录生成路由地址
@@ -41,8 +41,9 @@ examples/admin/
 │   │   ├── request-helper.ts useRequest()
 │   │   ├── api/              按业务场景定义的接口
 │   │   └── mock/             按接口 uri 存的演示数据
-│   ├── composables/          页面逻辑（如 useStudentList）
+│   ├── composables/          页面逻辑与主题（useStudentList、useTheme）
 │   ├── components/           示例内部组件
+│   ├── locale/               业务语言包（app / menu / page）
 │   └── services/             跨页面共享的轻量状态
 └── style/app.css             示例专属样式（布局、首页）
 ```
@@ -108,6 +109,46 @@ export function getStudentPage(query: StudentQuery = {}): Promise<ApiEnvelope<St
 ```
 
 一个业务场景一个文件，url 只写一份。
+
+## 语言包
+
+业务词条放在 `src/locale/`，按语言一个文件，通过 `createCampusAdmin` 的 `config.locale` 交给框架，
+与组件库内置的 `ca.*` 词条合并到同一个语言实例：
+
+```text
+src/locale/
+├── index.ts       businessMessages（按语言分组）+ 语言开关用的语言列表
+├── zh-CN.ts       app.*（外壳）/ menu.*（菜单）/ page.*（页面）
+└── en-US.ts       键与 zh-CN 完全一致
+```
+
+```ts
+// main.ts
+createCampusAdmin({
+  config: { locale: { locale: language, fallbackLocale: 'zh-CN', messages: businessMessages } },
+})
+```
+
+页面里取词：
+
+```vue
+<script setup lang="ts">
+import { useLocale } from '@unionschool/campus-admin'
+const { t } = useLocale()
+</script>
+
+<template><h1>{{ t('page.home.greeting') }}</h1></template>
+```
+
+约定：
+
+- `ca.*` 是组件库保留的命名空间，业务只用 `app.*` / `menu.*` / `page.*`；
+- 顶栏语言开关在 `src/composables/useLanguage.ts`，选择记在 `localStorage`，入口先定语言再挂载；
+- 侧栏菜单按 `menu.<菜单 id>` 取词条（`src/lib/translate.ts`），取不到用后端下发的 label 兜底；
+- 演示数据（学生姓名、课程名、通知标题）不参与国际化，真实项目由接口下发；
+- 改完词条跑 `pnpm run check:locale`，会校验两种语言的词条数量一致。
+
+完整说明见 [Campus Admin 国际化使用指南](../docs/Campus-Admin-国际化使用指南.md)。
 
 ## 常用命令
 

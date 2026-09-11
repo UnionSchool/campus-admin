@@ -14,6 +14,8 @@ import {
 import { CampusApplication } from '@unionschool/campus-core'
 import type { CampusApplicationOptions } from '@unionschool/campus-core'
 import { builtInComponents } from '@unionschool/campus-ui'
+import { createLocale, installLocale } from '@unionschool/campus-ui'
+import type { CaLocaleConfig } from '@unionschool/campus-ui'
 
 /**
  * 全局命令式 API。
@@ -94,6 +96,12 @@ export function createCampusAdmin(options: CampusApplicationOptions = {}) {
   const application = new CampusApplication(options)
   const bridge = createVueApplication(application)
 
+  /**
+   * 语言实例：内置 zh-CN / en-US 词条，
+   * 业务通过 config.locale.messages 追加自己的词条（deep merge，ca 命名空间由组件库保留）。
+   */
+  const locale = createLocale((options.config?.locale ?? {}) as CaLocaleConfig)
+
   Object.entries(builtInComponents).forEach(([name, component]) => bridge.component(name, component as Component))
   Object.entries(frameworkComponents).forEach(([name, component]) => bridge.component(name, component))
   bridge.register(options.providers ?? [])
@@ -104,9 +112,12 @@ export function createCampusAdmin(options: CampusApplicationOptions = {}) {
   return {
     ...bridge,
     name: 'campus-admin',
+    /** 语言实例，非 setup 场景（路由、请求拦截器）可直接使用 */
+    locale,
     install(app: App) {
       bridge.start()
       app.provide(CAMPUS_KEY, application)
+      installLocale(app, locale)
       bridge.install(app)
       // 命令式 API 的宿主独立挂载，挂载失败不影响主应用
       unmountOverlay = mountOverlayHost()

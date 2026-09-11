@@ -111,9 +111,9 @@ void load()
   display: grid;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #e6eef6;
+  border: 1px solid var(--ca-border-color);
   border-radius: 12px;
-  background: #fff;
+  background: var(--ca-surface-card);
 }
 
 .schedule-page__meta {
@@ -121,11 +121,11 @@ void load()
   align-items: center;
   justify-content: space-between;
   font-size: 12px;
-  color: #4d5f70;
+  color: var(--ca-text-regular);
 }
 
 .schedule-page__count {
-  color: #7b8b9c;
+  color: var(--ca-text-secondary);
 }
 
 .schedule-page__scroll {
@@ -141,20 +141,20 @@ void load()
 
 .schedule-table th,
 .schedule-table td {
-  border: 1px solid #eef3f9;
+  border: 1px solid var(--ca-border-color);
 }
 
 .schedule-table thead th {
   height: 36px;
-  background: #f7fafd;
+  background: var(--ca-surface-sunken);
   font-size: 12px;
   font-weight: 500;
-  color: #5d6d7d;
+  color: var(--ca-text-regular);
 }
 
 .schedule-table thead th.is-today {
-  color: #0878fa;
-  background: #edf6ff;
+  color: var(--ca-color-primary-text);
+  background: var(--ca-color-primary-soft);
 }
 
 .schedule-table__period {
@@ -163,14 +163,14 @@ void load()
   text-align: center;
   font-size: 11px;
   font-weight: 400;
-  color: #8a98a7;
+  color: var(--ca-text-secondary);
 }
 
 .schedule-table__period small {
   display: block;
   margin-top: 2px;
   font-size: 9px;
-  color: #a5b0ba;
+  color: var(--ca-text-placeholder);
 }
 
 .schedule-table tbody tr {
@@ -182,7 +182,7 @@ void load()
 }
 
 .schedule-table tbody td.is-today {
-  background: #fbfdff;
+  background: var(--ca-surface-sunken);
 }
 
 .schedule-table__lesson {
@@ -211,20 +211,20 @@ void load()
 }
 
 .schedule-table__lesson.blue {
-  --tone: #4b98fa;
-  --tint: #edf4ff;
-  color: #3d7fbf;
+  --tone: var(--ca-color-primary);
+  --tint: var(--ca-color-primary-soft);
+  color: var(--ca-color-primary-text);
 }
 
 .schedule-table__lesson.green {
-  --tone: #46bea3;
-  --tint: #ebfaf5;
-  color: #2f8f74;
+  --tone: var(--ca-color-success);
+  --tint: var(--ca-color-success-soft);
+  color: var(--ca-color-success-text);
 }
 
 .schedule-table__lesson.orange {
-  --tone: #ff9c57;
-  --tint: #fff4ea;
-  color: #c47a35;
+  --tone: var(--ca-color-warning);
+  --tint: var(--ca-color-warning-soft);
+  color: var(--ca-color-warning-text);
 }
 </style>

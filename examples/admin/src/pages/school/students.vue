@@ -105,11 +105,11 @@ function removeSelected() {
 
 <style scoped>
 .student-page { display: grid; gap: 16px; }
-.student-page__field { display: grid; gap: 6px; font-size: 12px; color: #7b8b9c; }
-.student-page__panel { display: grid; gap: 14px; padding: 16px; border: 1px solid #e6eef6; border-radius: 12px; background: #fff; }
+.student-page__field { display: grid; gap: 6px; font-size: 12px; color: var(--ca-text-secondary); }
+.student-page__panel { display: grid; gap: 14px; padding: 16px; border: 1px solid var(--ca-border-color); border-radius: 12px; background: var(--ca-surface-card); }
 .student-page__cell { display: inline-flex; align-items: center; gap: 8px; }
 .student-page__cell b { font-weight: 500; }
-.student-page__time { font-variant-numeric: tabular-nums; color: #4d5f70; }
+.student-page__time { font-variant-numeric: tabular-nums; color: var(--ca-text-regular); }
 .student-page__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.student-page__hint { color: #7b8b9c; font-size: 12px; }
+.student-page__hint { color: var(--ca-text-secondary); font-size: 12px; }
 </style>

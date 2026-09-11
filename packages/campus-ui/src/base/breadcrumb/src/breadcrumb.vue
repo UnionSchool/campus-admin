@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { ChevronRight, House } from '@lucide/vue'
 import { ns } from '@/core/namespace'
+import { useLocale } from '@/locale'
 
 export interface BreadcrumbItem {
   label: string
@@ -21,6 +22,8 @@ export interface BreadcrumbItem {
 }
 
 defineOptions({ name: 'CaBreadcrumb' })
+
+const { t } = useLocale()
 
 withDefaults(defineProps<{
   items: BreadcrumbItem[]
@@ -35,7 +38,7 @@ const className = ns('breadcrumb')
 </script>
 
 <template>
-  <nav :class="className" aria-label="面包屑导航">
+  <nav :class="className" :aria-label="t('ca.breadcrumb.label')">
     <ol :class="ns('breadcrumb', 'list')">
       <li v-for="(item, index) in items" :key="`${item.label}-${index}`" :class="ns('breadcrumb', 'item')">
         <button

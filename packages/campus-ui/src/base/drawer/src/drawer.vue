@@ -18,7 +18,11 @@ import { X } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
 import { focusableElements, lockScroll, unlockScroll } from '../../modal/src/core'
 
+import { useLocale } from '@/locale'
+
 defineOptions({ name: 'CaDrawer' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   modelValue?: boolean
@@ -87,7 +91,7 @@ onBeforeUnmount(() => {
         >
           <header :class="ns('drawer', 'header')">
             <h2 :class="ns('drawer', 'title')"><slot name="title">{{ title }}</slot></h2>
-            <button :class="ns('drawer', 'close')" type="button" aria-label="关闭" @click="close"><X :size="18" /></button>
+            <button :class="ns('drawer', 'close')" type="button" :aria-label="t('ca.common.close')" @click="close"><X :size="18" /></button>
           </header>
           <div :class="ns('drawer', 'body')"><slot /></div>
           <footer v-if="$slots.footer" :class="ns('drawer', 'footer')"><slot name="footer" /></footer>

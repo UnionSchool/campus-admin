@@ -4,7 +4,16 @@ import '@unionschool/campus-admin/style.css'
 import './style/app.css'
 import App from './App.vue'
 import router, { initApp } from './src/router'
+import { initTheme } from './src/composables/useTheme'
+import { initLanguage } from './src/composables/useLanguage'
+import { businessMessages } from './src/locale'
 import { requestProvider } from './src/lib/provider'
+
+// 先落主题再建应用，避免首屏先亮色再变暗
+initTheme()
+
+// 语言与主题一样在挂载前定好，避免首屏先中文再切英文
+const language = initLanguage()
 
 const app = createApp(App)
 
@@ -15,6 +24,11 @@ const campus = createCampusAdmin({
   config: {
     request: { baseURL: '/api', debug: import.meta.env.DEV, mock: import.meta.env.DEV },
     permission: { mode: 'rbac' },
+    /**
+     * 业务语言包交给框架：与组件库内置的 ca.* 词条深合并到同一个语言实例，
+     * 两套词库、一个实例，组件文案与业务文案一起切换。
+     */
+    locale: { locale: language, fallbackLocale: 'zh-CN', messages: businessMessages },
   },
   // 请求层通过 Provider 注册，业务代码用 campus('request') 取实例
   providers: [requestProvider],

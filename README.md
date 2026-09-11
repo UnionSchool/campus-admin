@@ -139,6 +139,13 @@ Monorepo 采用统一版本号，根 `package.json` 的 `version` 是唯一版�
 
 完整的 npm、GitHub 和 Gitee 发布方法见[仓库管理规范](./docs/Campus-Admin-仓库管理规范.md#7-发布流程)。
 
+## 文档
+
+- [组件使用指南](./docs/Campus-Admin-组件使用指南.md)：安装方式、主题与品牌色、Table 用法、完整页面写法、组件清单
+- [国际化使用指南](./docs/Campus-Admin-国际化使用指南.md)：词条约定、取词与切换、日期与数字格式化、后端文案对接、与 vue-i18n 共存、排查清单
+- [框架分层与升级规范](./docs/Campus-Admin-框架分层与升级规范.md)：四层包职责、组件目录约定、升级检查清单
+- [仓库管理规范](./docs/Campus-Admin-仓库管理规范.md)：版本、发布流程与仓库约定
+
 ## 许可证
 
 [MIT](./LICENSE)

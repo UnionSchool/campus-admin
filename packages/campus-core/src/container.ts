@@ -1,7 +1,7 @@
 import type { CampusProvider } from './contracts/provider'
 
 /**
- * 轻量服务容器，参考 Laravel Service Container 的最小能力集。
+ * 轻量服务容器，只保留最小能力集：绑定、单例、解析。
  *
  * 只做 bind、singleton、make，不引入装饰器、反射或自动依赖注入。
  */
@@ -13,7 +13,7 @@ export class CampusContainer {
     this.entries.set(key, value)
   }
 
-  /** 绑定单例，等价于 bind，保留 Laravel 命名习惯 */
+  /** 绑定单例，等价于 bind，语义更明确的别名 */
   singleton<T>(key: string, value: T | (() => T)): void {
     this.bind(key, value)
   }

@@ -19,6 +19,7 @@
   },
   "scripts": {
     "check:boundaries": "node scripts/check-boundaries.mjs",
+    "check:locale": "node scripts/check-locale.mjs",
     "typecheck": "pnpm --filter @unionschool/campus-core typecheck && pnpm --filter @unionschool/campus-framework typecheck && pnpm --filter @unionschool/campus-ui typecheck && pnpm --filter @unionschool/campus-admin typecheck && pnpm --filter @unionschool/example-* typecheck",
     "build:core": "pnpm --filter @unionschool/campus-core build",
     "build:framework": "pnpm --filter @unionschool/campus-framework build",
@@ -37,7 +38,7 @@
     "up": "bash ./up",
     "deploy": "node scripts/deploy.mjs",
     "clean": "node scripts/clean.mjs all",
-    "check": "npm run check:boundaries && npm run build:packages && npm run typecheck && npm run build:example && npm run pack:dry",
+    "check": "npm run check:boundaries && npm run check:locale && npm run build:packages && npm run typecheck && npm run build:example && npm run pack:dry",
     "pack:dry": "node scripts/verify-pack.mjs"
   },
   "devDependencies": {

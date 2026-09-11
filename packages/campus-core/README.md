@@ -55,7 +55,7 @@ const request = campus<RequestClient>('request')
 created → register（所有 Provider 绑定服务）→ boot（初始化，可依赖其他服务）→ start（触发启动回调）
 ```
 
-与 Laravel 的 Service Provider 一致：**register 阶段不要调用别的服务**，
+约定：**register 阶段不要调用别的服务**，
 因为无法保证对方已经注册完成；需要跨服务协作时放到 `boot`。
 
 ## API
@@ -83,14 +83,14 @@ created → register（所有 Provider 绑定服务）→ boot（初始化，可
 | `register(provider)` | 注册服务提供者，立即执行 `register` |
 | `use(plugin)` | 装载插件 |
 | `start()` | 执行所有 `boot` 并触发启动回调 |
-| `started(callback)` | 注册启动回调，等价于 Laravel 的 `booted` |
+| `started(callback)` | 注册启动回调，在所有 `boot` 完成后触发 |
 
 ### CampusContainer
 
 | 方法 | 说明 |
 | --- | --- |
 | `bind(key, value \| factory)` | 绑定实例或工厂函数，单例语义 |
-| `singleton(key, value)` | 同 `bind`，保留 Laravel 命名习惯 |
+| `singleton(key, value)` | 同 `bind`，语义更明确的别名 |
 | `make<T>(key)` | 解析服务，未注册返回 `undefined` |
 | `resolve<T>(key)` | 解析服务，未注册抛错 |
 | `has(key)` / `forget(key)` | 判断存在 / 移除绑定（测试用） |

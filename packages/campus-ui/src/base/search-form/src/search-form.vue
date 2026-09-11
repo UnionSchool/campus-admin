@@ -17,8 +17,11 @@
 import { computed, ref } from '@unionschool/campus-framework'
 import { ChevronDown, RotateCcw, Search } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 
 defineOptions({ name: 'CaSearchForm' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   loading?: boolean
@@ -31,9 +34,11 @@ const props = withDefaults(defineProps<{
 }>(), {
   columns: 4,
   visibleCount: 3,
-  searchText: '查询',
-  resetText: '重置',
 })
+
+/** 未显式传文案时用当前语言的默认值 */
+const searchTextValue = computed(() => props.searchText ?? t('ca.searchForm.search'))
+const resetTextValue = computed(() => props.resetText ?? t('ca.searchForm.reset'))
 
 const emit = defineEmits<{ search: []; reset: [] }>()
 
@@ -60,13 +65,13 @@ defineExpose({ expand: () => { expanded.value = true }, collapse: () => { expand
     </div>
     <div :class="ns('search-form', 'actions')">
       <button :class="ns('search-form', 'button')" type="button" :disabled="loading" @click="emit('reset')">
-        <RotateCcw :size="14" />{{ resetText }}
+        <RotateCcw :size="14" />{{ resetTextValue }}
       </button>
       <button :class="cx(ns('search-form', 'button'), ns('search-form', 'button', 'primary'))" type="submit" :disabled="loading">
-        <Search :size="14" />{{ loading ? '查询中…' : searchText }}
+        <Search :size="14" />{{ loading ? t('ca.searchForm.searching') : searchTextValue }}
       </button>
       <button v-if="canCollapse" :class="ns('search-form', 'toggle')" type="button" @click="expanded = !expanded">
-        {{ expanded ? '收起' : '展开' }}
+        {{ expanded ? t('ca.common.collapse') : t('ca.common.expand') }}
         <ChevronDown :size="13" :class="cx(ns('search-form', 'arrow'), expanded ? ns('search-form', 'arrow', 'open') : '')" />
       </button>
     </div>

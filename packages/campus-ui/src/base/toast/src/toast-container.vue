@@ -17,10 +17,13 @@
 <script setup lang="ts">
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { close, toasts } from './store'
 import type { ToastTone } from './store'
 
 defineOptions({ name: 'CaToastContainer' })
+
+const { t } = useLocale()
 
 const icons = {
   primary: Info,
@@ -39,7 +42,7 @@ const icons = {
           <b>{{ item.text }}</b>
           <p v-if="item.description">{{ item.description }}</p>
         </div>
-        <button :class="ns('toast', 'close')" type="button" aria-label="关闭消息" @click="close(item.id)"><X :size="13" /></button>
+        <button :class="ns('toast', 'close')" type="button" :aria-label="t('ca.toast.close')" @click="close(item.id)"><X :size="13" /></button>
       </div>
     </TransitionGroup>
   </div>

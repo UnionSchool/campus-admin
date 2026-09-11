@@ -14,10 +14,13 @@
 import { computed, ref } from '@unionschool/campus-framework'
 import { ChevronDown, X } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { findOption, normalizeOptions } from './core'
 import type { SelectOptions } from './core'
 
 defineOptions({ name: 'CaSelect' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   modelValue?: string | number
@@ -29,7 +32,6 @@ const props = withDefaults(defineProps<{
   invalid?: boolean
 }>(), {
   options: () => [],
-  placeholder: '请选择',
   size: 'medium',
 })
 
@@ -37,6 +39,8 @@ const emit = defineEmits<{ 'update:modelValue': [value: string]; change: [value:
 
 const normalized = computed(() => normalizeOptions(props.options))
 const selected = computed(() => findOption(normalized.value, props.modelValue))
+/** 未显式传 placeholder 时用当前语言的默认文案 */
+const placeholderText = computed(() => props.placeholder ?? t('ca.select.placeholder'))
 const open = ref(false)
 
 const className = computed(() => cx(
@@ -86,8 +90,8 @@ function handleKeydown(event: KeyboardEvent) {
       @click="toggle"
     >
       <span v-if="selected" :class="ns('select', 'value')">{{ selected.label }}</span>
-      <span v-else :class="ns('select', 'placeholder')">{{ placeholder }}</span>
-      <span v-if="clearable && selected && !disabled" :class="ns('select', 'clear')" role="button" aria-label="清空" @click="clear"><X :size="12" /></span>
+      <span v-else :class="ns('select', 'placeholder')">{{ placeholderText }}</span>
+      <span v-if="clearable && selected && !disabled" :class="ns('select', 'clear')" role="button" :aria-label="t('ca.common.clear')" @click="clear"><X :size="12" /></span>
       <ChevronDown :size="14" :class="ns('select', 'arrow')" aria-hidden="true" />
     </button>
 
@@ -102,7 +106,7 @@ function handleKeydown(event: KeyboardEvent) {
       >
         {{ option.label }}
       </li>
-      <li v-if="!normalized.length" :class="ns('select', 'empty')">暂无选项</li>
+      <li v-if="!normalized.length" :class="ns('select', 'empty')">{{ t('ca.select.empty') }}</li>
     </ul>
   </div>
 </template>

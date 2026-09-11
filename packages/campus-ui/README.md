@@ -256,6 +256,59 @@ Token 分三层，完整清单见 `src/styles/token.css`：
 
 层级 Token 同样可覆盖：`--ca-z-index-modal`、`--ca-z-index-message`。
 
+### 国际化
+
+组件库内置 zh-CN / en-US 两套词条，不需要额外安装 i18n 库。单独使用 `campus-ui` 时，
+在入口建一个语言实例并注入应用：
+
+```ts
+import { CampusUI, createLocale, installLocale } from '@unionschool/campus-ui'
+import { createApp } from 'vue'
+
+const app = createApp(App)
+const locale = createLocale({
+  locale: 'zh-CN',
+  // 业务词条放在自己的根键下，ca 是组件库保留的命名空间
+  messages: { 'zh-CN': zhCN, 'en-US': enUS },
+})
+
+app.use(CampusUI)          // 已自带一份默认语言实例，可省略下一行
+installLocale(app, locale)
+```
+
+取词与切换：
+
+```ts
+import { setLocale, useLocale } from '@unionschool/campus-ui'
+
+const { t, te } = useLocale()    // 组件内取词
+t('ca.pagination.total', { total: 12 })   // 共 12 条
+
+setLocale('en-US')               // 非 setup 场景
+```
+
+日期与数字格式化走内置的 `Intl` 封装，不要自己拼中文：
+
+```ts
+import { formatDay, formatMonth, formatNumber, weekdayLabels } from '@unionschool/campus-ui'
+
+formatMonth(new Date(2026, 8, 11), 'en-US')   // September 2026
+weekdayLabels('zh-CN')                        // ['周一', ...]
+formatNumber(3286, 'en-US')                   // 3,286
+```
+
+已经用 vue-i18n 的项目不要再装第二个实例，把内置词条合并进自己的实例即可：
+
+```ts
+import { caMessages } from '@unionschool/campus-ui'
+
+i18n.global.mergeLocaleMessage('zh-CN', caMessages['zh-CN'])
+i18n.global.mergeLocaleMessage('en-US', caMessages['en-US'])
+```
+
+完整约定（命名空间、覆盖组件文案、后端文案对接、加语言）见
+[Campus Admin 国际化使用指南](../../docs/Campus-Admin-国际化使用指南.md)。
+
 ### 类名约定
 
 ```text

@@ -1,7 +1,10 @@
 /**
  * DailyAgenda 的核心逻辑，纯 TypeScript，不依赖 Vue。
  * 升级 Vue 或更换渲染层时本文件无需改动。
+ * 文案与日期格式通过参数传入，不在这里写死，日期格式统一走 Intl。
  */
+import { formatDay, formatMonth, weekdayLabels } from '@/locale/format'
+import type { TranslateFn } from '@/locale/types'
 
 export interface AgendaItem {
   day: number
@@ -17,16 +20,15 @@ export interface AgendaDateCell {
   hasEvent: boolean
 }
 
-const WEEK_LABELS = ['一', '二', '三', '四', '五', '六', '日']
-
 /** 基准周首日：2026-09-07，避免依赖运行环境当前时间 */
 export const AGENDA_WEEK_START = new Date(2026, 8, 7)
 
-export function createWeekDates(offset: number, eventDays: number[] = [9, 10, 11]): AgendaDateCell[] {
+export function createWeekDates(offset: number, locale: string, eventDays: number[] = [9, 10, 11]): AgendaDateCell[] {
+  const labels = weekdayLabels(locale, 'narrow')
   return Array.from({ length: 7 }, (_, index) => {
     const dayOfMonth = 7 + offset * 7 + index
     return {
-      label: WEEK_LABELS[index] as string,
+      label: labels[index] as string,
       date: new Date(2026, 8, dayOfMonth),
       hasEvent: eventDays.includes(dayOfMonth),
     }
@@ -43,12 +45,18 @@ export function filterAgenda(items: AgendaItem[], day: number, keyword: string):
   return items.filter(item => item.day === day && item.title.includes(trimmed))
 }
 
-export function formatAgendaDate(date: Date): string {
-  return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月`
+/** 月份标题：2026年9月 / September 2026 */
+export function formatAgendaDate(date: Date, locale: string): string {
+  return formatMonth(date, locale)
 }
 
 /** 详情文案，与组件展示口径保持一致 */
-export function describeAgendaItem(item: AgendaItem, date: Date): string {
-  const state = item.done ? '此日程已完成。' : '请按时参加并准备相关材料。'
-  return `${date.getMonth() + 1} 月 ${date.getDate()} 日 ${item.time}，地点：${item.location}。${state}`
+export function describeAgendaItem(item: AgendaItem, date: Date, locale: string, t: TranslateFn): string {
+  const state = t(item.done ? 'ca.agenda.doneState' : 'ca.agenda.todoState')
+  return t('ca.agenda.describe', {
+    date: formatDay(date, locale),
+    time: item.time,
+    location: item.location,
+    state,
+  })
 }

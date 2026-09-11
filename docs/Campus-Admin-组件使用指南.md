@@ -82,6 +82,21 @@ setTheme('auto')   // 跟随系统
 <html data-ca-theme="dark">
 ```
 
+要做成用户可切换的开关，还需要「记住选择」这一步。示例后台把它放在顶栏右上角，
+入口先落主题再挂载应用，避免首屏先亮色再变暗（完整实现见
+`examples/admin/src/composables/useTheme.ts`）：
+
+```ts
+// main.ts —— 挂载前执行一次
+setTheme(localStorage.getItem('campus:theme') ?? 'auto')
+```
+
+```ts
+// 开关切换
+setTheme(dark ? 'dark' : 'light')
+localStorage.setItem('campus:theme', dark ? 'dark' : 'light')
+```
+
 ### 学校品牌色
 
 学校品牌不是蓝色时，只给一个主色即可，其余色阶自动推导：
@@ -96,6 +111,40 @@ resetPrimaryColor()          // 恢复默认蓝色
 自动推导的内容：hover / active、浅色底、浅底上的文字色、实心背景上的文字色。
 品牌色过浅（例如黄色）时会自动加深文字、并把实心按钮的文字换成深色，
 保证对比度达标。按钮、标签、菜单选中态、表格悬停、课表色块会一起生效。
+
+### 国际化
+
+组件库内置 zh-CN / en-US 两套词条，业务词条与内置词条合并到同一个语言实例：
+
+```ts
+import { createCampusAdmin } from '@unionschool/campus-admin'
+import { businessMessages } from './src/locale'
+
+createCampusAdmin({
+  config: { locale: { locale: 'zh-CN', fallbackLocale: 'zh-CN', messages: businessMessages } },
+})
+```
+
+取词与切换：
+
+```ts
+import { setLocale, useLocale } from '@unionschool/campus-admin'
+
+const { t, te } = useLocale()   // setup 内取词；te 判断词条是否存在
+t('ca.common.confirm')          // 组件库词条
+t('page.home.count', { total }) // 业务词条，{total} 为插值
+
+setLocale('en-US')              // 非 setup 场景：路由、请求拦截器等
+```
+
+三点必须记住：
+
+- `ca.*` 是组件库保留的命名空间，业务词条用其他根键（示例是 `app.*` / `menu.*` / `page.*`）。
+- 组件自带的默认文案可以改：单个组件用 `search-text` / `empty-text` 这类 props 覆盖，整个项目则在语言包里覆盖 `ca.*` 的叶子键，不要覆盖父级路径。
+- 已经用 vue-i18n 的项目不要再装第二个 i18n 实例，把 `caMessages` 合并进自己的实例即可。
+
+完整的词条约定、日期与数字格式化、后端文案对接、加一门语言以及排查清单，见
+[Campus Admin 国际化使用指南](./Campus-Admin-国际化使用指南.md)。
 
 ### 覆盖 Token
 

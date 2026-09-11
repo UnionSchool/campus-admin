@@ -11,26 +11,30 @@
 -->
 
 <script setup lang="ts">
+import { computed } from '@unionschool/campus-framework'
 import { Inbox } from '@lucide/vue'
 import { ns } from '@/core/namespace'
+import { useLocale } from '@/locale'
 
 defineOptions({ name: 'CaEmpty' })
 
-withDefaults(defineProps<{
+const { t } = useLocale()
+
+const props = defineProps<{
   title?: string
   description?: string
   size?: 'small' | 'medium'
-}>(), {
-  title: '暂无数据',
-})
+}>()
 
 const className = ns('empty')
+/** 未显式传 title 时用当前语言的默认文案 */
+const titleText = computed(() => props.title ?? t('ca.empty.title'))
 </script>
 
 <template>
   <div :class="className">
     <span :class="ns('empty', 'icon')" aria-hidden="true"><slot name="icon"><Inbox :size="30" /></slot></span>
-    <p :class="ns('empty', 'title')">{{ title }}</p>
+    <p :class="ns('empty', 'title')">{{ titleText }}</p>
     <p v-if="description" :class="ns('empty', 'desc')">{{ description }}</p>
     <div v-if="$slots.default" :class="ns('empty', 'action')"><slot /></div>
   </div>

@@ -15,10 +15,13 @@
 <script setup lang="ts">
 import { computed } from '@unionschool/campus-framework'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { attendanceMeta } from './core'
 import type { AttendanceStatus } from './core'
 
 defineOptions({ name: 'CaAttendanceBadge' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   status?: AttendanceStatus | string
@@ -31,6 +34,8 @@ const props = withDefaults(defineProps<{
 })
 
 const meta = computed(() => attendanceMeta(props.status))
+/** 状态文案按当前语言取词，切换语言时自动更新 */
+const label = computed(() => t(meta.value.labelKey))
 const className = computed(() => cx(
   ns('attendance-badge'),
   ns('attendance-badge', undefined, meta.value.tone),
@@ -41,7 +46,7 @@ const className = computed(() => cx(
 <template>
   <span :class="className">
     <i :class="ns('attendance-badge', 'dot')" aria-hidden="true"></i>
-    <span>{{ meta.label }}</span>
+    <span>{{ label }}</span>
     <time v-if="time" :class="ns('attendance-badge', 'time')">{{ time }}</time>
   </span>
 </template>

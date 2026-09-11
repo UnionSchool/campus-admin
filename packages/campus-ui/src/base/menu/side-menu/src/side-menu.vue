@@ -28,10 +28,13 @@
 import { computed, ref, watch } from '@unionschool/campus-framework'
 import { ChevronDown, ChevronsRight, Dot } from '@lucide/vue'
 import { ns, cx } from '@/core/namespace'
+import { useLocale } from '@/locale'
 import { collectExpandableKeys, flattenMenu, resolveKey } from '../../core'
 import type { SideMenuItem } from '../../core'
 
 defineOptions({ name: 'CaSideMenu' })
+
+const { t } = useLocale()
 
 const props = withDefaults(defineProps<{
   items: SideMenuItem[]
@@ -58,11 +61,13 @@ const props = withDefaults(defineProps<{
 }>(), {
   defaultExpandAll: false,
   highlightBranch: true,
-  ariaLabel: '导航菜单',
   indent: 14,
   indentStep: 14,
   levelOffset: () => [],
 })
+
+/** 未显式传 ariaLabel 时用当前语言的默认值 */
+const ariaLabelValue = computed(() => props.ariaLabel ?? t('ca.sideMenu.label'))
 
 /** 二级菜单默认图标：小圆点 */
 const defaultSubIcon = Dot
@@ -191,7 +196,7 @@ function handleSelect(row: SideMenuItem) {
 </script>
 
 <template>
-  <nav :class="base" :aria-label="ariaLabel">
+  <nav :class="base" :aria-label="ariaLabelValue">
     <button
       v-for="row in rows"
       :key="row.itemKey"

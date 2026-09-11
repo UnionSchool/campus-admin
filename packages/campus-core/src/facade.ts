@@ -15,7 +15,7 @@ export function getCurrentCampus(): CampusApplication | undefined {
 }
 
 /**
- * Campus Facade，对应 Laravel 的 Facade。
+ * Campus Facade：把容器里的服务暴露成一个静态调用入口。
  *
  * 业务代码用 campus('request') 取服务，而不是直接 import 具体实现，
  * 这样替换实现时无需改动业务代码。
