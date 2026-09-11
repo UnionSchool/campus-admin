@@ -82,20 +82,37 @@ setTheme('auto')   // 跟随系统
 <html data-ca-theme="dark">
 ```
 
-要做成用户可切换的开关，还需要「记住选择」这一步。示例后台把它放在顶栏右上角，
-入口先落主题再挂载应用，避免首屏先亮色再变暗（完整实现见
-`examples/admin/src/composables/useTheme.ts`）：
+要做成用户可切换的开关，还需要「记住选择」这一步，示例后台在顶栏右上角放了三态控件
+（浅色 / 深色 / 自动），完整实现见 `examples/admin/src/composables/useTheme.ts`：
 
 ```ts
-// main.ts —— 挂载前执行一次
-setTheme(localStorage.getItem('campus:theme') ?? 'auto')
+// 切换：存用户的选择本身，不要存解析后的明暗，否则下次无法跟随系统
+setTheme('auto')                              // 'light' | 'dark' | 'auto'
+localStorage.setItem('campus:theme', 'auto')
 ```
 
-```ts
-// 开关切换
-setTheme(dark ? 'dark' : 'light')
-localStorage.setItem('campus:theme', dark ? 'dark' : 'light')
+「自动」依赖系统偏好，只有等 JS 跑起来才知道结果，所以首屏要在样式生效前先定好，
+否则暗色系统上会先闪一下亮色。放在 `index.html` 的 `<head>` 里同步执行：
+
+```html
+<script>
+  ;(function () {
+    try {
+      var saved = localStorage.getItem('campus:theme') || 'auto'
+      var dark = saved === 'dark'
+        || (saved === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      document.documentElement.setAttribute('data-ca-theme', dark ? 'dark' : 'light')
+    }
+    catch (error) {
+      document.documentElement.setAttribute('data-ca-theme', 'light')
+    }
+  })()
+</script>
 ```
+
+注意两点：系统变化的监听只应由组件库持有（`setTheme('auto')` 会自动挂/摘），业务里不要再写一份
+`matchMedia` 监听去调 `setTheme`；界面上想显示「当前实际是深色」用 `isDarkTheme()` 或自己的
+`isDark` 派生值即可。
 
 ### 学校品牌色
 

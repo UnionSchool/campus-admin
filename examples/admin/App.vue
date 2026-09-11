@@ -3,10 +3,10 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   Bell, Building2, ChevronDown, ChevronRight, GraduationCap, Headphones, MapPin,
-  Languages, Menu, Moon, Search, Settings2, Sun, X,
+  Languages, Menu, Search, Settings2, SunMoon, X,
 } from '@lucide/vue'
-import { CaSideMenu, CaSwitch, useLocale } from '@unionschool/campus-ui'
-import type { SideMenuItem } from '@unionschool/campus-ui'
+import { CaSideMenu, useLocale } from '@unionschool/campus-ui'
+import type { CaTheme, SideMenuItem } from '@unionschool/campus-ui'
 import DetailDialog from './src/components/DetailDialog.vue'
 import { buildSideMenus, routeInfo } from './src/router'
 import { detail, showDetail } from './src/services/detail'
@@ -24,12 +24,18 @@ const searchKeyword = ref('')
 const { t, te } = useLocale()
 const { language, languages, switchLanguage } = useLanguage()
 
-// 明暗主题开关：状态与持久化在 useTheme 里，这里只负责渲染
-const { isDark, toggleDark } = useTheme()
-const darkMode = computed({
-  get: () => isDark.value,
-  set: value => toggleDark(value),
-})
+// 主题三态：浅色 / 深色 / 自动（跟随系统），状态与持久化在 useTheme 里，这里只负责渲染
+const { theme, isDark, setTheme } = useTheme()
+const themeModes = computed(() => [
+  { value: 'light' as CaTheme, label: t('app.themeLight') },
+  { value: 'dark' as CaTheme, label: t('app.themeDark') },
+  {
+    value: 'auto' as CaTheme,
+    label: t('app.themeAuto'),
+    // 自动模式的实际明暗由系统决定，标题里带出当前结果
+    title: t('app.themeAutoHint', { state: isDark.value ? t('app.themeDark') : t('app.themeLight') }),
+  },
+])
 
 /** 顶部模块导航：有 path 的可跳转，没有的弹出占位说明 */
 const topMenus = [
@@ -103,17 +109,19 @@ function handleTopMenu(item: { labelKey: string; path: string; descriptionKey?: 
         <div class="search-box">
           <Search :size="16" /><input v-model="searchKeyword" :aria-label="t('app.search')" :placeholder="t('app.search')" />
         </div>
-        <div class="language-switch" :title="t('app.language')">
+        <div class="top-switch language-switch" :title="t('app.language')">
           <Languages :size="15" />
           <button v-for="item in languages" :key="item.value" type="button" :class="{ active: language === item.value }"
             :aria-pressed="language === item.value" @click="switchLanguage(item.value)">
             {{ item.short }}
           </button>
         </div>
-        <div class="theme-switch" :title="darkMode ? t('app.themeLight') : t('app.themeDark')">
-          <Moon v-if="darkMode" :size="15" />
-          <Sun v-else :size="15" />
-          <CaSwitch v-model="darkMode" :aria-label="t('app.darkModeLabel')" />
+        <div class="top-switch theme-switch" role="group" :aria-label="t('app.themeLabel')">
+          <SunMoon :size="15" />
+          <button v-for="mode in themeModes" :key="mode.value" type="button" :class="{ active: theme === mode.value }"
+            :aria-pressed="theme === mode.value" :title="mode.title ?? mode.label" @click="setTheme(mode.value)">
+            {{ mode.label }}
+          </button>
         </div>
         <button class="notification" :aria-label="t('app.notification')"
           @click="showDetail(t('app.notification'), t('app.notificationDetail'))">

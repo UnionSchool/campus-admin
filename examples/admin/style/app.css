@@ -38,18 +38,11 @@ h1, h2, h3, p { margin: 0; }
 .search-box { display: flex; align-items: center; gap: 7px; width: 145px; padding: 7px 10px; background: #ffffff17; border-radius: 5px; }
 .search-box input { width: 100%; min-width: 0; color: var(--ca-color-primary-contrast); border: 0; background: transparent; font-size: 12px; }
 .search-box input::placeholder { color: var(--ca-color-primary-contrast); opacity: .7; }
-/* 主题开关：底色是品牌色，轨道改用白色透明度区分开关状态 */
-.theme-switch { display: flex; align-items: center; gap: 8px; color: var(--ca-color-primary-contrast); }
-.theme-switch .ca-switch__track { background: #ffffff3d; }
-.theme-switch .ca-switch__thumb { background: #ffffff; }
-.theme-switch .ca-switch--on .ca-switch__track { background: #ffffff; }
-.theme-switch .ca-switch--on .ca-switch__thumb { background: var(--ca-color-primary); }
-.theme-switch .ca-switch:focus-visible .ca-switch__track { outline-color: var(--ca-color-primary-contrast); }
-/* 语言切换：和主题开关并排，选中态用白底 + 品牌色文字 */
-.language-switch { display: flex; align-items: center; gap: 5px; color: var(--ca-color-primary-contrast); }
-.language-switch button { padding: 2px 7px; border-radius: 4px; font-size: 11px; line-height: 1.5; color: inherit; opacity: .75; }
-.language-switch button:hover { opacity: 1; }
-.language-switch button.active { background: #ffffff; color: var(--ca-color-primary); font-weight: 600; opacity: 1; }
+/* 顶栏分段控件：语言与主题共用一套样式，选中态白底 + 品牌色文字 */
+.top-switch { display: flex; align-items: center; gap: 5px; color: var(--ca-color-primary-contrast); }
+.top-switch button { padding: 2px 7px; border-radius: 4px; font-size: 12px; line-height: 1.5; color: inherit; opacity: .75; }
+.top-switch button:hover { opacity: 1; }
+.top-switch button.active { background: #ffffff; color: var(--ca-color-primary); font-weight: 600; opacity: 1; }
 .notification { position: relative; color: var(--ca-color-primary-contrast); display: flex; padding: 4px; }
 .notification i { position: absolute; top: 1px; right: 2px; width: 5px; height: 5px; background: #ffd185; border-radius: 50%; }
 .profile { display: flex; align-items: center; gap: 8px; color: var(--ca-color-primary-contrast); white-space: nowrap; padding: 0; font-size: 12px; }
@@ -212,9 +205,9 @@ h1, h2, h3, p { margin: 0; }
   .sidebar.open { transform: translateX(0); }
   .sidebar-mobile-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 17px; font-size: 14px; }
   .backdrop { display: block; position: fixed; inset: 0; z-index: 70; background: var(--ca-overlay-color); }
-  .theme-switch { gap: 0; }
-  .theme-switch>svg { display: none; }
-  .language-switch>svg { display: none; }
+  .top-switch { gap: 3px; }
+  .top-switch>svg { display: none; }
+  .top-switch button { padding: 2px 5px; font-size: 11px; }
   .main-content { margin-left: 0; padding: 72px 10px 0; z-index: auto; }
   .workspace { padding: 0 10px 10px; min-height: calc(100dvh - 72px); }
   .breadcrumb { font-size: 11px; min-height: 36px; } .breadcrumb>span { display: none; }
