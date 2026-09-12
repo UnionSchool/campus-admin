@@ -154,8 +154,9 @@ const { t } = useLocale()
 
 ```bash
 pnpm run build:packages     # 先构建各包
-pnpm run dev:admin          # 开发 admin 示例
+pnpm run dev:admin          # 开发 admin 示例（固定 http://localhost:8091，自动打开浏览器）
 pnpm run build:example      # 构建全部示例
+pnpm run preview:admin      # 预览构建产物（http://localhost:4173）
 pnpm run up                 # 构建并上传 admin 演示站
 ```
 

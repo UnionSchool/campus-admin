@@ -279,7 +279,7 @@ git ls-remote --heads gitee main
 
 ```bash
 pnpm run build:packages
-pnpm run dev:admin            # 开发
+pnpm run dev:admin            # 开发（固定 http://localhost:8091，自动打开浏览器）
 pnpm run build:example:admin  # 仅构建 admin 示例
 ```
 

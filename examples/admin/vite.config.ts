@@ -33,6 +33,22 @@ export default defineConfig({
       '@campus-admin/icon',
     ],
   },
+  /**
+   * 开发服务器：固定 8091 端口 + 自动打开浏览器。
+   *
+   * 为什么不用默认的 5173：很容易被别的 Vite 项目或上一次没退干净的实例占住，
+   * 自动跳端口会让每次的地址都不一样。这里用示例专属端口 + strictPort，
+   * 端口被占时直接报错（而不是悄悄换端口），临时换端口用 `npm run dev -- --port 8092`。
+   */
+  server: {
+    port: 8091,
+    strictPort: true,
+    open: true,
+  },
+  preview: {
+    port: 4173,
+    strictPort: true,
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,

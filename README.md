@@ -46,7 +46,7 @@ pnpm add @campus-admin/core
 ```bash
 pnpm install
 pnpm run build:packages
-pnpm run dev:admin
+pnpm run dev:admin          # 开发演示站（固定 http://localhost:8091，自动打开浏览器）
 ```
 
 示例通过 workspace 链接引用各包的 `dist` 产物，因此修改 `packages/**` 后需要重新执行 `pnpm run build:packages`。
