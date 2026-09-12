@@ -289,13 +289,34 @@ pnpm run build:example:admin  # 仅构建 admin 示例
 pnpm run up
 ```
 
-根目录 `up` 脚本会重新构建 `examples/admin`，检查 `examples/admin/dist/index.html`，然后执行：
+根目录 `up` 脚本（仅保留在本机，未纳入版本控制）按四步执行：
 
-```bash
-coscli sync examples/admin/dist cos://campus -r
+```text
+1. npm run build:packages       构建四个包 —— 示例按包名引用 @campus-admin/*，解析到各包 dist，
+                                不先构建就会把旧组件上传上去
+2. npm run build:example:admin  构建示例
+3. coscli sync dist/assets cos://campus/assets -r --delete --force --meta "Cache-Control:public, max-age=31536000, immutable"
+                                静态资源带内容 hash：长缓存 + 删除上一版遗留文件
+                                （--delete 必须配 --force 才会真正删除；只删 assets/ 前缀，
+                                  避免误删站根手工维护的文件）
+4. coscli sync dist cos://campus -r --exclude "assets/*" --exclude "index.html"
+                                站根其他文件，不删除
+5. coscli cp   .../index.html cos://campus/index.html --meta "Cache-Control:no-cache"
+                                index.html 不缓存，避免发版后用户拿旧 HTML 请求已替换的 hash 资源
 ```
 
-脚本不使用 `--delete`，因此不会自动删除 COS 中已有的其他文件。上传完成后访问 <https://campus.zhongxiaotong.com> 验证首页和静态资源。
+上传结束会请求一次 <https://campus.zhongxiaotong.com> 打印 HTTP 状态码做兜底校验。
+
+站点的图标 `examples/admin/public/favicon.ico` 随构建一起输出到 `dist/`，`index.html` 用相对路径引用，不再依赖手工上传到桶上。
+
+本地清理：
+
+```bash
+node scripts/clean.mjs all      # 各包 dist + 示例 dist + coscli 日志
+node scripts/clean.mjs cache    # 增量编译缓存（*.tsbuildinfo，改了 tsconfig 建议清一次）
+node scripts/clean.mjs coscli   # 上传失败日志（coscli_output、coscli.log）
+node scripts/clean.mjs dist:packages/ui   # 只清某个包的 dist
+```
 
 后续新增示例时，各自输出到自己的 `dist/`，并单独维护部署脚本，互不影响。`examples/web` 目前是预留目录，未纳入 workspace，不参与构建与发布。
 
