@@ -3,8 +3,8 @@
 面向智慧校园后台管理场景的 Vue 3 前端框架。
 
 - 演示站点：<https://campus.zhongxiaotong.com>
-- GitHub：<https://github.com/UnionSchool/@campus-admin/core>
-- Gitee：<https://gitee.com/UnionSchool/@campus-admin/core>
+- GitHub：<https://github.com/UnionSchool/campus-admin>
+- Gitee：<https://gitee.com/UnionSchool/campus-admin>
 
 > 当前处于早期开发阶段（`0.1.0-alpha`），API 可能调整，暂不建议直接用于生产环境。
 

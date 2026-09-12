@@ -186,8 +186,8 @@ git commit -m "chore: release v<版本号>"
 项目配置了两个远程仓库：
 
 ```text
-origin  https://github.com/UnionSchool/@campus-admin/core.git
-gitee   https://gitee.com/UnionSchool/@campus-admin/core.git
+origin  https://github.com/UnionSchool/campus-admin.git
+gitee   https://gitee.com/UnionSchool/campus-admin.git
 ```
 
 先将同一个 `main` 提交分别推送到两个平台：
