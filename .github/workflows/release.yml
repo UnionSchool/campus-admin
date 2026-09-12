@@ -34,8 +34,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Typecheck and build
         run: |
-          pnpm run typecheck
+          # 必须先构建：typecheck 依赖各包 dist 里的类型声明
           pnpm run build:packages
+          pnpm run typecheck
       - name: Publish ${{ matrix.package }}
         run: |
           if [[ "${GITHUB_REF_NAME}" == *-* ]]; then

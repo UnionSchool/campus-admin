@@ -4,9 +4,8 @@
     "noEmit": true,
     "types": ["vite/client"],
     "paths": {
-      "@campus-admin/ui": ["../campus-ui/src/index.ts"],
-      "@campus-admin/locale": ["../campus-locale/src/index.ts"],
-      "@campus-admin/icon": ["../campus-icon/src/index.ts"]
+      "@campus-admin/locale": ["../locale/src/index.ts"],
+      "@campus-admin/icon": ["../icon/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"]

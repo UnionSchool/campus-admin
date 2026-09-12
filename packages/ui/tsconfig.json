@@ -5,8 +5,7 @@
     "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"],
-      "@campus-admin/core": ["../campus-framework/src/index.ts"],
-      "@campus-admin/core": ["../campus-core/src/index.ts"]
+      "@campus-admin/locale": ["../locale/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"]
