@@ -11,7 +11,7 @@
 -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CaButton, CaEmpty, CaPageHeader, CaSkeleton, toast } from '@unionschool/campus-admin'
+import { CaButton, CaEmpty, CaPageHeader, CaSkeleton, toast } from '@campus-admin/core'
 import { getCourseSchedule } from '../../../lib/api/schedule'
 import type { ScheduleData, ScheduleLesson } from '../../../lib/api/schedule'
 

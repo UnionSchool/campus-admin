@@ -6,7 +6,7 @@
  * 这里只负责「记住用户的选择」与「把语言写进 <html lang>」。
  */
 import { computed } from 'vue'
-import { setLocale, useLocale } from '@unionschool/campus-admin'
+import { setLocale, useLocale } from '@campus-admin/core'
 import { DEFAULT_LANGUAGE, LANGUAGES } from '../locale'
 
 const STORAGE_KEY = 'campus:locale'

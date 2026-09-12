@@ -4,7 +4,7 @@
  *
  * 用法:
  *   node scripts/clean.mjs all
- *   node scripts/clean.mjs dist:packages/campus-core dist:packages/campus-admin
+ *   node scripts/clean.mjs dist:packages/core dist:packages/core
  *   node scripts/clean.mjs dist site
  *
  * 只有显式传入目标才删除，避免误删目录，
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url'
 const projectRoot = fileURLToPath(new URL('..', import.meta.url))
 const args = process.argv.slice(2)
 
-const packageNames = ['campus-core', 'campus-framework', 'campus-ui', 'campus-admin']
+const packageNames = ['icon', 'locale', 'ui', 'core']
 const outputs = []
 
 if (args.includes('all') || args.length === 0) {

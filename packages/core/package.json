@@ -1,0 +1,83 @@
+{
+  "name": "@campus-admin/core",
+  "version": "1.0.0",
+  "description": "Campus Admin 框架层与装配入口：应用生命周期、服务容器、Vue 适配、命令式 API 与组件装配",
+  "type": "module",
+  "license": "MIT",
+  "author": "UnionSchool",
+  "homepage": "https://campus.zhongxiaotong.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnionSchool/campus-admin.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "campus",
+    "school",
+    "admin",
+    "framework",
+    "dashboard"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "LICENSE",
+    "dist",
+    "README.md",
+    "types"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "ca": [
+        "./types/ca.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs",
+      "source": "./src/index.ts"
+    },
+    "./style.css": {
+      "import": "./dist/core.css",
+      "default": "./dist/core.css"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "build": "node ../../scripts/clean.mjs dist:packages/core && vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json && vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@lucide/vue": "^1.44.0",
+    "vue": "^3.5.42"
+  },
+  "dependencies": {
+    "@campus-admin/icon": "workspace:^",
+    "@campus-admin/locale": "workspace:^",
+    "@campus-admin/ui": "workspace:^"
+  },
+  "devDependencies": {
+    "@lucide/vue": "^1.44.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vue": "^3.5.42",
+    "vue-tsc": "^3.3.11"
+  }
+}

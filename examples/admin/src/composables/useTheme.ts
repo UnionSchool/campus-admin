@@ -10,8 +10,8 @@
  * 3. 首次访问没有本地记录时跟随系统偏好（prefers-color-scheme）
  */
 import { computed, readonly, ref } from 'vue'
-import { setTheme } from '@unionschool/campus-admin'
-import type { CaTheme } from '@unionschool/campus-admin'
+import { setTheme } from '@campus-admin/core'
+import type { CaTheme } from '@campus-admin/core'
 
 const STORAGE_KEY = 'campus:theme'
 

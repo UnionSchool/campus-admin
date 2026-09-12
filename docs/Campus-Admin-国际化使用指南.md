@@ -1,8 +1,8 @@
 # Campus Admin 国际化使用指南
 
-> 适用包：`@unionschool/campus-admin`（含 `campus-ui` 全部组件）
+> 适用包：`@campus-admin/core`（含 `@campus-admin/ui` 全部组件）
 > 可运行示例：`examples/admin/src/locale`（业务词条）、`examples/admin/src/composables/useLanguage.ts`（语言开关）
-> 组件库实现：`packages/campus-ui/src/locale`
+> 组件库实现：`packages/ui/src/locale`
 
 ## 1. 一分钟接入
 
@@ -12,10 +12,10 @@
 
 ```ts
 // src/locale/zh-CN.ts
-import type { LocaleMessages } from '@unionschool/campus-admin'
+import type { LocaleMessages } from '@campus-admin/core'
 
 const zhCN: LocaleMessages = {
-  app: { name: '众校通智慧校园' },
+  app: { name: '智慧校园' },
   page: { home: { count: '共 {total} 项' } },
   menu: { 'school-student': '学生管理' },
 }
@@ -26,7 +26,7 @@ export default zhCN
 ```ts
 // src/locale/en-US.ts —— 键必须与 zh-CN 完全一致
 const enUS: LocaleMessages = {
-  app: { name: 'ZhongXiaoTong Campus' },
+  app: { name: 'Smart Campus' },
   page: { home: { count: '{total} items' } },
   menu: { 'school-student': 'Students' },
 }
@@ -34,7 +34,7 @@ const enUS: LocaleMessages = {
 
 ```ts
 // src/locale/index.ts
-import type { LocaleMessageMap } from '@unionschool/campus-admin'
+import type { LocaleMessageMap } from '@campus-admin/core'
 import zhCN from './zh-CN'
 import enUS from './en-US'
 
@@ -46,7 +46,7 @@ export const businessMessages: LocaleMessageMap = { 'zh-CN': zhCN, 'en-US': enUS
 业务词条与组件库内置词条会深合并到**同一个语言实例**，组件文案与业务文案共用一套语言包：
 
 ```ts
-import { createCampusAdmin } from '@unionschool/campus-admin'
+import { createCampusAdmin } from '@campus-admin/core'
 import { businessMessages } from './src/locale'
 
 app.use(createCampusAdmin({
@@ -70,7 +70,7 @@ createCampusAdmin({ config: { locale: { locale: language, messages: businessMess
 ### 1.3 切换语言
 
 ```ts
-import { setLocale } from '@unionschool/campus-admin'
+import { setLocale } from '@campus-admin/core'
 
 setLocale('en-US')   // 组件文案 + 业务文案一起变，不需要刷新
 ```
@@ -88,7 +88,7 @@ document.documentElement.lang = 'en-US'
 词条是嵌套对象，取词时用点号路径；结构与 vue-i18n 的 `messages` 完全一致，可以直接互相合并。
 
 ```ts
-t('app.name')                              // 众校通智慧校园
+t('app.name')                              // 智慧校园
 t('page.home.count', { total: 12 })        // 共 12 项
 t('page.home.count', { total: 12 })        // 英文下：12 items
 ```
@@ -100,7 +100,7 @@ t('page.home.count', { total: 12 })        // 英文下：12 items
 
 | 命名空间 | 归属 | 说明 |
 | --- | --- | --- |
-| `ca.*` | 组件库保留 | 组件自身界面文案，见 `packages/campus-ui/src/locale/lang` |
+| `ca.*` | 组件库保留 | 组件自身界面文案，见 `packages/ui/src/locale/lang` |
 | `app.*` | 业务 | 应用外壳：顶栏、侧栏、面包屑、页脚（示例约定） |
 | `menu.*` | 业务 | 后端菜单文案，键取菜单 id（示例约定） |
 | `page.*` | 业务 | 页面文案，按页面分层（示例约定） |
@@ -137,7 +137,7 @@ const zhCN = {
 
 查找顺序是：当前语言 → 当前语言的主语言（`zh-CN` → `zh`）→ 兜底语言 → 兜底语言的主语言。
 
-都没找到时 `t()` **原样返回 key**（与 vue-i18n 行为一致），同时开发环境会打一次 `[campus-ui] 缺少词条：xxx`，便于定位漏翻。切到未注册的语言不会报错，会走 `fallbackLocale`。
+都没找到时 `t()` **原样返回 key**（与 vue-i18n 行为一致），同时开发环境会打一次 `[@campus-admin/locale] 缺少词条：xxx`，便于定位漏翻。切到未注册的语言不会报错，会走 `fallbackLocale`。
 
 ## 3. 在代码里取词
 
@@ -145,7 +145,7 @@ const zhCN = {
 
 ```vue
 <script setup lang="ts">
-import { useLocale } from '@unionschool/campus-admin'
+import { useLocale } from '@campus-admin/core'
 
 const { t, te } = useLocale()
 </script>
@@ -171,7 +171,7 @@ const { t, te } = useLocale()
 | `getCurrentLocale()` | 当前语言实例（`t` / `te` / `mergeMessages` 都在上面） |
 
 ```ts
-import { getCurrentLocale, getLocale, setLocale } from '@unionschool/campus-admin'
+import { getCurrentLocale, getLocale, setLocale } from '@campus-admin/core'
 
 console.log(getLocale())                      // zh-CN
 const { t, te, mergeMessages } = getCurrentLocale()
@@ -188,7 +188,7 @@ setLocale('en-US')
 | --- | --- |
 | `useLocale()` | setup 内取词，返回 `{ locale, fallbackLocale, t, te, setLocale, mergeMessages, getMessages }` |
 | `createLocale(options)` | 自己建语言实例（`{ locale, fallbackLocale, messages }`） |
-| `installLocale(app, locale)` | 把实例注入应用并设为当前实例，`campus-admin` 安装时已自动调用 |
+| `installLocale(app, locale)` | 把实例注入应用并设为当前实例，`@campus-admin/core` 安装时已自动调用 |
 | `provideLocale(locale)` | 仅 setup 内可用，向子组件提供实例 |
 | `CA_LOCALE_KEY` | 注入键，用于替换实现 |
 | `caMessages` | 组件库内置词条 `{ 'zh-CN': {...}, 'en-US': {...} }`，用于合并进业务自己的 i18n |
@@ -199,7 +199,7 @@ setLocale('en-US')
 语言相关的格式统一走组件库导出的工具（底层是 `Intl`），不要在业务里拼「年 / 月 / 日」：
 
 ```ts
-import { formatDay, formatMonth, formatNumber, weekdayLabels } from '@unionschool/campus-admin'
+import { formatDay, formatMonth, formatNumber, weekdayLabels } from '@campus-admin/core'
 
 formatMonth(new Date(2026, 8, 11), 'zh-CN')   // 2026年9月
 formatMonth(new Date(2026, 8, 11), 'en-US')   // September 2026
@@ -240,7 +240,7 @@ const label = translateOr(t, te, menuKeyOf(node), node.label)
 
 ```ts
 import { createI18n } from 'vue-i18n'
-import { caMessages } from '@unionschool/campus-admin'
+import { caMessages } from '@campus-admin/core'
 
 const i18n = createI18n({
   legacy: false,
@@ -285,13 +285,13 @@ const jaJP = {
 
 也可以直接复用内置的 `caMessages` 作为起点，再覆盖需要翻译的叶子键。
 
-当前 `zh-CN` / `en-US` 两套内置词条随包静态输出（gzip 后不到 1KB）。语言数量变多时再拆成 `@unionschool/campus-ui/locale/<locale>` 子路径动态加载，并同步 `package.json` 的 `exports` 与 `scripts/verify-pack.mjs` 白名单。
+当前 `zh-CN` / `en-US` 两套内置词条随包静态输出（gzip 后不到 1KB）。语言数量变多时再拆成 `@campus-admin/ui/locale/<locale>` 子路径动态加载，并同步 `package.json` 的 `exports` 与 `scripts/verify-pack.mjs` 白名单。
 
 ## 8. 给组件库加一条文案
 
 ```text
-1. packages/campus-ui/src/locale/lang/zh-CN.ts   加 ca.<组件>.<语义>
-2. packages/campus-ui/src/locale/lang/en-US.ts   补同一条（少一条会被门禁拦下）
+1. packages/ui/src/locale/lang/zh-CN.ts   加 ca.<组件>.<语义>
+2. packages/ui/src/locale/lang/en-US.ts   补同一条（少一条会被门禁拦下）
 3. 组件里用 const { t } = useLocale() + t('ca.<组件>.<语义>')
 4. 默认值型 props 不要写死中文：删掉 withDefaults 里的默认值，
    改成 computed(() => props.xxx ?? t('ca.xxx'))

@@ -1,5 +1,5 @@
 /* 演示后台专属样式：应用外壳、首页布局与响应式。
-   组件自身的视觉样式由 @unionschool/campus-ui 提供。
+   组件自身的视觉样式由 @campus-admin/ui 提供。
    颜色一律引用 --ca-* Token：明暗主题由 setTheme() 在 <html> 上切一次即可全局生效，
    这里不写死任何与主题相关的色值。 */
 
@@ -143,8 +143,7 @@ h1, h2, h3, p { margin: 0; }
 .file-item>i { width: 4px; height: 4px; background: var(--ca-color-danger); border-radius: 50%; flex-shrink: 0; }
 .file-item:hover b { color: var(--blue); }
 .service-note { color: var(--ca-text-placeholder); font-size: 12px; display: flex; justify-content: center; gap: 6px; align-items: center; }
-.page-footer { font-size: 12px; display: flex; justify-content: center; gap: 10px; color: var(--ca-text-placeholder); padding: 21px 0 6px; }
-.page-footer span { border-left: 1px solid var(--ca-border-color); padding-left: 10px; }
+.page-footer { font-size: 12px; display: flex; justify-content: center; text-align: center; color: var(--ca-text-placeholder); padding: 21px 0 6px; }
 
 .modal-backdrop { position: fixed; inset: 0; background: var(--ca-overlay-color); z-index: 100; display: grid; place-items: center; padding: 20px; backdrop-filter: blur(2px); }
 .dialog { width: min(480px, 100%); border-radius: 9px; background: var(--ca-surface-card); padding: 23px; box-shadow: var(--ca-shadow-popup); }

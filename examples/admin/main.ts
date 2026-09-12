@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
-import { ca, createCampusAdmin } from '@unionschool/campus-admin'
-import '@unionschool/campus-admin/style.css'
+import { ca, createCampusAdmin } from '@campus-admin/core'
+import '@campus-admin/core/style.css'
 import './style/app.css'
 import App from './App.vue'
 import router, { initApp } from './src/router'

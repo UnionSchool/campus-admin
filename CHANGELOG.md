@@ -1,15 +1,25 @@
 # 更新日志
 
-本项目版本号遵循 Semantic Versioning。Monorepo 采用统一版本号，根 `package.json` 的 `version` 是唯一版本来源。
+本项目版本号遵循 Semantic Versioning。仓库采用统一版本号，根 `package.json` 的 `version` 是唯一版本来源。
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-12
+
 ### 架构
 
-- 从单包拆分为 pnpm Monorepo，包含 `@unionschool/campus-core`、`@unionschool/campus-framework`、`@unionschool/campus-ui`、`@unionschool/campus-admin` 四个包。
-- `campus-core` 提供应用生命周期（`register → boot → start`）、服务容器、上下文、配置契约与 Facade。
-- `campus-framework` 成为全项目唯一直接依赖 `vue` 的包，统一导出响应式 API 并提供 `useCampus`。
-- `campus-admin` 负责装配三个包并注册内置组件，业务项目只需要安装这一个包。
+- 包结构与包名重构：npm 作用域从 `@unionschool/*` 改为 `@campus-admin/*`，四个包按职责重新划分：
+  - `@campus-admin/icon`：校园语义图标（`CampusStudent`、`CampusCard`…）与后端图标名解析（`resolveIcon`），依赖 `@lucide/vue`；
+  - `@campus-admin/locale`：国际化运行时（词条、`useLocale`/`setLocale`、`Intl` 日期数字格式化），依赖 `vue`；
+  - `@campus-admin/ui`：纯 UI，27 个组件 + 设计 Token + 主题，依赖 `@campus-admin/locale`；
+  - `@campus-admin/core`：框架层 + 装配入口，应用生命周期、服务容器、Vue 适配、`ca` 命令式 API 与 `createCampusAdmin()`。
+- 取消 `campus-admin`、`campus-framework` 两个包：前者并入 `@campus-admin/core`（装配、`ca`、弹层宿主），
+  后者并入 core 的 Vue 适配层（响应式 API 出口、`useCampus`、overlay 组件）。
+- 组件库不再经框架层转口 Vue API，改为直接依赖 `vue`；轻提示队列归组件库所有，`ca.toast` 通过它入队，两套 API 共用同一份队列。
+- 目录同步改名：`packages/core`、`packages/ui`、`packages/locale`、`packages/icon`。
+- 分层边界规则重写为「依赖只能向上」：icon / locale 是底座，ui 只依赖 locale，core 依赖 ui / locale / icon；
+  源码禁止依赖构建工具，也禁止反向依赖 examples（`scripts/check-boundaries.mjs` 强制）。
+- 发布顺序改为 `icon → locale → ui → core`；GitHub 与 Gitee 仓库地址修正为 `UnionSchool/campus-admin`。
 - 新增 `scripts/check-boundaries.mjs` 分层边界检查，纳入 `pnpm run check` 门禁。
 - 新增 `scripts/verify-pack.mjs` 发布产物校验，检查各包 tarball 白名单。
 
@@ -28,13 +38,19 @@
 
 ### 组件
 
-- 新增国际化：`packages/campus-ui/src/locale` 内置 zh-CN / en-US 词条，`useLocale()` 取词、`setLocale()` 切换、`te()` 判断词条是否存在，`caMessages` 可直接合并进业务已有的 vue-i18n 实例。
+- 新增国际化：`packages/ui/src/locale` 内置 zh-CN / en-US 词条，`useLocale()` 取词、`setLocale()` 切换、`te()` 判断词条是否存在，`caMessages` 可直接合并进业务已有的 vue-i18n 实例。
 - 组件内置文案全部改为词条：操作按钮（查询 / 重置 / 展开 / 收起 / 清空 / 移除 / 返回 / 关闭）、空态与加载态、分页「共 N 条」、表格空态、弹窗与抽屉默认按钮、下拉「请选择 / 暂无选项」、考勤状态词典、课表与日程的全部界面文案，以及 21 处中文 `aria-label`。
 - 语言相关格式统一改为 `Intl`：年月的「2026年9月 / September 2026」、星期标签、统计数值千分位、表格字符串排序的 locale，不再手工拼接中文。
 - 组件库对 vue-i18n 保持零依赖：`useLocale()` 注入不到实例时回退到内置 zh-CN 默认实例，单独使用组件库也能正常工作。
 - `campus-admin` 的 `createCampusAdmin` 支持 `config.locale`（locale / fallbackLocale / messages），业务词条与组件库内置词条深合并到同一个语言实例。
+- 新增 `CaCopyright`（基础层）与 `CaSlogan`（原子层）：页脚版权行由 `name` 自动拼成「© 年份 名称」（可用 `displayCopyright` 整行自定义），`partner` 渲染「Powered By 开发者 | 众校通 ®」，`CaSlogan` 不传 `title` 时回退默认的众校通标语；词条为 `ca.copyright.*` 与 `ca.slogan.default`，中英各一份。
 - 新增 `scripts/check-locale.mjs` 并纳入 `npm run check`：校验代码用到的词条键都存在、各语言词条数量一致。
-- 修复 `pnpm run deploy` 本地发布：本地环境无法生成 npm provenance（会报 `Automatic provenance generation not supported for provider: null`），改为本地自动加 `--no-provenance`、CI 中保留；预发布版本自动带 `--tag next`；新增 `--skip-npm` 用于只推标签、交给 `release.yml` 在 CI 里发布。
+- 发布脚本拆成三个模式，职责不再混在一起：
+  - `pnpm run deploy:dev` / `deploy:main`（`scripts/deploy.mjs`）：切分支 → rebase → 门禁 → 提交 → 推送 GitHub / Gitee 的对应分支；main 跑完整 `check`，支持 `--from dev` 先合并；
+  - `pnpm run release`（`scripts/release.mjs`）：校验（版本一致 / 分支 main / 干净工作区 / 标签不重复 / check）→ 打 `v<version>` 标签 → 推标签 → 默认由 CI 发布（带 provenance），`--local` 时本地发布（自动 `--no-provenance` + `--tag next|latest`）；
+  - `pnpm run version:bump`（`scripts/version.mjs`）：统一升根、四个包与示例的版本号并刷新 lockfile，版本计算交给 npm 的 semver 规则；**缺省自增预发布号**（`0.1.0-alpha.2 → alpha.3`），也可指定 `patch|minor|major`、`--preid` 或直接给具体版本号。
+- `pnpm run release` 同样**缺省自增**：不传参数时先升一个预发布号（可用 `--version` 指定、`--no-bump` 关闭），版本有变化则自动提交 `chore: release v<version>` 并推送分支，再打标签发布；Git 标签与 npm 版本始终是同一个 `v<version>`。
+- 删除原 `scripts/deploy.mjs`（统一发布脚本），其发布逻辑合并进 `scripts/release.mjs`；`pnpm run deploy` 改为分支推送命令。
 - 新增《Campus Admin 国际化使用指南》（`docs/Campus-Admin-国际化使用指南.md`）：一分钟接入、词条与命名空间约定、取词切换到日期数字格式化、后端文案对接、与 vue-i18n 共存、加语言与排查清单；组件使用指南、根 README、组件库 README 与示例 README 均已加入入口。
 - 组件导出统一 `Ca` 前缀：`CaDailyAgenda`、`CaWeeklyTimetable`。
 - 组件逻辑与渲染分离，日期计算、过滤与文案抽到纯 TypeScript 的 `core.ts`。

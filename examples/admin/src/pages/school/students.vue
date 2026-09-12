@@ -2,8 +2,8 @@
 import {
   CaAttendanceBadge, CaAvatar, CaButton, CaInput, CaPageHeader, CaPagination,
   CaSearchForm, CaSelect, CaTable, CaTag, toast,
-} from '@unionschool/campus-admin'
-import type { TableColumn } from '@unionschool/campus-admin'
+} from '@campus-admin/core'
+import type { TableColumn } from '@campus-admin/core'
 import { useStudentList } from '../../composables/useStudentList'
 import type { StudentRow } from '../../composables/useStudentList'
 

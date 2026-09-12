@@ -1,0 +1,59 @@
+{
+  "name": "@campus-admin/locale",
+  "version": "1.0.0",
+  "description": "面向智慧校园后台的国际化运行时：词条、取词切换与日期数字格式化",
+  "type": "module",
+  "license": "MIT",
+  "author": "UnionSchool",
+  "homepage": "https://campus.zhongxiaotong.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnionSchool/campus-admin.git",
+    "directory": "packages/locale"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "i18n",
+    "locale",
+    "campus",
+    "admin"
+  ],
+  "sideEffects": false,
+  "files": [
+    "LICENSE",
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs",
+      "source": "./src/index.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "node ../../scripts/clean.mjs dist:packages/locale && tsc --declaration --emitDeclarationOnly -p tsconfig.build.json && vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.42"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vue": "^3.5.42"
+  }
+}

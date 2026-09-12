@@ -10,16 +10,28 @@ export default defineConfig({
    */
   base: './',
   /**
-   * 示例仍然按包名引用（不写 src 别名），但把构建解析优先级设为 source。
+   * 示例只按包名引用，不写 src 别名，保证“验证的是发布产物”。
    *
-   * 各包的 exports 里同时声明了 source 与 import：
-   * - 开发与构建命中 source，直接消费源码，跨包的 re-export 不会在打包时被优化掉
-   * - 发布到 npm 后没有 source 条件，使用方拿到 dist，行为与线上一致
-   *
-   * 这是 Vite 处理 monorepo 工作区包的推荐做法，也是官方模板的默认行为。
+   * 各包的 exports 里 source 排在 import 之后，所以开发与构建都命中 dist：
+   * 与发布到 npm 后的行为一致，改完组件源码记得先跑 pnpm run build:packages。
    */
   resolve: {
     conditions: ['source', 'import', 'module', 'browser', 'default'],
+  },
+  /**
+   * 工作区包不参与依赖预打包。
+   *
+   * 预打包会用 import/module 条件解析到 dist，而源码图用 source 条件解析到 src，
+   * 同一个包被加载两份就会出现「两个语言实例 / 两个注入 key」这类问题
+   * （现象是业务文案跟着切换、组件文案不跟着变）。
+   */
+  optimizeDeps: {
+    exclude: [
+      '@campus-admin/core',
+      '@campus-admin/ui',
+      '@campus-admin/locale',
+      '@campus-admin/icon',
+    ],
   },
   build: {
     outDir: 'dist',

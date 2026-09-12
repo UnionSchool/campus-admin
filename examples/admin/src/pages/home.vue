@@ -5,8 +5,8 @@ import {
   FolderUp, GraduationCap, MessageSquareText, MonitorSmartphone, Settings2,
   ShieldCheck, UserRound,
 } from '@lucide/vue'
-import { CaDailyAgenda, CaWeeklyTimetable } from '@unionschool/campus-ui'
-import { useLocale } from '@unionschool/campus-ui'
+import { CaDailyAgenda, CaWeeklyTimetable } from '@campus-admin/ui'
+import { useLocale } from '@campus-admin/core'
 import DetailDialog from '../components/DetailDialog.vue'
 import { detail, showDetail } from '../services/detail'
 

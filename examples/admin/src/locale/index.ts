@@ -8,7 +8,7 @@
  * 后安装的实例会把先安装的整个顶掉，组件里 useI18n() 只会拿到最后一个实例。
  * 两套词库、一个实例，是唯一不冲突的形态。
  */
-import type { LocaleMessageMap } from '@unionschool/campus-admin'
+import type { LocaleMessageMap } from '@campus-admin/core'
 import zhCN from './zh-CN'
 import enUS from './en-US'
 

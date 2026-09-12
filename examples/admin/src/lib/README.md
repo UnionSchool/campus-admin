@@ -72,7 +72,7 @@ request **不做拆包**，接口函数返回的就是完整外壳，页面自�
 
 ```ts
 import { getStudentPage } from '@/lib/api/student'
-import { toast } from '@unionschool/campus-admin'
+import { toast } from '@campus-admin/core'
 
 async function load() {
   const res = await getStudentPage({ page: 1, pageSize: 10 })

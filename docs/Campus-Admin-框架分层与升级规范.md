@@ -1,7 +1,7 @@
 # Campus Admin 框架分层与升级规范
 
-> 适用范围：`campus-core`、`campus-framework`、`campus-ui`、`campus-admin` 四个包
-> 状态：已实施（v0.1.0-alpha 阶段，Monorepo）
+> 适用范围：`@campus-admin/core`、`@campus-admin/core`、`@campus-admin/ui`、`@campus-admin/core` 四个包
+> 状态：已实施（v0.1.0-alpha 阶段）
 > 目标：框架升级不触碰业务代码，业务代码不依赖框架实现
 
 ## 1. 要解决的问题
@@ -24,56 +24,56 @@ Campus Admin 采用同一套思路分层，区别只是渲染层换成了 Vue。
 
 ```text
 packages/
-├── campus-core/               # 核心层：不依赖任何框架，最稳定
+├── icon/                       # 图标包：校园语义别名 + 后端图标名解析
+│   └── src/index.ts            # CampusStudent…、iconRegistry、resolveIcon
+├── locale/                     # 国际化包：运行时 + 内置词条
 │   └── src/
-│       ├── contracts/         # 契约：config.ts、provider.ts
-│       ├── container.ts       # 服务容器 (bind / singleton / make / resolve)
-│       ├── context.ts         # 应用上下文：配置读写与服务解析
-│       ├── application.ts     # 生命周期：register → boot → start
-│       ├── facade.ts          # campus('request') 形式取服务
-│       └── index.ts
-├── campus-framework/          # 框架适配层：唯一允许 import 'vue' 的包
+│       ├── index.ts            # createLocale / useLocale / setLocale / te
+│       ├── types.ts            # LocaleMessages、TranslateFn、CaLocale
+│       ├── format.ts           # Intl 封装：年月、星期、千分位
+│       └── lang/               # zh-CN.ts、en-US.ts（ca.* 词条）
+├── ui/                         # 组件包：只依赖 locale，不反向依赖 core
 │   └── src/
-│       ├── vue.ts             # 响应式与生命周期 API 的统一出口
-│       ├── application.ts     # Campus 生命周期 ↔ Vue 插件桥接
-│       ├── campus.ts          # useCampus / CAMPUS_KEY
-│       └── index.ts
-├── campus-ui/                 # 组件层：每个组件独立目录
-│   └── src/
-│       ├── atom/                  # 原子：元素级、不占版面
-│       ├── base/                  # 基础：区域级、可直接布局
-│       ├── feature/               # 功能：多个组件完成一件事
+│       ├── atom/               # 原子：元素级、不占版面
+│       ├── base/               # 基础：区域级、可直接布局
+│       ├── feature/            # 功能：多个组件完成一件事
 │       │   └── daily-agenda/
 │       │       ├── src/core.ts    # 纯逻辑：日期、过滤、文案
 │       │       ├── src/data.ts    # 演示数据，真实项目由 Props 注入
 │       │       ├── src/daily-agenda.vue
 │       │       ├── style/index.css
 │       │       └── index.ts
-│       ├── core/                  # ns、cx、主题与品牌色
-│       └── styles/                # token / base / reset
-│       ├── styles/               # Token、基础类，后续迁移到主题包
-│       └── index.ts
-└── campus-admin/              # 装配层
+│       ├── core/               # ns、cx、主题与品牌色
+│       └── styles/             # token / base / reset
+└── core/                       # 框架与装配包（业务唯一入口）
     └── src/
-        ├── plugin.ts          # createCampusAdmin、内置组件注册表
-        └── index.ts           # 统一出口，转发 core / framework / ui
+        ├── contracts/          # 契约：config.ts、provider.ts
+        ├── container.ts        # 服务容器（bind / singleton / make / resolve）
+        ├── context.ts          # 应用上下文：配置读写与服务解析
+        ├── application.ts      # 生命周期：register → boot → start
+        ├── facade.ts           # campus('request') 形式取服务
+        ├── vue.ts              # 响应式 API 出口
+        ├── vue-application.ts  # Campus 生命周期 ↔ Vue 插件桥接
+        ├── campus.ts           # useCampus / CAMPUS_KEY
+        ├── services/           # loading / toast / modal / store
+        ├── components/overlay/ # 命令式 API 的弹层宿主
+        └── plugin.ts           # createCampusAdmin、内置组件注册表、ca
 
 examples/
 ├── admin/                     # 学校管理后台示例，同时是演示站
-│   └── @unionschool/example-admin
 └── web/                       # 预留：学校官方网站，暂不做
 ```
 
 依赖方向必须单向，不允许反向引用：
 
 ```text
-campus-core（纯 TypeScript）
+@campus-admin/core（纯 TypeScript）
    ↓
-campus-framework（框架适配）
+@campus-admin/core（框架适配）
    ↓
-campus-ui（具体组件）
+@campus-admin/ui（具体组件）
    ↓
-campus-admin（装配）
+@campus-admin/core（装配）
    ↓
 examples/*（只从包名引用，不引用源码）
 ```
@@ -82,12 +82,12 @@ examples/*（只从包名引用，不引用源码）
 
 | 包 | 允许依赖 | 职责 | 升级时是否需要改 |
 | --- | --- | --- | --- |
-| `campus-core` | 只依赖 TypeScript | 应用生命周期、容器、配置、契约、Facade | 基本不需要 |
-| `campus-framework` | 可依赖 `vue` | 响应式出口、Vue 插件桥接、`useCampus` | 需要，但只在这一层 |
-| `campus-ui` | 只依赖 `campus-framework` 与图标库 | 组件模板、交互、样式 | 只在模板语法变化时微调 |
-| `campus-admin` | 依赖以上三个包 | 装配、内置组件注册、统一出口 | 装配关系变化时 |
+| `@campus-admin/icon` | `@lucide/vue` | 校园语义图标、后端图标名解析 | 换图标库时 |
+| `@campus-admin/locale` | `vue` | 词条、取词与切换、`Intl` 日期数字格式化 | 基本不需要 |
+| `@campus-admin/ui` | `@campus-admin/locale`、`vue`、`@lucide/vue` | 组件模板、交互、样式、设计 Token | 只在模板语法变化时微调 |
+| `@campus-admin/core` | 上面三个包 + `vue` | 应用生命周期、容器、Vue 适配、`ca` API、装配入口 | 装配关系变化时 |
 
-判断标准很简单：**在 `campus-core` 里写不出来的东西，都属于 framework 或更高层。**
+判断标准很简单：**在 `@campus-admin/icon`、`@campus-admin/locale` 里写不出来的东西，都属于 ui 或 core。**
 
 ## 4. 概念对应关系
 
@@ -95,19 +95,19 @@ examples/*（只从包名引用，不引用源码）
 
 | 常见概念 | Campus Admin | 位置 |
 | --- | --- | --- |
-| Application | `CampusApplication` | `packages/campus-core/src/application.ts` |
-| Service Container | `CampusContainer` | `packages/campus-core/src/container.ts` |
-| Service Provider | `CampusProvider` 契约 + `defineProvider` | `packages/campus-core/src/contracts/provider.ts` |
-| Package / Plugin | `CampusPlugin` 契约 + `definePlugin` | `packages/campus-core/src/contracts/provider.ts` |
-| Facade | `campus('service')` | `packages/campus-core/src/facade.ts` |
-| 配置文件 | `CampusConfig` 对象 | `packages/campus-core/src/contracts/config.ts` |
-| 应用入口 / 引导文件 | `createCampusAdmin()` | `packages/campus-admin/src/plugin.ts` |
-| 视图模板 | `.vue` 组件 | `packages/campus-ui/src/{atom,base,feature}/*` |
+| Application | `CampusApplication` | `packages/core/src/application.ts` |
+| Service Container | `CampusContainer` | `packages/core/src/container.ts` |
+| Service Provider | `CampusProvider` 契约 + `defineProvider` | `packages/core/src/contracts/provider.ts` |
+| Package / Plugin | `CampusPlugin` 契约 + `definePlugin` | `packages/core/src/contracts/provider.ts` |
+| Facade | `campus('service')` | `packages/core/src/facade.ts` |
+| 配置文件 | `CampusConfig` 对象 | `packages/core/src/contracts/config.ts` |
+| 应用入口 / 引导文件 | `createCampusAdmin()` | `packages/core/src/plugin.ts` |
+| 视图模板 | `.vue` 组件 | `packages/ui/src/{atom,base,feature}/*` |
 
 生命周期约定：**register 只做绑定，boot 才允许依赖其他提供者**。
 
 ```ts
-import { createCampusAdmin, defineProvider } from '@unionschool/campus-admin'
+import { createCampusAdmin, defineProvider } from '@campus-admin/core'
 
 const requestProvider = defineProvider({
   name: 'request',
@@ -123,7 +123,7 @@ const requestProvider = defineProvider({
 })
 
 const campus = createCampusAdmin({
-  name: '众校通智慧校园',
+  name: '智慧校园',
   version: '1.0.0',
   config: { request: { baseURL: '/api' } },
   providers: [requestProvider],
@@ -139,15 +139,15 @@ app.use(campus)
 组件不再直接写 `import { ref } from 'vue'`，而是：
 
 ```ts
-import { computed, ref } from '@unionschool/campus-framework'
+import { computed, ref } from '@campus-admin/core'
 ```
 
-升级 Vue 时只检查 `packages/campus-framework/src/vue.ts`。该文件只是转发 Vue 的稳定 API，
+升级 Vue 时只检查 `packages/core/src/vue.ts`。该文件只是转发 Vue 的稳定 API，
 即使将来替换成别的响应式实现，改动也集中在一个文件。
 
 ### 第二道：业务逻辑与渲染分离
 
-日期计算、过滤、文案拼装放在 `packages/campus-ui/src/<层>/<name>/src/core.ts`，
+日期计算、过滤、文案拼装放在 `packages/ui/src/<层>/<name>/src/core.ts`，
 纯 TypeScript，不依赖 Vue，可以：
 
 - 直接用 `tsx` / Node 跑单测，不需要挂载组件。
@@ -161,9 +161,9 @@ import { computed, ref } from '@unionschool/campus-framework'
 `scripts/check-boundaries.mjs` 在 CI 中强制以下规则：
 
 ```text
-1. packages/campus-core 不得依赖 vue、vite、@vue/*、@lucide/vue、任何 .vue 文件
-   以及其他 @unionschool/* 包
-2. 只有 packages/campus-framework 可以直接 import 'vue'
+1. packages/core 不得依赖 vue、vite、@vue/*、@lucide/vue、任何 .vue 文件
+   以及其他 @campus-admin/* 包
+2. 只有 packages/core 可以直接 import 'vue'
 ```
 
 违反时 `pnpm run check` 直接失败，避免“约定只写在文档里，代码里慢慢失效”。
@@ -181,7 +181,7 @@ import { computed, ref } from '@unionschool/campus-framework'
 ### 新增组件
 
 ```text
-packages/campus-ui/src/<atom|base|feature>/<kebab-name>/
+packages/ui/src/<atom|base|feature>/<kebab-name>/
 ├── src/core.ts             # 纯逻辑，必须有
 ├── src/data.ts             # 演示数据，可省略
 ├── src/<kebab-name>.vue    # 只做渲染
@@ -192,7 +192,7 @@ packages/campus-ui/src/<atom|base|feature>/<kebab-name>/
 组件按判据归入三层：元素级是 `atom`、区域级是 `base`、多组件组合完成一件事是 `feature`。
 
 新增后只需要改两处：组件自己的目录 + 所属层的 `index.ts`（命名导出 + 加入该层注册表）。
-顶层 `builtInComponents` 由三层注册表合并而来，`campus-admin` 会自动纳入全局注册。
+顶层 `builtInComponents` 由三层注册表合并而来，`@campus-admin/core` 会自动纳入全局注册。
 
 组件内**不允许出现硬编码颜色**：颜色必须来自 `--ca-*` Token（见 `src/styles/token.css`），
 否则暗色主题与运行时品牌换色会失效。主色实心背景上的文字统一用 `--ca-color-primary-contrast`。
@@ -225,7 +225,7 @@ export const permissionProvider = defineProvider({
 2. pnpm run typecheck                     # 各包与示例类型检查
 3. pnpm run build:packages                # 按依赖顺序构建并输出类型声明
 4. pnpm run build:example                 # 示例站点按包名引用并通过构建
-5. 检查 packages/campus-framework/src/vue.ts 是否有被移除或改签名的 API
+5. 检查 packages/core/src/vue.ts 是否有被移除或改签名的 API
 6. 运行 examples/admin，验证课表与日程交互
 7. 更新 CHANGELOG 与最低版本说明
 ```
@@ -234,17 +234,17 @@ export const permissionProvider = defineProvider({
 
 ## 8. 示例与应用的关系
 
-- 示例与业务项目一样，只能从包名引用：`import { createCampusAdmin } from '@unionschool/campus-admin'`。
+- 示例与业务项目一样，只能从包名引用：`import { createCampusAdmin } from '@campus-admin/core'`。
 - 示例不得通过 Vite `alias` 或 `tsconfig.paths` 指向 `packages/*/src`，否则无法验证真实发布产物。
-- 新增示例统一放在 `examples/<name>/`，包名 `@unionschool/example-<name>`，构建产物输出到各自的 `dist/`。
+- 新增示例统一放在 `examples/<name>/`，包名 `@campus-admin/example-<name>`，构建产物输出到各自的 `dist/`。
 - `campus.zhongxiaotong.com` 对应 `examples/admin`，上传脚本只同步该示例的 `dist/`。
 
 ## 9. 后续可选演进
 
-- 引入 Vitest，为 `packages/campus-ui/src/*/*/src/core.ts` 补纯函数测试。
+- 引入 Vitest，为 `packages/ui/src/*/*/src/core.ts` 补纯函数测试。
 - 引入 ESLint `no-restricted-imports`，把边界规则前移到编辑器。
-- 抽出独立主题包，把 `packages/campus-ui/src/styles` 迁出为 `campus-theme`。
-- 按需从 `campus-core` 拆分 `campus-request`、`campus-auth`、`campus-permission`。
+- 抽出独立主题包，把 `packages/ui/src/styles` 迁出为 `campus-theme`。
+- 按需从 `@campus-admin/core` 拆分 `campus-request`、`campus-auth`、`campus-permission`。
 
 ## 10. 构建脚本的类型配置
 
@@ -253,7 +253,7 @@ export const permissionProvider = defineProvider({
 
 - pnpm 只把依赖安装到声明它的包下面，根目录声明才能让所有包的构建脚本共享同一份类型。
 - `tsconfig.base.json` 不设置 `types` 字段（省略即包含 `node_modules/@types` 下全部类型），
-  而 `packages/campus-ui`、`packages/campus-admin` 显式写了 `"types": ["vite/client"]`，
+  而 `packages/ui`、`packages/core` 显式写了 `"types": ["vite/client"]`，
   因此 Node 类型不会进入浏览器产物的类型环境。
 
 构建脚本的类型检查由根目录 `tsconfig.node.json` 负责，它只包含 `vite.config.ts` 与 `scripts/**/*.mjs`，

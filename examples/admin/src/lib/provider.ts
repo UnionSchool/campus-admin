@@ -1,5 +1,5 @@
-import { defineProvider } from '@unionschool/campus-admin'
-import type { CampusContext } from '@unionschool/campus-admin'
+import { defineProvider } from '@campus-admin/core'
+import type { CampusContext } from '@campus-admin/core'
 import { createRequestClient } from './request'
 
 /** 服务键：业务通过 campus('request') 取实例 */

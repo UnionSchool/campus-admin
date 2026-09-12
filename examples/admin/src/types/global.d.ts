@@ -1,4 +1,4 @@
-import type { ca as CaInstance } from '@unionschool/campus-admin'
+import type { ca as CaInstance } from '@campus-admin/core'
 
 /**
  * 全局命令式 API 的类型声明。
@@ -8,7 +8,7 @@ import type { ca as CaInstance } from '@unionschool/campus-admin'
  * 也不必写成 window.ca（两种写法都支持）。
  */
 declare global {
-  /** 全局命令式 API，见 @unionschool/campus-admin 的 README */
+  /** 全局命令式 API，见 @campus-admin/core 的 README */
   const ca: typeof CaInstance
 
   interface Window {

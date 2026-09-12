@@ -6,14 +6,14 @@
  * - menu.*   侧栏菜单文案，键取菜单节点 id，见 router/index.ts
  * - page.*   页面文案，按页面分层
  *
- * ca.* 由组件库保留（packages/campus-ui/src/locale），业务不要写这一层，
+ * ca.* 由组件库保留（packages/ui/src/locale），业务不要写这一层，
  * 否则会覆盖组件自身文案。
  */
-import type { LocaleMessages } from '@unionschool/campus-admin'
+import type { LocaleMessages } from '@campus-admin/core'
 
 const zhCN: LocaleMessages = {
   app: {
-    name: '众校通智慧校园',
+    name: '智慧校园',
     slogan: 'Intelligent campus management system',
     navBasic: '基础应用',
     navStudents: '学生管理',
@@ -26,19 +26,18 @@ const zhCN: LocaleMessages = {
     notification: '消息通知',
     notificationDetail: '您有 36 条演示消息，其中包含校园公告、请假审批提醒和设备巡检通知。',
     profile: '林老师',
-    profileDetail: '众校通实验中学 · 学校管理员。当前展示教师工作台视图。',
+    profileDetail: '众校通实验学校 · 学校管理员。当前展示教师工作台视图。',
     help: '帮助与服务',
     helpDetail: '首页支持常用功能自定义、个人与班级课表切换、按周查看课程、按日期查看日程及详情。',
     settings: '系统设置',
     settingsDetail: '系统设置业务页面尚未接入。',
-    version: '众校通 · 让校园管理更简单',
     breadcrumb: '当前位置：',
     date: '2026 年 9 月 11 日 · 星期五',
     demo: '演示',
     navTitle: '功能导航',
-    school: '众校通实验中学',
-    footer: '众校通智慧校园',
-    footerSlogan: '连接每一份成长',
+    school: '众校通实验学校',
+    /** 开发者 / 渠道方署名：示例填 Campus Admin，留空则只显示「Powered By 众校通 ®」 */
+    partner: 'Campus Admin',
     openMenu: '打开菜单',
     closeMenu: '关闭菜单',
     themeLight: '浅色',

@@ -5,8 +5,8 @@ import {
   CaEmpty, CaInput, CaModal, CaPageHeader, CaPagination, CaProgress,
   CaSearchForm, CaSelect, CaSkeleton, CaStatistic, CaStudentPicker, CaSwitch,
   CaTable, CaTag, CaTextarea, toast,
-} from '@unionschool/campus-admin'
-import type { GradeTreeNode, StudentOption, TableColumn } from '@unionschool/campus-admin'
+} from '@campus-admin/core'
+import type { GradeTreeNode, StudentOption, TableColumn } from '@campus-admin/core'
 
 const students: StudentOption[] = [
   { id: '20260301', name: '李思远', studentNo: '20260301', grade: '高二', className: '高二（3）班' },

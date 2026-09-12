@@ -2,11 +2,11 @@
  * 示例后台的业务词条（英文）。
  * 键与 zh-CN.ts 完全一致，缺一条会在英文界面下露出中文。
  */
-import type { LocaleMessages } from '@unionschool/campus-admin'
+import type { LocaleMessages } from '@campus-admin/core'
 
 const enUS: LocaleMessages = {
   app: {
-    name: 'ZhongXiaoTong Campus',
+    name: 'Smart Campus',
     slogan: 'Intelligent campus management system',
     navBasic: 'Workspace',
     navStudents: 'Students',
@@ -24,14 +24,13 @@ const enUS: LocaleMessages = {
     helpDetail: 'The home page supports custom shortcuts, personal and class timetables, weekly courses and daily schedules.',
     settings: 'Settings',
     settingsDetail: 'The settings page is not connected yet.',
-    version: 'ZhongXiaoTong · Campus management made simple',
     breadcrumb: 'You are here: ',
     date: 'Fri, Sep 11, 2026',
     demo: 'Demo',
     navTitle: 'Navigation',
     school: 'ZhongXiaoTong Experimental School',
-    footer: 'ZhongXiaoTong Campus',
-    footerSlogan: 'Growing together',
+    /** 开发者 / 渠道方署名：示例填 Campus Admin，留空则只显示「Powered By 众校通 ®」 */
+    partner: 'Campus Admin',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     themeLight: 'Light',

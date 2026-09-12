@@ -1,10 +1,10 @@
-# Campus
+# Campus Admin
 
-面向智慧校园后台管理场景的 Vue 3 前端框架 Monorepo。
+面向智慧校园后台管理场景的 Vue 3 前端框架。
 
 - 演示站点：<https://campus.zhongxiaotong.com>
-- GitHub：<https://github.com/UnionSchool/campus>
-- Gitee：<https://gitee.com/UnionSchool/campus>
+- GitHub：<https://github.com/UnionSchool/@campus-admin/core>
+- Gitee：<https://gitee.com/UnionSchool/@campus-admin/core>
 
 > 当前处于早期开发阶段（`0.1.0-alpha`），API 可能调整，暂不建议直接用于生产环境。
 
@@ -12,22 +12,22 @@
 
 | 包 | 说明 | 依赖 |
 | --- | --- | --- |
-| [`@unionschool/campus-core`](./packages/campus-core) | 应用生命周期、服务容器、配置、契约、Facade，不依赖任何框架 | 无 |
-| [`@unionschool/campus-framework`](./packages/campus-framework) | Vue 适配层，全项目唯一直接依赖 `vue` 的包 | campus-core、vue |
-| [`@unionschool/campus-ui`](./packages/campus-ui) | 后台组件库，逻辑与渲染分离 | campus-framework、vue |
-| [`@unionschool/campus-admin`](./packages/campus-admin) | 完整后台框架入口，业务项目通常只安装这一个包 | campus-core、campus-framework、campus-ui |
+| [`@campus-admin/icon`](./packages/icon) | 校园语义图标（`CampusStudent`、`CampusCard`…）与后端图标名解析 | `@lucide/vue` |
+| [`@campus-admin/locale`](./packages/locale) | 国际化运行时：词条、取词切换、`Intl` 日期数字格式化 | `vue` |
+| [`@campus-admin/ui`](./packages/ui) | 后台组件库：27 个组件、设计 Token、主题 | `@campus-admin/locale`、`vue` |
+| [`@campus-admin/core`](./packages/core) | 框架层 + 装配入口，业务项目通常只安装这一个包 | 上面三个包 |
 
 ```text
-campus-admin
-├── campus-core       框架核心（无框架依赖）
-├── campus-framework  Vue 适配层
-└── campus-ui         组件库
+@campus-admin/core          框架层 + 装配入口（生命周期、容器、Vue 适配、ca API）
+├── @campus-admin/ui        组件库（组件 / 设计 Token / 主题）
+├── @campus-admin/locale    国际化运行时
+└── @campus-admin/icon      校园语义图标
 ```
 
 业务项目只需要：
 
 ```bash
-pnpm add @unionschool/campus-admin
+pnpm add @campus-admin/core
 ```
 
 ## 示例应用
@@ -36,7 +36,7 @@ pnpm add @unionschool/campus-admin
 
 | 示例 | 包名 | 说明 |
 | --- | --- | --- |
-| `examples/admin/` | `@unionschool/example-admin` | 学校管理后台示例，同时作为 `campus.zhongxiaotong.com` 演示站 |
+| `examples/admin/` | `@campus-admin/example-admin` | 学校管理后台示例，同时作为 `campus.zhongxiaotong.com` 演示站 |
 | `examples/web/` | — | 预留目录，学校官方网站，暂不做 |
 
 ## 本地开发
@@ -59,23 +59,25 @@ pnpm run check:boundaries   # 只做分层边界检查
 pnpm run build:packages     # 按 core → framework → ui → admin 顺序构建
 pnpm run build:example      # 构建全部示例
 pnpm run up                 # 构建并上传 admin 演示站到 campus.zhongxiaotong.com
-pnpm run deploy             # 发布到 GitHub、Gitee 与 npm（统一版本号）
-pnpm run deploy -- --dry-run
+pnpm run deploy:dev         # 提交并推送 dev 到 GitHub / Gitee
+pnpm run deploy:main        # 提交并推送 main（完整门禁）
+pnpm run release            # 打标签并发布到 npm（统一版本号，CI 发布）
 ```
 
 ## 架构约定
 
 ```text
-packages/campus-core        纯 TypeScript：生命周期、容器、配置、契约
-packages/campus-framework   框架适配：唯一依赖 vue 的位置
-packages/campus-ui          组件：只依赖 core 与 framework
-packages/campus-admin       装配：注册组件、注入实例、组装插件
-examples/*                  示例：只从 npm 包名引用，不引用源码
+packages/core        纯 TypeScript：生命周期、容器、配置、契约
+packages/icon    图标：校园语义别名 + 后端图标名解析
+packages/locale  国际化：词条、取词、日期数字格式化
+packages/ui      组件：只依赖 locale，不反向依赖 core
+packages/core    框架与装配：容器、Vue 适配、命令式 API、组件注册
+examples/*       示例：只从 npm 包名引用，不引用源码
 ```
 
-依赖方向单向，`scripts/check-boundaries.mjs` 在 CI 中强制校验：`campus-core` 不得依赖框架或 UI 库，只有 `campus-framework` 可以直接 `import 'vue'`。
+依赖只能向上，`scripts/check-boundaries.mjs` 在 CI 中强制校验：`ui` 不得依赖 `core`，`locale` / `icon` 不得依赖 `ui` 与 `core`，源码里不得出现构建工具，也不得反向依赖 `examples`。
 
-框架升级时只需检查 `campus-framework`，业务组件与业务项目无需改动。完整规则见[框架分层与升级规范](./docs/Campus-Admin-框架分层与升级规范.md)。
+框架升级时只需检查 `@campus-admin/core`，业务组件与业务项目无需改动。完整规则见[框架分层与升级规范](./docs/Campus-Admin-框架分层与升级规范.md)。
 
 ## 全局命令式 API：ca
 
@@ -113,7 +115,7 @@ ca.modal({ title: '详情', content: '...' })
 需要类型提示时按需 import：
 
 ```ts
-import { ca } from '@unionschool/campus-admin'
+import { ca } from '@campus-admin/core'
 ```
 
 ## 统一接口返回格式
@@ -135,7 +137,7 @@ if (res.code === 0) {
 
 ## 发布
 
-Monorepo 采用统一版本号，根 `package.json` 的 `version` 是唯一版本来源，发布脚本会校验每个子包版本是否一致。
+仓库采用统一版本号，根 `package.json` 的 `version` 是唯一版本来源，发布脚本会校验每个子包版本是否一致。
 
 完整的 npm、GitHub 和 Gitee 发布方法见[仓库管理规范](./docs/Campus-Admin-仓库管理规范.md#7-发布流程)。
 
@@ -149,3 +151,17 @@ Monorepo 采用统一版本号，根 `package.json` 的 `version` 是唯一版�
 ## 许可证
 
 [MIT](./LICENSE)
+
+**使用时请保留版权信息**（MIT 许可要求随副本保留版权声明）：
+
+- 保留仓库与各包内的 `LICENSE` 文件与版权声明；
+- 保留页面页脚中的「Powered By 众校通 ®」署名；
+- 二次分发或修改后的版本，请在显著位置保留同样的版权声明。
+
+## 联系
+
+- 官网：<https://campus.zhongxiaotong.com>
+
+---
+
+Powered By 众校通 ®

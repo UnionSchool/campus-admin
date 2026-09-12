@@ -14,10 +14,16 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url))
-const packages = ['campus-core', 'campus-framework', 'campus-ui', 'campus-admin']
+const packages = ['icon', 'locale', 'ui', 'core']
 const outputDir = mkdtempSync(join(tmpdir(), 'campus-pack-'))
 
-const required = [/^package\/package\.json$/, /^package\/dist\//]
+/** 发布产物必须带上的文件：包描述、构建产物、许可证与说明（许可证与版权随包分发） */
+const required = [
+  /^package\/package\.json$/,
+  /^package\/LICENSE$/,
+  /^package\/README\.md$/,
+  /^package\/dist\//,
+]
 const forbidden = /^package\/(src|examples|docs|\.github|\.local-docs|test|tests|__tests__)\//
 
 let failed = false

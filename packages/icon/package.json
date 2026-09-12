@@ -1,0 +1,61 @@
+{
+  "name": "@campus-admin/icon",
+  "version": "1.0.0",
+  "description": "面向智慧校园的语义图标集：校园业务图标别名与后端图标名解析",
+  "type": "module",
+  "license": "MIT",
+  "author": "UnionSchool",
+  "homepage": "https://campus.zhongxiaotong.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnionSchool/campus-admin.git",
+    "directory": "packages/icon"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "campus",
+    "icon",
+    "school",
+    "admin"
+  ],
+  "sideEffects": false,
+  "files": [
+    "LICENSE",
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs",
+      "source": "./src/index.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "node ../../scripts/clean.mjs dist:packages/icon && tsc --declaration --emitDeclarationOnly -p tsconfig.build.json && vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@lucide/vue": "^1.44.0",
+    "vue": "^3.5.42"
+  },
+  "devDependencies": {
+    "@lucide/vue": "^1.44.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vue": "^3.5.42"
+  }
+}

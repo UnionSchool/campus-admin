@@ -1,4 +1,4 @@
-import { campus } from '@unionschool/campus-admin'
+import { campus } from '@campus-admin/core'
 import type { RequestClient } from './request'
 import { REQUEST_KEY } from './provider'
 

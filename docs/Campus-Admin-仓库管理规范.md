@@ -6,11 +6,11 @@
 | --- | --- |
 | GitHub 仓库 | `UnionSchool/campus` |
 | Gitee 仓库 | `UnionSchool/campus` |
-| npm 包 | `@unionschool/campus-core`、`@unionschool/campus-framework`、`@unionschool/campus-ui`、`@unionschool/campus-admin` |
+| npm 包 | `@campus-admin/core`、`@campus-admin/core`、`@campus-admin/ui`、`@campus-admin/core` |
 | 演示与文档 | <https://campus.zhongxiaotong.com> |
 | 技术栈 | Vue 3、TypeScript、Vite |
 | 许可证 | MIT |
-| 组织方式 | 单仓库（pnpm Monorepo）、统一版本号、多 npm 包 |
+| 组织方式 | pnpm 工作区：单仓库、统一版本号、多 npm 包 |
 
 ## 2. 内容分级与发布边界
 
@@ -18,10 +18,10 @@
 
 | 目录或文件 | GitHub | npm | 说明 |
 | --- | --- | --- | --- |
-| `packages/campus-core/src/` | 上传 | 编译后发布 | 框架核心源码 |
-| `packages/campus-framework/src/` | 上传 | 编译后发布 | Vue 适配层源码 |
-| `packages/campus-ui/src/` | 上传 | 编译后发布 | 组件与样式源码 |
-| `packages/campus-admin/src/` | 上传 | 编译后发布 | 主包装配源码 |
+| `packages/core/src/` | 上传 | 编译后发布 | 框架核心源码 |
+| `packages/core/src/` | 上传 | 编译后发布 | Vue 适配层源码 |
+| `packages/ui/src/` | 上传 | 编译后发布 | 组件与样式源码 |
+| `packages/core/src/` | 上传 | 编译后发布 | 主包装配源码 |
 | `packages/*/dist/` | 不上传 | 发布 | 自动生成的 npm 安装内容 |
 | `examples/*/` | 上传 | 不发布 | 示例应用与演示站，按 npm 包名引用框架 |
 | `docs/` | 上传 | 不发布 | 面向用户和贡献者的公开文档 |
@@ -51,17 +51,17 @@ campus/
 │   ├── admin/                  # 学校管理后台示例（演示站）
 │   └── web/                    # 规划中
 ├── packages/                   # 可上传，按依赖顺序构建
-│   ├── campus-core/            # 无框架依赖
-│   ├── campus-framework/       # 唯一依赖 vue 的包
-│   ├── campus-ui/              # 组件库
-│   └── campus-admin/           # 主包入口
+│   ├── icon/                   # 校园语义图标与图标名解析
+│   ├── locale/                 # 国际化运行时
+│   ├── ui/                     # 组件库（只依赖 locale）
+│   └── core/                   # 框架层 + 装配入口
 ├── scripts/                    # 边界检查、清理、发布、上传
 ├── package.json                # 根版本号与统一脚本
 ├── pnpm-workspace.yaml
 └── pnpm-lock.yaml
 ```
 
-四个子包必须保持统一版本号：根 `package.json` 的 `version` 是唯一版本来源，发布脚本会校验各包版本一致。后续可以在 `packages/campus-ui/src` 内增加 `layout`、`icons`、`hooks`、`utils` 和 `locale` 等目录，也可以在 `examples/` 下新增 `web`、`teacher` 等示例。
+四个子包必须保持统一版本号：根 `package.json` 的 `version` 是唯一版本来源，发布脚本会校验各包版本一致。后续可以在 `packages/ui/src` 内增加 `layout`、`hooks`、`utils` 等目录，也可以在 `examples/` 下新增 `web`、`teacher` 等示例。
 
 ## 4. 内部资料规则
 
@@ -101,26 +101,56 @@ chore: update build configuration
 
 ## 7. 发布流程
 
-完成版本号、`CHANGELOG.md` 和发布提交后，推荐直接运行统一发布脚本：
+日常只有三件事，各对应一个命令，职责严格分开：
 
 ```bash
-pnpm run deploy
+pnpm run deploy:dev     # ① 提交当前改动并推送到 GitHub / Gitee 的 dev
+pnpm run deploy:main    # ② 提交并推送到 main（跑完整门禁）
+pnpm run release        # ③ 发布到 npm（打标签 → CI 发布）
 ```
 
-脚本会检查 `main` 分支、干净工作区、两端远程分支、重复 Git 标签、各子包版本一致性，执行 `pnpm run check`，随后依次推送 GitHub、Gitee 并发布四个子包。正式发布前可先演练检查：
+前两个只管「提交 + 推送分支」，第三个只管「打标签 + 发布 npm」——发布脚本不会替你提交代码，推送脚本也不会创建标签。
+
+| 命令 | 关键参数 | 做什么 |
+| --- | --- | --- |
+| `pnpm run deploy:dev` | `-m "信息"`、`--dry-run`、`--no-pull`、`--no-check` | 切到 dev → `git pull --rebase` → 快检（boundaries / locale / typecheck）→ 提交 → 推送两个远程 |
+| `pnpm run deploy:main` | 同上，外加 `--from dev` | 同上，但门禁换成完整 `pnpm run check`；`--from dev` 会先 `git merge --no-ff dev` |
+| `pnpm run release` | 递增类型、`--version <v>`、`--no-bump`、`--preid`、`--dry-run`、`--local`、`--skip-check` | 校验 → 升版本并提交 → 打 `v<version>` 标签 → 推标签 → 发布（`--local` 时本地发布） |
+| `pnpm run version:bump` | 递增类型、具体版本号、`--preid`、`--dry-run` | 只升版本号（根 + 四个包 + 示例）并刷新 lockfile |
+
+**版本号规则：Git 标签与 npm 版本完全一致**（同一个 `v<version>`），且缺省自动递增、需要时完全自定义：
 
 ```bash
-pnpm run deploy -- --dry-run
+pnpm run version:bump                    # 缺省自增预发布号：0.1.0-alpha.2 → 0.1.0-alpha.3
+pnpm run version:bump patch              # 0.1.0-alpha.2 → 0.1.0
+pnpm run version:bump --preid beta       # 换预发布后缀：0.1.0-beta.0
+pnpm run version:bump 0.2.0-alpha.1      # 完全自定义
+pnpm run version:bump --dry-run          # 只看结果，不写入
+
+pnpm run release                         # 发布时缺省也会自增一个预发布号，再打标签、发布
+pnpm run release --version 0.2.0-alpha.1 # 指定版本发布
+pnpm run release --no-bump               # 用当前版本号发布（不升版本）
 ```
 
-演练模式不会推送代码、创建标签或发布 npm。下面各节保留手工发布方法，供排错或特殊情况使用。
+递增规则交给 npm 自己算（`npm version`）：预发布号自增保持同一 `major.minor.patch`，`patch` / `minor` 会去掉预发布后缀，从稳定版切预发布则先抬 patch（`0.1.0` → `0.1.1-alpha.0`）。发布时若版本号有变化，脚本会先提交一次 `chore: release v<version>` 并推送到两个远程，再打标签。
 
-两点约定：
+推送脚本的行为约定：
 
-- **本地发布不生成 provenance**。npm 只支持在 GitHub Actions、GitLab CI 这类受支持的 CI 环境里生成 provenance，本地执行会报 `Automatic provenance generation not supported for provider: null`，脚本因此显式关闭它；`package.json` 里的 `publishConfig.provenance` 是给 CI 用的。
-- 需要带 provenance 的正式发布，用 `pnpm run deploy -- --skip-npm`：只推标签，由 `.github/workflows/release.yml` 在 CI 里发布（见 7.4）。
+- 目标分支不存在就自动创建（优先跟踪 `origin/<branch>`）；推送前默认 `git pull --rebase`，冲突时停下交给你处理；
+- 工作区有改动就自动提交，提交信息默认 `chore: deploy <branch>`，可用 `-m` 覆盖；工作区干净则跳过提交、只推送；
+- 两个远程分别推送，失败不静默：会打印「已推送 origin / gitee 失败」，修好后可重复执行（幂等）；任何情况下都不 force push。
 
-预发布版本（`0.1.0-alpha.1`）必须显式指定 dist-tag，脚本会按版本号自动使用 `next`，与 CI 规则一致。
+发布脚本的校验链：**版本一致 → 分支 main → 工作区干净 → 本地/远程标签不存在 → `npm run check`**。
+统一版本下四个包必须同版本，所以一次发布就是四个包一起发（详见 7.3）。
+
+发布的两点约定：
+
+- **CI 是默认发布通道**：`pnpm run release` 只推标签，由 `.github/workflows/release.yml` 在 Actions 里发布，只有 CI 环境能生成 provenance；
+- **本地发布不生成 provenance**：npm 只支持 GitHub Actions、GitLab CI 这类环境，本地执行会报 `Automatic provenance generation not supported for provider: null`，`--local` 会显式关闭它。
+
+预发布版本（`0.1.0-alpha.3`）必须显式指定 dist-tag，脚本与 CI 都按版本号自动使用 `next`，稳定版用 `latest`。
+
+下面各节保留手工发布方法，供排错或特殊情况使用。
 
 ### 7.1 发布前准备
 
@@ -156,8 +186,8 @@ git commit -m "chore: release v<版本号>"
 项目配置了两个远程仓库：
 
 ```text
-origin  https://github.com/UnionSchool/campus.git
-gitee   https://gitee.com/UnionSchool/campus.git
+origin  https://github.com/UnionSchool/@campus-admin/core.git
+gitee   https://gitee.com/UnionSchool/@campus-admin/core.git
 ```
 
 先将同一个 `main` 提交分别推送到两个平台：
@@ -189,19 +219,19 @@ pnpm run check
 四个子包必须同时发布，预发布版本使用 `next` 标签，避免占用 `latest`（与 `.github/workflows/release.yml`、第 2 节版本规范一致）：
 
 ```bash
-pnpm --filter @unionschool/campus-core publish --access public --tag next --no-provenance
-pnpm --filter @unionschool/campus-framework publish --access public --tag next --no-provenance
-pnpm --filter @unionschool/campus-ui publish --access public --tag next --no-provenance
-pnpm --filter @unionschool/campus-admin publish --access public --tag next --no-provenance
+pnpm --filter @campus-admin/core publish --access public --tag next --no-provenance
+pnpm --filter @campus-admin/core publish --access public --tag next --no-provenance
+pnpm --filter @campus-admin/ui publish --access public --tag next --no-provenance
+pnpm --filter @campus-admin/core publish --access public --tag next --no-provenance
 ```
 
 稳定版本发布到默认的 `latest` 标签时，去掉 `--tag next`：
 
 ```bash
-pnpm --filter @unionschool/campus-admin publish --access public --no-provenance
+pnpm --filter @campus-admin/core publish --access public --no-provenance
 ```
 
-发布顺序必须是 `campus-core` → `campus-framework` → `campus-ui` → `campus-admin`，否则依赖方会指向尚未发布的版本。同一版本号不能重复发布，如果需要修正内容，必须增加根版本号并同步全部子包后重新发布。
+发布顺序必须是 `@campus-admin/core` → `@campus-admin/core` → `@campus-admin/ui` → `@campus-admin/core`，否则依赖方会指向尚未发布的版本。同一版本号不能重复发布，如果需要修正内容，必须增加根版本号并同步全部子包后重新发布。
 
 ### 7.4 使用 Git 标签自动发布 npm
 
@@ -232,8 +262,8 @@ git push gitee v<版本号>
 ### 7.5 发布后验证
 
 ```bash
-for pkg in campus-core campus-framework campus-ui campus-admin; do
-  npm view "@unionschool/$pkg" version
+for pkg in @campus-admin/core @campus-admin/core @campus-admin/ui @campus-admin/core; do
+  npm view "@campus-admin/$pkg" version
 done
 git ls-remote --heads origin main
 git ls-remote --heads gitee main
@@ -283,6 +313,20 @@ coscli sync examples/admin/dist cos://campus -r
 
 ## 9. 权限与安全
 
+### 9.1 版权与署名
+
+项目采用 MIT 许可，**使用时必须保留版权信息**：
+
+- 各包发布产物内必须带 `LICENSE`（`scripts/verify-pack.mjs` 会校验），README 末尾统一署名「Powered By 众校通 ®」；
+- 示例站与业务页面必须保留页脚署名与联系方式，统一用组件库的 `CaCopyright` 渲染：
+
+```vue
+<CaCopyright :name="学校名字" :partner="开发者" />
+```
+
+`name` 是版权主体（学校 / 机构名），组件自动拼成「© 年份 学校名字」，年份取当前年份；需要完全自定义版权行时再传 `displayCopyright`；`partner` 是开发者 / 渠道方署名，传了渲染成「Powered By 开发者 | 众校通 ®」；默认插槽可放附加信息。**「Powered By 众校通 ®」是固定署名，不随语言变化，也不允许删除。**
+- 二次分发、二次封装或修改后的版本，请在显著位置保留同样的版权声明。
+
 - GitHub 和 npm 均开启双重验证，维护者只拥有必要权限。
 - Issue 和 Pull Request 不得包含真实学生信息或生产系统敏感截图。
 - 安全漏洞通过 GitHub Security Advisory 私密报告。
@@ -290,11 +334,11 @@ coscli sync examples/admin/dist cos://campus -r
 
 ## 10. 初始化状态
 
-- 已按 `campus-core`、`campus-framework`、`campus-ui`、`campus-admin` 拆分 Monorepo，统一版本号。
+- 已拆分为 `@campus-admin/icon`、`@campus-admin/locale`、`@campus-admin/ui`、`@campus-admin/core` 四个 npm 包，统一版本号。
 - 已隔离 npm 包源码、示例应用、公开文档和本地内部文档。
 - 已通过各子包 `files` 白名单限制发布内容。
 - 已配置分包构建、类型声明、分层边界检查、CI 和基于 Git 标签的 npm 发布流程。
 - `examples/admin` 已按 npm 包名引用框架，并作为 `campus.zhongxiaotong.com` 演示站。
-- 四个 npm 包尚未发布，首次发布需先确认 `@unionschool` 组织发布权限。
+- 四个 npm 包尚未发布，首次发布需先确认 `@campus-admin` 组织发布权限。
 - GitHub 和 Gitee 仓库默认分支为 `main`。
 - GitHub 分支保护和 npm Trusted Publishing 仍需按平台实际配置持续检查。

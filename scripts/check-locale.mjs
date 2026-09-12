@@ -7,7 +7,8 @@
  * 1. 代码里用到的词条键必须在语言包里存在；
  * 2. 各语言包的键必须完全一致（少一条就会在切语言时露出另一种语言）。
  *
- * 检查两个目标：组件库（ca.* 命名空间）与示例后台的业务词条。
+ * 检查两个目标：组件库（@campus-admin/ui 的 ca.* 命名空间，词条在 @campus-admin/locale）
+ * 与示例后台的业务词条。
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
@@ -21,12 +22,12 @@ const violations = []
 
 const TARGETS = [
   {
-    name: '组件库 campus-ui',
-    /** 扫描这些目录下的 .ts/.vue */
-    roots: [join(projectRoot, 'packages/campus-ui/src')],
+    name: '组件库 @campus-admin/ui',
+    /** 扫描这些目录下的 .ts/.vue：组件用词条，locale 定义词条 */
+    roots: [join(projectRoot, 'packages/ui/src'), join(projectRoot, 'packages/locale/src')],
     /** 语言包目录本身不参与扫描 */
-    skip: ['locale'],
-    langDir: join(projectRoot, 'packages/campus-ui/src/locale/lang'),
+    skip: ['lang'],
+    langDir: join(projectRoot, 'packages/locale/src/lang'),
     /** 只统计这个前缀的键 */
     match: key => key.startsWith('ca.'),
     /** 这些前缀的词条由代码动态拼接，不做“未使用”提示 */

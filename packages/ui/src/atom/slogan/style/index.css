@@ -1,0 +1,4 @@
+/**
+ * 标语：不设字号与颜色，跟随所在容器；只保证行内布局不撑开。
+ */
+.ca-slogan { display: inline; line-height: inherit; }

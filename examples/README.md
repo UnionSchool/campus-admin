@@ -9,7 +9,7 @@
 
 | 目录 | 包名 | 说明 | 部署地址 |
 | --- | --- | --- | --- |
-| `admin/` | `@unionschool/example-admin` | 学校管理后台完整示例，同时也是演示站 | <https://campus.zhongxiaotong.com> |
+| `admin/` | `@campus-admin/example-admin` | 学校管理后台完整示例，同时也是演示站 | <https://campus.zhongxiaotong.com> |
 
 ## 预留目录
 
@@ -54,7 +54,7 @@ examples/admin/
 1. 定路径             页面路径 = 菜单层级，例如 /teach/course/textbook
 2. lib/api/xxx.ts     声明 uri 与返回类型
 3. lib/mock/...       按接口 uri 建演示数据（可选）
-4. pages/...vue       写页面，组件从 @unionschool/campus-admin 拿
+4. pages/...vue       写页面，组件从 @campus-admin/core 拿
 5. 菜单数据           后端下发 path，本地开发改 lib/mock/menu/main.json
 ```
 
@@ -133,7 +133,7 @@ createCampusAdmin({
 
 ```vue
 <script setup lang="ts">
-import { useLocale } from '@unionschool/campus-admin'
+import { useLocale } from '@campus-admin/core'
 const { t } = useLocale()
 </script>
 
@@ -162,7 +162,7 @@ pnpm run up                 # 构建并上传 admin 演示站
 ## 新增示例的约定
 
 1. 目录名使用小写单词，例如 `teacher`、`parent`。
-2. 包名统一为 `@unionschool/example-<name>`，`package.json` 中声明 `"private": true`。
-3. 依赖通过 `workspace:*` 引用 `@unionschool/campus-admin` 等包，禁止直接引用 `packages/*/src`。
+2. 包名统一为 `@campus-admin/example-<name>`，`package.json` 中声明 `"private": true`。
+3. 依赖通过 `workspace:*` 引用 `@campus-admin/core` 等包，禁止直接引用 `packages/*/src`。
 4. 构建产物输出到各自的 `dist/`，互不覆盖；新增示例后同步更新 `scripts/clean.mjs`。
 5. 部署脚本按示例单独维护，`up` 只负责 `admin` 示例对应的演示站。

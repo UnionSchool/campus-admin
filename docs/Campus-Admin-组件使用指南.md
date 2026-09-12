@@ -1,6 +1,6 @@
 # Campus Admin 组件使用指南
 
-> 适用包：`@unionschool/campus-admin`（含 `campus-ui` 全部组件）
+> 适用包：`@campus-admin/core`（含 `@campus-admin/ui` 全部组件）
 > 示例代码可直接运行：`examples/admin/src/pages/school/students.vue`
 
 ## 1. 两种使用方式
@@ -12,15 +12,15 @@
 ```ts
 // main.ts
 import { createApp } from 'vue'
-import { createCampusAdmin } from '@unionschool/campus-admin'
-import '@unionschool/campus-admin/style.css'
+import { createCampusAdmin } from '@campus-admin/core'
+import '@campus-admin/core/style.css'
 import App from './App.vue'
 
 const app = createApp(App)
 
 // createCampusAdmin 返回的是 Vue 插件，已内置注册全部 Ca 组件
 app.use(createCampusAdmin({
-  name: '众校通智慧校园',
+  name: '智慧校园',
   version: '1.0.0',
   config: { request: { baseURL: '/api' } },
 }))
@@ -49,8 +49,8 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-import { CaButton, CaTable, toast } from '@unionschool/campus-admin'
-import type { TableColumn } from '@unionschool/campus-admin'
+import { CaButton, CaTable, toast } from '@campus-admin/core'
+import type { TableColumn } from '@campus-admin/core'
 </script>
 ```
 
@@ -63,13 +63,13 @@ import type { TableColumn } from '@unionschool/campus-admin'
 组件样式必须引入一次：
 
 ```ts
-import '@unionschool/campus-admin/style.css'
+import '@campus-admin/core/style.css'
 ```
 
 ### 明暗主题
 
 ```ts
-import { setTheme } from '@unionschool/campus-admin'
+import { setTheme } from '@campus-admin/core'
 
 setTheme('dark')   // 暗色
 setTheme('light')  // 亮色
@@ -119,7 +119,7 @@ localStorage.setItem('campus:theme', 'auto')
 学校品牌不是蓝色时，只给一个主色即可，其余色阶自动推导：
 
 ```ts
-import { setPrimaryColor, resetPrimaryColor } from '@unionschool/campus-admin'
+import { setPrimaryColor, resetPrimaryColor } from '@campus-admin/core'
 
 setPrimaryColor('#7c4dff')   // 紫色品牌
 resetPrimaryColor()          // 恢复默认蓝色
@@ -134,7 +134,7 @@ resetPrimaryColor()          // 恢复默认蓝色
 组件库内置 zh-CN / en-US 两套词条，业务词条与内置词条合并到同一个语言实例：
 
 ```ts
-import { createCampusAdmin } from '@unionschool/campus-admin'
+import { createCampusAdmin } from '@campus-admin/core'
 import { businessMessages } from './src/locale'
 
 createCampusAdmin({
@@ -145,7 +145,7 @@ createCampusAdmin({
 取词与切换：
 
 ```ts
-import { setLocale, useLocale } from '@unionschool/campus-admin'
+import { setLocale, useLocale } from '@campus-admin/core'
 
 const { t, te } = useLocale()   // setup 内取词；te 判断词条是否存在
 t('ca.common.confirm')          // 组件库词条
@@ -175,7 +175,7 @@ setLocale('en-US')              // 非 setup 场景：路由、请求拦截器�
 }
 ```
 
-完整变量清单见 `packages/campus-ui/src/styles/token.css`。
+完整变量清单见 `packages/ui/src/styles/token.css`。
 
 ## 3. Table 用法
 
@@ -183,7 +183,7 @@ setLocale('en-US')              // 非 setup 场景：路由、请求拦截器�
 
 ```vue
 <script setup lang="ts">
-import type { TableColumn } from '@unionschool/campus-admin'
+import type { TableColumn } from '@campus-admin/core'
 
 interface StudentRow {
   id: string
@@ -318,13 +318,28 @@ useStudentList()（负责逻辑）
 
 | 层 | 组件 |
 | --- | --- |
-| 原子 `src/atom` | CaButton、CaIcon、CaTag、CaAvatar、CaInput、CaTextarea、CaSelect、CaCheckbox、CaSwitch、CaProgress、CaAttendanceBadge |
-| 基础 `src/base` | CaTable、CaPagination、CaStatistic、CaModal、CaDrawer、CaEmpty、CaSkeleton、CaToastContainer + toast、CaBreadcrumb、CaSideMenu、CaPageHeader、CaSearchForm、CaClassTree |
+| 原子 `src/atom` | CaButton、CaIcon、CaTag、CaAvatar、CaInput、CaTextarea、CaSelect、CaCheckbox、CaSwitch、CaProgress、CaAttendanceBadge、CaSlogan |
+| 基础 `src/base` | CaTable、CaPagination、CaStatistic、CaModal、CaDrawer、CaEmpty、CaSkeleton、CaToastContainer + toast、CaBreadcrumb、CaSideMenu、CaPageHeader、CaSearchForm、CaClassTree、CaCopyright |
 | 功能 `src/feature` | CaStudentPicker、CaWeeklyTimetable、CaDailyAgenda |
 
 判据：元素级是原子；区域级、能直接布局的是基础；多个组件组合起来完成一件事、且不区分角色的是功能。
 
 全部组件在 `examples/admin` 的「组件总览」页有可交互演示。
+
+### 署名与标语
+
+页脚署名与标语统一用组件库提供，业务不要各写各的：
+
+```vue
+<!-- 页脚署名：学校名自动拼成「© 年份 学校名」，没传就用默认的众校通标语 -->
+<CaCopyright :name="学校名字" :partner="开发者名" />
+
+<!-- 标语：传了用学校的，不传回退默认的众校通标语 -->
+<CaSlogan title="学校的 slogan" />
+<CaSlogan />
+```
+
+`CaCopyright` 的 `displayCopyright` 可整行自定义版权文案，默认插槽放备案号等附加内容；`CaSlogan` 的根元素是 `span`，字号与颜色跟随所在位置。
 
 ## 6. 常用 Props 速查
 

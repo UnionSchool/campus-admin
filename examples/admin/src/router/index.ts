@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { shallowRef } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import type { SideMenuItem } from '@unionschool/campus-ui'
-import type { TranslateFn } from '@unionschool/campus-ui'
+import type { SideMenuItem } from '@campus-admin/ui'
+import type { TranslateFn } from '@campus-admin/core'
 import * as icons from '@lucide/vue'
 import { getMainMenu } from '../lib/api/menu'
 import type { MenuNode } from '../lib/api/menu'
@@ -91,7 +91,7 @@ router.afterEach((to) => {
     section: (to.meta.section as string | undefined) ?? '基础应用',
   }
   const info = routeInfo(to.path, fallback)
-  document.title = `${info.title} · 众校通智慧校园`
+  document.title = `${info.title} · 智慧校园`
 })
 
 /**
@@ -179,7 +179,7 @@ async function setupRoutes(): Promise<void> {
       title: String(current.meta.title ?? '智慧校园'),
       section: String(current.meta.section ?? '基础应用'),
     })
-    document.title = `${info.title} · 众校通智慧校园`
+    document.title = `${info.title} · 智慧校园`
   }
 }
 

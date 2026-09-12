@@ -5,8 +5,9 @@ import {
   Bell, Building2, ChevronDown, ChevronRight, GraduationCap, Headphones, MapPin,
   Languages, Menu, Search, Settings2, SunMoon, X,
 } from '@lucide/vue'
-import { CaSideMenu, useLocale } from '@unionschool/campus-ui'
-import type { CaTheme, SideMenuItem } from '@unionschool/campus-ui'
+import { CaSideMenu, useLocale } from '@campus-admin/core'
+import type { CaTheme } from '@campus-admin/core'
+import type { SideMenuItem } from '@campus-admin/ui'
 import DetailDialog from './src/components/DetailDialog.vue'
 import { buildSideMenus, routeInfo } from './src/router'
 import { detail, showDetail } from './src/services/detail'
@@ -97,7 +98,7 @@ function handleTopMenu(item: { labelKey: string; path: string; descriptionKey?: 
       </button>
       <div class="brand">
         <GraduationCap :size="35" :stroke-width="1.8" />
-        <div><strong>{{ t('app.name') }}</strong><span>{{ t('app.slogan') }}</span></div>
+        <div><strong>{{ t('app.name') }}</strong><span><CaSlogan :title="t('app.slogan')" /></span></div>
       </div>
       <nav class="top-nav" :aria-label="t('app.modules')">
         <button v-for="item in topMenus" :key="item.labelKey" :class="{ active: item.path && route.path === item.path }"
@@ -155,7 +156,7 @@ function handleTopMenu(item: { labelKey: string; path: string; descriptionKey?: 
           <button @click="showDetail(t('app.settings'), t('app.settingsDetail'))">
             <Settings2 :size="17" />{{ t('app.settings') }}
           </button>
-          <span class="version">{{ t('app.version') }}</span>
+          <span class="version"><CaSlogan /></span>
         </div>
       </div>
     </aside>
@@ -178,7 +179,9 @@ function handleTopMenu(item: { labelKey: string; path: string; descriptionKey?: 
           <component :is="Component" />
         </RouterView>
 
-        <footer class="page-footer">{{ t('app.footer') }}<span>{{ t('app.footerSlogan') }}</span></footer>
+        <footer class="page-footer">
+          <CaCopyright :name="t('app.school')" :partner="t('app.partner')" />
+        </footer>
       </div>
     </main>
 

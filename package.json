@@ -1,18 +1,18 @@
 {
-  "name": "campus",
-  "version": "0.1.0-alpha.2",
+  "name": "campus-admin",
+  "version": "1.0.0",
   "private": true,
-  "description": "众校通智慧校园 Vue 3 前端框架 Monorepo",
+  "description": "Campus Admin：面向智慧校园的 Vue 3 后台框架",
   "type": "module",
   "license": "MIT",
   "author": "UnionSchool",
   "homepage": "https://campus.zhongxiaotong.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UnionSchool/campus.git"
+    "url": "git+https://github.com/UnionSchool/campus-admin.git"
   },
   "bugs": {
-    "url": "https://github.com/UnionSchool/campus/issues"
+    "url": "https://github.com/UnionSchool/campus-admin/issues"
   },
   "engines": {
     "node": ">=20.19.0"
@@ -20,23 +20,28 @@
   "scripts": {
     "check:boundaries": "node scripts/check-boundaries.mjs",
     "check:locale": "node scripts/check-locale.mjs",
-    "typecheck": "pnpm --filter @unionschool/campus-core typecheck && pnpm --filter @unionschool/campus-framework typecheck && pnpm --filter @unionschool/campus-ui typecheck && pnpm --filter @unionschool/campus-admin typecheck && pnpm --filter @unionschool/example-* typecheck",
-    "build:core": "pnpm --filter @unionschool/campus-core build",
-    "build:framework": "pnpm --filter @unionschool/campus-framework build",
-    "build:ui": "pnpm --filter @unionschool/campus-ui build",
-    "build:admin": "pnpm --filter @unionschool/campus-admin build",
-    "build:packages": "npm run build:core && npm run build:framework && npm run build:ui && npm run build:admin",
-    "build:example": "pnpm --filter @unionschool/example-* build",
-    "build:example:admin": "pnpm --filter @unionschool/example-admin build",
+    "typecheck": "pnpm --filter @campus-admin/icon typecheck && pnpm --filter @campus-admin/locale typecheck && pnpm --filter @campus-admin/ui typecheck && pnpm --filter @campus-admin/core typecheck && pnpm --filter @campus-admin/example-* typecheck",
+    "build:icon": "pnpm --filter @campus-admin/icon build",
+    "build:locale": "pnpm --filter @campus-admin/locale build",
+    "build:ui": "pnpm --filter @campus-admin/ui build",
+    "build:core": "pnpm --filter @campus-admin/core build",
+    "build:packages": "npm run build:icon && npm run build:locale && npm run build:ui && npm run build:core",
+    "build:example": "pnpm --filter @campus-admin/example-* build",
+    "build:example:admin": "pnpm --filter @campus-admin/example-admin build",
     "build:demo": "npm run build:example",
     "build": "npm run build:packages",
-    "dev": "pnpm --filter @unionschool/example-admin dev",
-    "dev:admin": "pnpm --filter @unionschool/example-admin dev",
-    "preview": "pnpm --filter @unionschool/example-admin preview",
-    "preview:admin": "pnpm --filter @unionschool/example-admin preview",
-    "preview:example": "pnpm --filter @unionschool/example-admin preview",
+    "dev": "pnpm --filter @campus-admin/example-admin dev",
+    "dev:admin": "pnpm --filter @campus-admin/example-admin dev",
+    "preview": "pnpm --filter @campus-admin/example-admin preview",
+    "preview:admin": "pnpm --filter @campus-admin/example-admin preview",
+    "preview:example": "pnpm --filter @campus-admin/example-admin preview",
     "up": "bash ./up",
     "deploy": "node scripts/deploy.mjs",
+    "deploy:dev": "node scripts/deploy.mjs dev",
+    "deploy:main": "node scripts/deploy.mjs main",
+    "release": "node scripts/release.mjs",
+    "release:dry": "node scripts/release.mjs --dry-run",
+    "version:bump": "node scripts/version.mjs",
     "clean": "node scripts/clean.mjs all",
     "check": "npm run check:boundaries && npm run check:locale && npm run build:packages && npm run typecheck && npm run build:example && npm run pack:dry",
     "pack:dry": "node scripts/verify-pack.mjs"
