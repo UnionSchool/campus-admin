@@ -38,6 +38,10 @@ jobs:
           pnpm run build:packages
           pnpm run typecheck
       - name: Publish ${{ matrix.package }}
+        # 首次发布必须用 token（Trusted Publisher 只对已存在的包生效）；
+        # 四个包发布成功后，去 npm 给每个包配 Trusted Publisher，就可以删掉 NODE_AUTH_TOKEN。
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [[ "${GITHUB_REF_NAME}" == *-* ]]; then
             pnpm --filter "@campus-admin/${{ matrix.package }}" publish --access public --tag next --no-git-checks
